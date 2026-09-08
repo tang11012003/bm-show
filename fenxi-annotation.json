@@ -1,0 +1,111 @@
+{
+  "prototypeId": "fenxi",
+  "version": 2,
+  "mobile": {
+    "appRoot": "[data-proto-app]",
+    "deviceWidth": 375,
+    "scrollContainers": [
+      "[data-proto-scroll-container]",
+      ".page-body"
+    ]
+  },
+  "globalMeta": {
+    "name": "高考志愿与陪读社区 · 学习分析与诊断报告 PRD",
+    "version": "V1.0",
+    "updatedAt": "2026-09-08"
+  },
+  "globalSections": [
+    {
+      "id": "overview",
+      "title": "1. 业务背景与产品定位",
+      "format": "markdown",
+      "content": "### 1.1 业务背景\n本页面为考生与家长提供多维度的学情诊断、错题归因走势以及智能化提分策略建议。通过整合历次模拟考与每日刷题数据，生成动态可视化分析。\n\n### 1.2 核心价值\n- **走势洞察**：按学年、学期动态追踪各科目得分率变化。\n- **能力画像**：五维雷达图直观呈现基础题、中档题与拔高题攻坚能力。\n- **行动闭环**：联动最新日程、错题本与 AI 提分指导方案。"
+    },
+    {
+      "id": "rules",
+      "title": "2. 核心计算口径与变更规范",
+      "format": "markdown",
+      "content": "### 2.1 综合得分率计算口径\n综合得分率 = `(所有科目加权得分 / 所有科目满分) × 100%`，保留一位小数。\n\n### 2.2 变动标记规范（每日同步测试与教研）\n- 🟢 **【新增】**：新上线的错题日程卡片与 AI 诊断建议推送。\n- 🟡 **【修改】**：优化了五维雷达图算法模型与统计范围筛选联动。\n- ⚪ **【原有】**：基础学科得分率走势折线图与历史成绩归档。"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "anno-schedule",
+      "scope": "page:default",
+      "target": ".schedule-wrap",
+      "x": 0.85,
+      "y": 0.12,
+      "type": "add",
+      "typeLabel": "新增",
+      "badge": "新增",
+      "title": "最新日程卡片联动错题复习",
+      "format": "markdown",
+      "content": "**业务规则（本轮新增）**：\n1. 左侧卡片展示待处理错题复习任务及倒计时，点击穿透至 `cuoti.html`。\n2. 右侧展示今日课程与考试日程，支持点击右上角「查看全部 ›」跳转 `quanburicheng.html`。\n3. 无待办日程时自动展示「今日已完成所有学习任务」的轻量占位插画。"
+    },
+    {
+      "id": "anno-radar",
+      "scope": "page:default",
+      "target": ".sc-cards-box",
+      "x": 0.88,
+      "y": 0.35,
+      "type": "modify",
+      "typeLabel": "修改",
+      "badge": "修改",
+      "title": "综合能力雷达模型与指标计算",
+      "format": "markdown",
+      "content": "**变更逻辑（本轮修改）**：\n1. 算法模型由原有的 3 维升级为 5 维能力评估（基础固化、中档攻坚、难点突破、答题速度、失误率控制）。\n2. 增加与“首次诊断”对照虚线，直观呈现提分进步轨迹。\n3. 切换统计范围（如 2025-2026学年）时，雷达图带动画平滑刷新。"
+    },
+    {
+      "id": "anno-ai-advice",
+      "scope": "page:default",
+      "target": ".welcome-text",
+      "x": 0.85,
+      "y": 0.05,
+      "type": "add",
+      "typeLabel": "新增",
+      "badge": "新增",
+      "title": "AI 陪读提分建议智能推送",
+      "format": "markdown",
+      "content": "**业务规则（本轮新增）**：\n1. 系统每日凌晨结合学生失分知识点自动生成 1~2 句个性化提分策略。\n2. 针对得分率低于 70% 的科目（如物理），高亮提供专项突破入口。\n3. 支持家长一键将该建议分享至私信或家长讨论区。"
+    },
+    {
+      "id": "anno-trend",
+      "scope": "page:default",
+      "target": ".page-body",
+      "x": 0.88,
+      "y": 0.72,
+      "type": "original",
+      "typeLabel": "原有",
+      "badge": "原有",
+      "title": "各科得分率走势与历史曲线",
+      "format": "markdown",
+      "content": "**原有功能**：\n1. 展示语文、数学、物理等多科目的模拟考历次得分率折线图。\n2. 支持点击科目 Chip 切换单科或多科叠加对比。\n3. 数据来源于学生绑定的历次考卷录入数据。"
+    },
+    {
+      "id": "note-mtscw763-1-1709f70120",
+      "scope": "page:default",
+      "target": "#app span.hl:nth-of-type(3)",
+      "x": 0.812767094017094,
+      "y": 0.9537259265560031,
+      "title": "【物理受力分析图】业务说明",
+      "content": "<p>请补充该功能点的业务规则、数据口径、角色权限或异常处理逻辑。</p>",
+      "format": "html",
+      "type": "add",
+      "typeLabel": "新增",
+      "badge": "新增"
+    },
+    {
+      "id": "note-mtscwdus-2-38e60fd670",
+      "scope": "page:default",
+      "target": "#app div.sc-header",
+      "x": 0.5382143399900937,
+      "y": 0.25,
+      "title": "最新日程 查看日程业务说明",
+      "content": "<p>请补充该功能点的业务规则、数据口径、角色权限或异常处理逻辑。</p>",
+      "format": "html",
+      "type": "original",
+      "typeLabel": "原有",
+      "badge": "原有"
+    }
+  ]
+}

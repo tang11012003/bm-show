@@ -1,0 +1,3020 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>学习分析 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --primary: #20DCAD;
+  --primary-dark: #00B383;
+  --bg: #F9F9FC;
+  --surface: #FFFFFF;
+  --text1: #111112;
+  --text2: #4B4C53;
+  --text3: #8C8D9B;
+  --hint: #B6B8C5;
+  --divider: #F3F4F6;
+  --orange: #FF7919;
+  --red: #FF2242;
+  --r-card: 12px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+  background: #E5E7EB;
+  color: var(--text1);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#app {
+  width: 100%;
+  max-width: 375px;
+  height: 100vh;
+  max-height: 812px;
+  background: var(--surface);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 420px) {
+  #app {
+    max-height: 100vh;
+    box-shadow: none;
+  }
+}
+
+.page-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--bg);
+}
+.page-body::-webkit-scrollbar {
+  display: none;
+}
+
+/* ================= 顶部绿色渐变区域 ================= */
+.top-hero {
+  position: relative;
+  padding: 16px 14px 18px;
+  background: linear-gradient(180deg, #20DCAD -9%, #DDFDF8 83%);
+}
+
+.welcome-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1A7E68;
+  padding: 4px 0 12px 2px;
+}
+
+/* ================= 最新日程挂件区 ================= */
+.schedule-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 14px;
+  cursor: pointer;
+}
+
+.sc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 0 2px;
+}
+
+.sc-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sc-schedule-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #111112;
+  line-height: 1;
+  letter-spacing: -0.2px;
+  -webkit-text-stroke: 3px #FFFFFF;
+  paint-order: stroke fill;
+}
+
+.sc-cal-icon {
+  width: 22px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.sc-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: #20DCAD;
+  color: #FFFFFF;
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(32, 220, 173, 0.35);
+}
+.sc-view-btn .arrow {
+  width: 12px;
+  height: 12px;
+}
+
+/* 日程卡片层叠组合 (左侧黑卡 + 右侧主卡，弹性并排自适应) */
+.sc-cards-box {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+}
+
+.sc-date-card {
+  width: 96px;
+  background: #111112;
+  border-radius: 12px;
+  padding: 12px 10px;
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(17, 17, 18, 0.15);
+}
+
+.sc-date-card .month {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.6);
+}
+.sc-date-card .day {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+  color: #FFFFFF;
+  margin: 2px 0;
+}
+.sc-date-card .weekday {
+  font-size: 11px;
+  font-weight: 500;
+  color: #20DCAD;
+  background: rgba(32, 220, 173, 0.16);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.sc-main-card {
+  flex: 1;
+  margin-left: -14px;
+  background: linear-gradient(180deg, #C3F1E6 0%, #FFFFFF 26%);
+  border-radius: 12px;
+  padding: 12px 14px 10px 24px;
+  z-index: 2;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.sc-countdown-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111112;
+  line-height: 1.2;
+}
+
+.sc-countdown-num {
+  display: flex;
+  align-items: baseline;
+  margin: 2px 0;
+}
+.sc-countdown-num .num {
+  font-size: 28px;
+  font-weight: 900;
+  color: #111112;
+  line-height: 1;
+}
+.sc-countdown-num .unit {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111112;
+  margin-left: 2px;
+}
+
+.sc-progress {
+  width: 40px;
+  height: 4px;
+  background: linear-gradient(90deg, #EAED83 4%, #06FFD6 97%);
+  border-radius: 2px;
+  margin-bottom: 6px;
+}
+
+.sc-divider {
+  height: 1px;
+  background: #F6F6FC;
+  margin-bottom: 6px;
+}
+
+.sc-note-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.sc-note-icon {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.sc-note-text {
+  font-size: 12px;
+  color: #8C8D9B;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ================= 临考冲刺提示 ================= */
+.ai-tip-wrap {
+  position: relative;
+  margin-top: 4px;
+}
+
+.ai-tip-deco {
+  position: absolute;
+  top: -8px;
+  width: 12px;
+  height: 22px;
+  z-index: 3;
+}
+.ai-tip-deco.left { left: 24px; }
+.ai-tip-deco.right { right: 24px; }
+.ai-tip-deco .stick {
+  width: 4px;
+  height: 16px;
+  background: #FFFFFF;
+  border-radius: 0 0 4px 4px;
+  margin: 0 auto;
+}
+.ai-tip-deco .cap {
+  width: 10px;
+  height: 10px;
+  background: #98E8D5;
+  border-radius: 50%;
+  margin: -2px auto 0;
+}
+
+.ai-tip-title-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #111112;
+  color: #20DCAD;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 12px;
+  margin-bottom: -8px;
+  position: relative;
+  z-index: 3;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.ai-tip-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 16px 14px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 16px rgba(0, 179, 131, 0.08);
+}
+
+.ai-tip-text {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #4B4C53;
+}
+.ai-tip-text .hl {
+  color: #00B383;
+  font-weight: 700;
+}
+.ai-tip-text .name {
+  color: #111112;
+  font-weight: 700;
+}
+
+/* ================= 复盘区域容器 ================= */
+.review-wrap {
+  position: relative;
+  background: var(--bg);
+  padding: 0 12px 20px;
+}
+
+/* 顶部黑色操作条（学生选择与试卷分析） */
+.review-header {
+  height: 52px;
+  background: #111112;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(17, 17, 18, 0.12);
+}
+
+.student-picker {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+.student-picker .name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+.student-picker .grade {
+  font-size: 13px;
+  font-weight: 500;
+  color: #8C8D9B;
+}
+.student-picker .arrow {
+  width: 8px;
+  height: 5px;
+  fill: #8C8D9B;
+}
+
+.analyze-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(32, 220, 173, 0.15);
+  color: #20DCAD;
+  border: 1px solid rgba(32, 220, 173, 0.4);
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.analyze-btn:active {
+  background: rgba(32, 220, 173, 0.3);
+}
+.analyze-btn .cam {
+  width: 16px;
+  height: 16px;
+  fill: #20DCAD;
+}
+
+/* 报告状态 Banner */
+.report-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  border-radius: 10px;
+}
+.report-banner.generating {
+  background: linear-gradient(90deg, #FFF8E1, #FFF3E0);
+  border: 1px solid rgba(251, 192, 45, 0.4);
+}
+.report-banner.completed {
+  background: linear-gradient(90deg, #E8F5E9, #F1F8E9);
+  border: 1px solid rgba(67, 160, 71, 0.3);
+}
+.rb-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.report-banner.generating .rb-icon { background: rgba(251, 192, 45, 0.15); }
+.report-banner.completed .rb-icon { background: rgba(67, 160, 71, 0.15); }
+.report-banner.generating .rb-icon .material-icons {
+  color: #FBC02D;
+  font-size: 16px;
+  animation: spin 1.5s linear infinite;
+}
+.report-banner.completed .rb-icon .material-icons {
+  color: #43A047;
+  font-size: 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.rb-text { flex: 1; min-width: 0; }
+.rb-title { font-size: 13px; font-weight: 600; color: #111112; }
+.rb-sub { font-size: 11px; color: #8C8D9B; margin-top: 1px; }
+.rb-action {
+  font-size: 12px;
+  font-weight: 600;
+  color: #20DCAD;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+/* ================= 学情复盘汇总卡片 ================= */
+.fupan-card {
+  background: #FFFFFF;
+  border-radius: var(--r-card);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  border: 1px solid #F0F0F5;
+}
+.fupan-card:active {
+  transform: scale(0.99);
+}
+
+.fc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.fc-title-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fc-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #111112;
+  line-height: 1.2;
+}
+.fc-sub {
+  font-size: 12px;
+  color: #8C8D9B;
+}
+.fc-arrow {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8C8D9B;
+}
+
+.fc-stats {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.fc-stat-main .val {
+  display: flex;
+  align-items: baseline;
+}
+.fc-stat-main .num {
+  font-size: 28px;
+  font-weight: 900;
+  color: #FF7919;
+  line-height: 1;
+}
+.fc-stat-main .pct {
+  font-size: 16px;
+  font-weight: 800;
+  color: #FF7919;
+}
+.fc-stat-main .lbl {
+  font-size: 12px;
+  color: #8C8D9B;
+  margin-top: 3px;
+}
+
+.fc-stat-right {
+  display: flex;
+  gap: 18px;
+}
+.fc-stat-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.fc-stat-col .num {
+  font-size: 18px;
+  font-weight: 800;
+  color: #4B4C53;
+  line-height: 1;
+}
+.fc-stat-col .lbl {
+  font-size: 12px;
+  color: #B6B8C5;
+  margin-top: 3px;
+}
+
+/* ================= 科目分类标签 ================= */
+.subject-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  overflow-x: auto;
+  padding: 2px 0;
+}
+.subject-tabs::-webkit-scrollbar { display: none; }
+.sub-tab {
+  flex-shrink: 0;
+  height: 30px;
+  padding: 0 13px;
+  border-radius: 15px;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #4B4C53;
+  border: 1px solid #ECECF2;
+  transition: all 0.15s ease;
+}
+.sub-tab.active {
+  background: #111112;
+  color: #20DCAD;
+  border-color: #111112;
+  font-weight: 700;
+}
+
+/* ================= 试卷列表 ================= */
+.paper-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.paper-item {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid #F0F0F5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+.paper-item:active {
+  background: #FAFAFC;
+  transform: scale(0.99);
+}
+
+.pi-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pi-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pi-icon.red { background: #FFE8EC; }
+.pi-icon.green { background: #E2F9F4; }
+.pi-icon svg { width: 16px; height: 16px; }
+
+.pi-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.pi-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pi-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111112;
+  line-height: 1.2;
+}
+.pi-tag {
+  font-size: 11px;
+  font-weight: 400;
+  color: #4B4C53;
+  padding: 2px 6px;
+  background: rgba(246, 246, 252, 0.99);
+  border-radius: 4px;
+  line-height: 1;
+}
+.pi-meta {
+  font-size: 12px;
+  font-weight: 400;
+  color: #8C8D9B;
+  line-height: 1;
+}
+.pi-score {
+  display: flex;
+  align-items: baseline;
+}
+.pi-score .got {
+  font-size: 16px;
+  font-weight: 700;
+  color: #FF7919;
+  line-height: 1;
+}
+.pi-score.big .got {
+  font-size: 16px;
+  font-weight: 700;
+  color: #00B383;
+}
+.pi-score .total {
+  font-size: 12px;
+  font-weight: 500;
+  color: #B6B8C5;
+  line-height: 1;
+}
+
+/* ================= 底部导航 ================= */
+.bottom-nav {
+  background: #FFFFFF;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  box-shadow: 0px -4px 12px rgba(32, 37, 54, 0.04);
+  flex-shrink: 0;
+  position: relative;
+  border-top: 1px solid #F0F0F5;
+}
+.nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  background: none;
+  width: 68px;
+  text-decoration: none;
+}
+.nav-icon-wrap {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+  position: relative;
+}
+.nav-item.active .nav-icon-bg {
+  position: absolute;
+  width: 44px;
+  height: 24px;
+  background: #A5FEBD;
+  border-radius: 12px;
+  z-index: 0;
+}
+.nav-item svg {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  z-index: 1;
+}
+.nav-item .nav-label {
+  font-size: 11px;
+  font-weight: 400;
+  color: #B6B8C5;
+  line-height: 1;
+}
+.nav-item.active .nav-label {
+  color: #202536;
+  font-weight: 700;
+}
+.home-indicator {
+  width: 100%;
+  height: 10px;
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.home-bar {
+  width: 134px;
+  height: 4px;
+  background: #111112;
+  border-radius: 2px;
+}
+</style>
+
+
+
+
+
+
+
+<style id="protoMobileAnnotationCss">
+:root {
+  --protoMobile-accent: #3388ff;
+  --protoMobile-accent-dark: #2167d9;
+  --protoMobile-accent-soft: #f0f9ff;
+  --protoMobile-ink: #223355;
+  --protoMobile-muted: #6b7a99;
+  --protoMobile-line: #dde1eb;
+  --protoMobile-bg: #edf0f6;
+  --protoMobile-device-width: 414px;
+  --protoMobile-docs-width: 520px;
+}
+
+html.protoMobile-ready,
+html.protoMobile-ready body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.protoMobile-stage,
+.protoMobile-stage *,
+.protoMobile-overlay-root,
+.protoMobile-overlay-root * {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+
+.protoMobile-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: var(--protoMobile-docs-width) 8px var(--protoMobile-device-width) minmax(320px, 1fr);
+  gap: 16px;
+  align-items: center;
+  overflow: hidden;
+  background: var(--protoMobile-bg);
+  color: var(--protoMobile-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+}
+
+.protoMobile-stage.no-docs {
+  grid-template-columns: var(--protoMobile-device-width) minmax(320px, 1fr);
+  justify-content: center;
+}
+.protoMobile-stage.no-docs .protoMobile-desktop-splitter { display: none; }
+.protoMobile-stage.no-docs .protoMobile-device { grid-column: 1; }
+.protoMobile-stage.no-docs .protoMobile-notes-panel { grid-column: 2; }
+
+.protoMobile-docs-panel { grid-column: 1; grid-row: 1; }
+.protoMobile-desktop-splitter { grid-column: 2; grid-row: 1; }
+.protoMobile-device { grid-column: 3; grid-row: 1; }
+.protoMobile-notes-panel { grid-column: 4; grid-row: 1; }
+
+.protoMobile-desktop-splitter {
+  position: relative;
+  width: 8px;
+  min-width: 8px;
+  height: min(896px, calc(100dvh - 32px));
+  align-self: center;
+  cursor: col-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.protoMobile-desktop-splitter::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 56px;
+  border-radius: 2px;
+  background: #b8c2d3;
+  transform: translate(-50%, -50%);
+  transition: height 0.15s ease, background 0.15s ease;
+}
+
+.protoMobile-desktop-splitter:hover::after,
+.protoMobile-desktop-splitter:focus-visible::after,
+.protoMobile-desktop-splitter.is-dragging::after { height: 84px; background: var(--protoMobile-accent); }
+.protoMobile-stage.is-resizing { cursor: col-resize; user-select: none; }
+
+.protoMobile-device,
+.protoMobile-review-panel {
+  height: min(896px, calc(100dvh - 32px));
+  min-height: 0;
+}
+
+.protoMobile-device {
+  position: relative;
+  width: var(--protoMobile-device-width);
+  min-width: 0;
+  justify-self: center;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(34, 51, 85, 0.12);
+}
+
+.protoMobile-device > [data-proto-app] {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+.protoMobile-review-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(51, 136, 255, 0.22);
+  border-top: 3px solid rgba(51, 136, 255, 0.82);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 44px rgba(34, 51, 85, 0.1);
+}
+
+.protoMobile-panel-header {
+  height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid #e9edf5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  font-size: 16px;
+}
+
+.protoMobile-doc-layout {
+  height: calc(100% - 56px);
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  min-height: 0;
+}
+
+.protoMobile-doc-nav {
+  padding: 12px 8px;
+  border-right: 1px solid #e9edf5;
+  overflow-y: auto;
+  background: #fbfcff;
+}
+
+.protoMobile-doc-nav button {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--protoMobile-muted);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.protoMobile-doc-nav button:hover,
+.protoMobile-doc-nav button.is-active {
+  border-left-color: var(--protoMobile-accent);
+  color: #235cb3;
+  background: #e8f1ff;
+}
+
+.protoMobile-doc-content {
+  min-width: 0;
+  padding: 0 16px 24px;
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+.protoMobile-doc-section {
+  padding: 20px 0;
+  border-bottom: 1px solid #e9edf5;
+  scroll-margin-top: 12px;
+}
+
+.protoMobile-doc-section:last-child { border-bottom: 0; }
+.protoMobile-doc-section > h3 { margin: 0 0 12px; color: var(--protoMobile-ink); font-size: 16px; line-height: 24px; }
+
+.protoMobile-desktop-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--protoMobile-muted);
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.protoMobile-switch {
+  position: relative;
+  width: 40px;
+  height: 24px;
+  min-height: 0;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: #ced4e0;
+  cursor: pointer;
+}
+
+.protoMobile-switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(34, 51, 85, 0.2);
+  transition: transform 180ms ease;
+}
+
+.protoMobile-notes-panel {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.protoMobile-note-list {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  padding: 12px;
+  padding-bottom: 60px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.protoMobile-note-card {
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 12px 14px 12px 62px;
+  position: relative;
+  border: 1px solid #e1e6ef;
+  border-left: 4px solid #79a8ff;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(34, 51, 85, 0.06);
+  color: var(--protoMobile-ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.protoMobile-note-card:hover,
+.protoMobile-note-card.is-active {
+  border-color: #9bbcff;
+  border-left-color: var(--protoMobile-accent-dark);
+  box-shadow: 0 8px 20px rgba(33, 103, 217, 0.13);
+}
+
+.protoMobile-note-index {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  width: 32px;
+  height: 32px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--protoMobile-accent);
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(33, 103, 217, 0.42), 0 5px 12px rgba(33, 103, 217, 0.2);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.protoMobile-note-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+
+.protoMobile-note-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+.protoMobile-note-tag.tag-add {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.protoMobile-note-tag.tag-modify {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.protoMobile-note-tag.tag-original {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.protoMobile-note-tag.tag-delete {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.protoMobile-note-tag.tag-custom {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.protoMobile-note-card.card-add { border-left-color: #10b981; }
+.protoMobile-note-card.card-modify { border-left-color: #f59e0b; }
+.protoMobile-note-card.card-original { border-left-color: #94a3b8; }
+.protoMobile-note-card.card-delete { border-left-color: #ef4444; }
+.protoMobile-note-card.card-custom { border-left-color: #3b82f6; }
+
+.protoMobile-note-card h3 { margin: 0; font-size: 14px; line-height: 21px; color: var(--protoMobile-ink); font-weight: 700; }
+.protoMobile-note-card .protoMobile-rich-content { font-size: 12px; line-height: 19px; }
+.protoMobile-empty { padding: 40px 16px; color: #8b96ab; font-size: 13px; text-align: center; }
+
+.protoMobile-overlay-root {
+  --protoMobile-layer-root: 2147483000;
+  position: fixed;
+  inset: 0;
+  z-index: var(--protoMobile-layer-root);
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  background: transparent;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  letter-spacing: 0;
+}
+
+.protoMobile-overlay-root::backdrop { background: transparent; pointer-events: none; }
+.protoMobile-marker-layer { position: fixed; inset: 0; pointer-events: none; }
+.protoMobile-marker-layer.is-hidden { visibility: hidden; }
+.protoMobile-marker[hidden] { display: none; }
+
+.protoMobile-marker {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--protoMobile-accent);
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(51, 136, 255, 0.28), 0 8px 18px rgba(33, 103, 217, 0.28);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.protoMobile-marker:hover,
+.protoMobile-marker.is-active {
+  background: var(--protoMobile-accent-dark);
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(51, 136, 255, 0.28), 0 10px 22px rgba(33, 103, 217, 0.34);
+}
+
+.protoMobile-target-highlight {
+  outline: 3px solid rgba(51, 136, 255, 0.45) !important;
+  outline-offset: 3px !important;
+}
+
+.protoMobile-compact-docs-trigger,
+.protoMobile-compact-backdrop,
+.protoMobile-compact-close,
+.protoMobile-mobile-controls,
+.protoMobile-mobile-note-layer,
+.protoMobile-mobile-docs-layer { display: none; }
+
+.protoMobile-rich-content { color: var(--protoMobile-muted); font-size: 14px; line-height: 1.65; overflow-wrap: anywhere; }
+.protoMobile-rich-content > :first-child { margin-top: 0; }
+.protoMobile-rich-content > :last-child { margin-bottom: 0; }
+.protoMobile-rich-content h1,
+.protoMobile-rich-content h2,
+.protoMobile-rich-content h3,
+.protoMobile-rich-content h4 { color: var(--protoMobile-ink); }
+.protoMobile-rich-content p,
+.protoMobile-rich-content ul,
+.protoMobile-rich-content ol,
+.protoMobile-rich-content blockquote,
+.protoMobile-rich-content pre,
+.protoMobile-rich-content table { margin: 8px 0; }
+.protoMobile-rich-content ul,
+.protoMobile-rich-content ol { padding-left: 20px; }
+.protoMobile-rich-content blockquote { padding: 8px 12px; border-left: 3px solid var(--protoMobile-accent); background: #f6f9ff; }
+.protoMobile-rich-content table { width: 100%; border-collapse: collapse; color: var(--protoMobile-ink); font-size: 12px; }
+.protoMobile-rich-content th,
+.protoMobile-rich-content td { padding: 7px 8px; border: 1px solid var(--protoMobile-line); text-align: left; vertical-align: top; }
+.protoMobile-rich-content th { background: #f5f7fa; }
+.protoMobile-rich-content pre { padding: 12px; border-radius: 4px; overflow: auto; background: #172033; color: #eaf1ff; }
+.protoMobile-rich-content code { font-family: Consolas, "SFMono-Regular", monospace; }
+.protoMobile-rich-content :not(pre) > code { padding: 2px 5px; border-radius: 3px; background: #edf3ff; color: #235cb3; }
+.protoMobile-rich-content img { display: block; max-width: 100%; height: auto; margin: 10px auto; border-radius: 4px; }
+.protoMobile-rich-content .protoMobile-mermaid { max-width: 100%; overflow: auto; }
+.protoMobile-rich-content .protoMobile-mermaid svg { max-width: 100%; height: auto; }
+
+@media (min-width: 768px) and (max-width: 1179px) {
+  .protoMobile-stage { grid-template-columns: var(--protoMobile-device-width) minmax(320px, 1fr); justify-content: center; }
+  .protoMobile-docs-panel { display: none; }
+  .protoMobile-desktop-splitter { display: none; }
+  .protoMobile-device { grid-column: 1; }
+  .protoMobile-notes-panel { grid-column: 2; }
+  .protoMobile-docs-panel.is-compact-open {
+    position: fixed;
+    inset: 16px auto 16px 16px;
+    z-index: 2147483500;
+    width: min(520px, calc(100vw - 32px));
+    height: auto;
+    display: block;
+    pointer-events: auto;
+  }
+  .protoMobile-compact-close { display: grid; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; place-items: center; background: #f5f7fa; color: var(--protoMobile-ink); font-size: 20px; cursor: pointer; }
+  .protoMobile-compact-docs-trigger { position: fixed; top: 18px; left: 18px; z-index: 2147483400; display: block; min-width: 54px; height: 34px; border: 1px solid #9bbcff; border-radius: 17px; background: #fff; color: #235cb3; pointer-events: auto; cursor: pointer; }
+  .protoMobile-compact-backdrop.is-open { position: fixed; inset: 0; z-index: 2147483450; display: block; background: rgba(20, 32, 55, 0.38); pointer-events: auto; }
+}
+
+@media (max-width: 767px) {
+  .protoMobile-stage { display: block; padding: 0; background: #fff; }
+  .protoMobile-review-panel { display: none; }
+  .protoMobile-desktop-splitter { display: none; }
+  .protoMobile-device { width: 100%; height: 100dvh; max-height: none; box-shadow: none; }
+  .protoMobile-mobile-controls { display: block; }
+  .protoMobile-mobile-launcher {
+    position: fixed;
+    right: 16px;
+    bottom: calc(112px + env(safe-area-inset-bottom));
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--protoMobile-accent), var(--protoMobile-accent-dark));
+    color: #fff;
+    box-shadow: 0 0 0 2px rgba(33, 103, 217, 0.48), 0 10px 24px rgba(33, 103, 217, 0.36);
+    pointer-events: auto;
+    touch-action: none;
+    cursor: grab;
+  }
+  .protoMobile-mobile-launcher > span { font-size: 18px; font-weight: 700; }
+  .protoMobile-mobile-launcher > small { position: absolute; top: -6px; right: -5px; min-width: 20px; height: 20px; padding: 0 4px; border: 2px solid #fff; border-radius: 10px; display: grid; place-items: center; background: #4d79d8; color: #fff; font-size: 10px; }
+  .protoMobile-mobile-menu {
+    position: fixed;
+    width: min(276px, calc(100vw - 16px));
+    padding: 6px;
+    border: 1px solid rgba(51, 136, 255, 0.28);
+    border-radius: 8px;
+    display: none;
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(33, 103, 217, 0.22), 0 4px 12px rgba(8, 17, 38, 0.12);
+    pointer-events: auto;
+  }
+  .protoMobile-mobile-menu.is-open { display: block; }
+  .protoMobile-mobile-menu-row,
+  .protoMobile-mobile-menu-link { width: 100%; min-height: 58px; padding: 10px 12px; border: 0; border-radius: 5px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; color: var(--protoMobile-ink); font: inherit; text-align: left; }
+  .protoMobile-mobile-menu-link { cursor: pointer; }
+  .protoMobile-mobile-menu-link:hover { background: #f5f8ff; }
+  .protoMobile-mobile-menu-copy { display: grid; gap: 3px; }
+  .protoMobile-mobile-menu-copy strong { font-size: 14px; }
+  .protoMobile-mobile-menu-copy small { color: var(--protoMobile-muted); font-size: 11px; }
+  .protoMobile-mobile-note-layer.is-open { position: fixed; inset: 0; display: block; pointer-events: auto; }
+  .protoMobile-mobile-mask { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: rgba(24, 37, 62, 0.46); }
+  .protoMobile-mobile-sheet {
+    --protoMobile-sheet-height: 68dvh;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--protoMobile-sheet-height);
+    min-height: 36dvh;
+    max-height: 94dvh;
+    border-radius: 16px 16px 0 0;
+    display: grid;
+    grid-template-rows: 28px auto minmax(0, 1fr);
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 -12px 36px rgba(34, 51, 85, 0.18);
+  }
+  .protoMobile-sheet-handle { display: grid; place-items: center; touch-action: none; cursor: ns-resize; }
+  .protoMobile-sheet-handle span { width: 40px; height: 4px; border-radius: 2px; background: #c7cedb; }
+  .protoMobile-mobile-sheet-header { min-height: 56px; padding: 0 16px; border-bottom: 1px solid #e9edf5; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .protoMobile-mobile-sheet-header > strong { min-width: 0; color: var(--protoMobile-ink); font-size: 15px; line-height: 22px; }
+  .protoMobile-mobile-sheet-tools { display: flex; gap: 8px; }
+  .protoMobile-mobile-sheet-tools button,
+  .protoMobile-mobile-docs-header button { width: 38px; height: 38px; min-height: 0; padding: 0; border: 0; border-radius: 50%; display: grid; place-items: center; background: #f5f7fa; color: var(--protoMobile-muted); font-size: 20px; cursor: pointer; }
+  .protoMobile-mobile-sheet-body { padding: 16px; overflow: auto; }
+  .protoMobile-mobile-docs-layer.is-open { position: fixed; inset: 0; display: grid; grid-template-rows: 58px minmax(0, 1fr); background: #fff; pointer-events: auto; }
+  .protoMobile-mobile-docs-header { padding: 0 16px; border-bottom: 1px solid #e9edf5; display: flex; align-items: center; justify-content: space-between; color: var(--protoMobile-ink); }
+  .protoMobile-mobile-docs-content { padding: 0 16px 24px; overflow: auto; }
+  .protoMobile-mobile-docs-content .protoMobile-doc-section { padding: 18px 0; }
+}
+
+/* 页面切换导航栏与管理 (极简白底风格) */
+.protoMobile-page-nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e9edf5;
+  flex-shrink: 0;
+}
+.protoMobile-page-tabs-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.protoMobile-page-tabs-wrap::-webkit-scrollbar { display: none; }
+.protoMobile-page-tab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  background: #fff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.protoMobile-page-tab-chip:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+.protoMobile-page-tab-chip.is-active {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #3b82f6;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.15);
+}
+.protoMobile-page-manage-btn {
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #64748b;
+  flex-shrink: 0;
+}
+.protoMobile-page-manage-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+
+.protoMobile-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px 6px;
+  border-bottom: 1px solid #eef2f6;
+  background: #fafbfc;
+  flex-shrink: 0;
+}
+
+.protoMobile-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  transition: all 0.15s ease;
+  user-select: none;
+  line-height: 1.4;
+}
+
+.protoMobile-filter-chip:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.protoMobile-filter-count {
+  display: inline-block;
+  font-size: 10px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.06);
+  font-weight: 700;
+  min-width: 14px;
+  text-align: center;
+  line-height: 14px;
+}
+
+.protoMobile-filter-chip.is-active {
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.protoMobile-filter-chip.chip-all.is-active {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #1e293b;
+}
+
+.protoMobile-filter-chip.chip-add.is-active {
+  background: #059669;
+  color: #ffffff;
+  border-color: #059669;
+}
+
+.protoMobile-filter-chip.chip-modify.is-active {
+  background: #d97706;
+  color: #ffffff;
+  border-color: #d97706;
+}
+
+.protoMobile-filter-chip.chip-original.is-active {
+  background: #475569;
+  color: #ffffff;
+  border-color: #475569;
+}
+
+.protoMobile-filter-chip.chip-delete.is-active {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
+.protoMobile-filter-chip.is-active .protoMobile-filter-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+</style>
+
+
+
+
+
+
+</head>
+<body>
+<div id="app" data-proto-app data-proto-platform="mobile" data-proto-scope="page:default">
+  <div class="page-body">
+
+    <!-- 顶部绿色渐变区域 -->
+    <div class="top-hero">
+      <div class="welcome-text">欢迎回来！张张的家长1983</div>
+
+      <!-- 最新日程挂件 -->
+      <div class="schedule-wrap" onclick="window.location.href='rili.html'">
+        <div class="sc-header">
+          <div class="sc-title-row">
+            <div class="sc-schedule-title">最新日程</div>
+            <div class="sc-cal-icon">
+              <svg width="22" height="20" viewBox="0 0 23 21" fill="none">
+                <path d="M21.23 20.1C21.23 20.65 20.78 21.1 20.23 21.1H2.77C2.22 21.1 1.77 20.65 1.77 20.1V5.1C1.77 4.55 2.22 4.1 2.77 4.1H5.27V2.6C5.27 1.72 5.98 1 6.86 1C7.74 1 8.45 1.72 8.45 2.6V4.1H14.55V2.6C14.55 1.72 15.26 1 16.14 1C17.02 1 17.73 1.72 17.73 2.6V4.1H20.23C20.78 4.1 21.23 4.55 21.23 5.1V20.1Z" fill="#8FEDD6" fill-opacity="0.4"/>
+                <path d="M18.23 18.1H4.77C4.22 18.1 3.77 17.65 3.77 17.1V8.1H19.23V17.1C19.23 17.65 18.78 18.1 18.23 18.1Z" fill="#20DCAD" fill-opacity="0.85"/>
+                <path d="M7.5 11.5H6.5C6.22 11.5 6 11.28 6 11V10C6 9.72 6.22 9.5 6.5 9.5H7.5C7.78 9.5 8 9.72 8 10V11C8 11.28 7.78 11.5 7.5 11.5ZM12 11.5H11C10.72 11.5 10.5 11.28 10.5 11V10C10.5 9.72 10.72 9.5 11 9.5H12C12.28 9.5 12.5 9.72 12.5 10V11C12.5 11.28 12.28 11.5 12 11.5ZM16.5 11.5H15.5C15.22 11.5 15 11.28 15 11V10C15 9.72 15.22 9.5 15.5 9.5H16.5C16.78 9.5 17 9.72 17 10V11C17 11.28 16.78 11.5 16.5 11.5ZM7.5 15H6.5C6.22 15 6 14.78 6 14.5V13.5C6 13.22 6.22 13 6.5 13H7.5C7.78 13 8 13.22 8 13.5V14.5C8 14.78 7.78 15 7.5 15ZM12 15H11C10.72 15 10.5 14.78 10.5 14.5V13.5C10.5 13.22 10.72 13 11 13H12C12.28 13 12.5 13.22 12.5 13.5V14.5C12.5 14.78 12.28 15 12 15Z" fill="#20DCAD"/>
+              </svg>
+            </div>
+          </div>
+          <div class="sc-view-btn">
+            <span>查看日程</span>
+            <svg class="arrow" viewBox="0 0 14 14" fill="none"><path d="M5.25 2.333L9.917 7L5.25 11.667" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <div class="sc-cards-box">
+          <!-- 左侧深色日期卡 -->
+          <div class="sc-date-card">
+            <div class="month">11</div>
+            <div class="day">05</div>
+            <div class="weekday">星期四</div>
+          </div>
+
+          <!-- 右侧倒计时卡 -->
+          <div class="sc-main-card">
+            <div>
+              <div class="sc-countdown-title">距离 期中综合考试 还有</div>
+              <div class="sc-countdown-num">
+                <span class="num">10</span><span class="unit">天</span>
+              </div>
+              <div class="sc-progress"></div>
+            </div>
+            <div>
+              <div class="sc-divider"></div>
+              <div class="sc-note-row">
+                <div class="sc-note-icon">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M12.6 3.5H1.4C1.01 3.5 0.7 3.19 0.7 2.8V1.4C0.7 1.01 1.01 0.7 1.4 0.7H12.6C12.99 0.7 13.3 1.01 13.3 1.4V2.8C13.3 3.19 12.99 3.5 12.6 3.5ZM11.9 4.9H2.1C1.99 4.9 1.9 4.99 1.9 5.1V12.6C1.9 12.99 2.21 13.3 2.6 13.3H11.4C11.79 13.3 12.1 12.99 12.1 12.6V5.1C12.1 4.99 12.01 4.9 11.9 4.9Z" fill="#8FEDD6" fill-opacity="0.6"/>
+                    <path d="M4.2 8.4H9.8C10.02 8.4 10.2 8.22 10.2 8C10.2 7.78 10.02 7.6 9.8 7.6H4.2C3.98 7.6 3.8 7.78 3.8 8C3.8 8.22 3.98 8.4 4.2 8.4ZM4.2 10.5H9.8C10.02 10.5 10.2 10.32 10.2 10.1C10.2 9.88 10.02 9.7 9.8 9.7H4.2C3.98 9.7 3.8 9.88 3.8 10.1C3.8 10.32 3.98 10.5 4.2 10.5Z" fill="#20DCAD"/>
+                  </svg>
+                </div>
+                <div class="sc-note-text">重点复习函数与力学专项</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 临考冲刺提示 -->
+      <div class="ai-tip-wrap">
+        <div class="ai-tip-deco left"><div class="stick"></div><div class="cap"></div></div>
+        <div class="ai-tip-deco right"><div class="stick"></div><div class="cap"></div></div>
+        <div class="ai-tip-title-badge">
+          <span class="material-icons" style="font-size:12px">auto_awesome</span>
+          <span>临考冲刺提示</span>
+        </div>
+        <div class="ai-tip-card">
+          <div class="ai-tip-text">
+            综合<span class="name">“张小晓”</span>近8次考试，建议重点抓<span class="hl">【数学二次函数最值】</span>与<span class="hl">【物理受力分析图】</span>，此板块提分性价比最高！
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 复盘区 -->
+    <div class="review-wrap">
+      <!-- 顶部操作条（学生选择与试卷分析） -->
+      <div class="review-header">
+        <div class="student-picker" onclick="switchStudent()">
+          <span class="name">张小晓</span>
+          <span class="grade">(高二)</span>
+          <svg class="arrow" viewBox="0 0 10 6" fill="none"><path d="M0 0L5 6L10 0H0Z" fill="#8C8D9B"/></svg>
+        </div>
+        <button class="analyze-btn" onclick="window.location.href='xuanzhexingzhi.html'">
+          <svg class="cam" viewBox="0 0 18 18" fill="none">
+            <path d="M4.745 3.642C5.172 2.363 6.369 1.5 7.718 1.5H10.282C11.631 1.5 12.828 2.363 13.255 3.642C13.302 3.786 13.42 3.894 13.566 3.931L14.17 4.082C15.54 4.424 16.5 5.654 16.5 7.066V12.75C16.5 14.821 14.821 16.5 12.75 16.5H5.25C3.179 16.5 1.5 14.821 1.5 12.75V7.066C1.5 5.654 2.46 4.424 3.83 4.082L4.434 3.931C4.58 3.894 4.698 3.786 4.745 3.642ZM7.718 3C7.015 3 6.391 3.45 6.168 4.117C5.958 4.746 5.441 5.225 4.797 5.386L4.193 5.537C3.492 5.713 3 6.343 3 7.066V12.75C3 13.993 4.007 15 5.25 15H12.75C13.993 15 15 13.993 15 12.75V7.066C15 6.343 14.508 5.713 13.807 5.537L13.203 5.386C12.559 5.225 12.042 4.746 11.832 4.117C11.609 3.45 10.985 3 10.282 3H7.718Z" fill="#20DCAD"/>
+            <path d="M9 11.25C10.657 11.25 12 9.907 12 8.25C12 6.593 10.657 5.25 9 5.25C7.343 5.25 6 6.593 6 8.25C6 9.907 7.343 11.25 9 11.25Z" fill="#20DCAD"/>
+          </svg>
+          <span>试卷分析</span>
+        </button>
+      </div>
+
+      <!-- Report banner (动态生成状态) -->
+      <div class="report-banner" id="reportBanner" style="display:none" onclick="handleBannerClick()"></div>
+
+      <!-- 学情复盘卡片 -->
+      <div class="fupan-card" onclick="window.location.href='cuoti.html'">
+        <div class="fc-head">
+          <div class="fc-title-col">
+            <div class="fc-title">学情复盘</div>
+            <div class="fc-sub">查看历史试卷与错题归因</div>
+          </div>
+          <div class="fc-arrow">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M5.97 3.47L10.5 8L5.97 12.53C5.864 12.635 5.75 12.816 5.75 13C5.75 13.184 5.864 13.365 5.97 13.47C6.076 13.575 6.21 13.639 6.354 13.639C6.498 13.639 6.631 13.575 6.737 13.47L11.78 8.432C11.886 8.326 11.949 8.19 11.949 8.045C11.949 7.901 11.886 7.765 11.78 7.659L6.737 2.621C6.631 2.516 6.498 2.451 6.354 2.451C6.21 2.451 6.076 2.516 5.97 2.621C5.753 2.838 5.753 3.189 5.97 3.406V3.47Z" fill="#4B4C53"/></svg>
+          </div>
+        </div>
+        <div class="fc-stats">
+          <div class="fc-stat-main">
+            <div class="val">
+              <span class="num">76.2</span><span class="pct">%</span>
+            </div>
+            <div class="lbl">平均得分率</div>
+          </div>
+          <div class="fc-stat-right">
+            <div class="fc-stat-col">
+              <div class="num">9</div>
+              <div class="lbl">试卷总数</div>
+            </div>
+            <div class="fc-stat-col">
+              <div class="num">40</div>
+              <div class="lbl">累计错题</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 科目筛选标签 -->
+      <div class="subject-tabs" id="subjectTabs">
+        <div class="sub-tab active" onclick="filterSubject(this, 'all')">全部</div>
+        <div class="sub-tab" onclick="filterSubject(this, 'yuwen')">语文</div>
+        <div class="sub-tab" onclick="filterSubject(this, 'shuxue')">数学</div>
+        <div class="sub-tab" onclick="filterSubject(this, 'yingyu')">英语</div>
+        <div class="sub-tab" onclick="filterSubject(this, 'wuli')">物理</div>
+        <div class="sub-tab" onclick="filterSubject(this, 'huaxue')">化学</div>
+      </div>
+
+      <!-- 试卷列表 -->
+      <div class="paper-list">
+        <div class="paper-item" onclick="window.location.href='tiezidetail.html?id=1'">
+          <div class="pi-left">
+            <div class="pi-icon red">
+              <svg viewBox="0 0 16 16" fill="none">
+                <path d="M3.333 1.333H9.333L12.667 4.667V13.333C12.667 13.701 12.368 14 12 14H3.333C2.965 14 2.667 13.701 2.667 13.333V2C2.667 1.632 2.965 1.333 3.333 1.333Z" fill="#FF2242"/>
+                <path d="M9.333 1.333V4H12.667" stroke="white" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5.333 7.333H10M5.333 9.333H10M5.333 11.333H8" stroke="white" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="pi-info">
+              <div class="pi-name-row">
+                <span class="pi-name">期中考试</span>
+                <span class="pi-tag">数学</span>
+              </div>
+              <div class="pi-meta">2026-07-15</div>
+            </div>
+          </div>
+          <div class="pi-score"><span class="got">4</span><span class="total">/25</span></div>
+        </div>
+
+        <div class="paper-item" onclick="window.location.href='tiezidetail.html?id=2'">
+          <div class="pi-left">
+            <div class="pi-icon green">
+              <svg viewBox="0 0 16 16" fill="none">
+                <path d="M13.333 2.667L6 10L2.667 6.667L1.333 8L6 12.667L14.667 4L13.333 2.667Z" fill="#20DCAD"/>
+              </svg>
+            </div>
+            <div class="pi-info">
+              <div class="pi-name-row">
+                <span class="pi-name">12月月考</span>
+                <span class="pi-tag">数学</span>
+              </div>
+              <div class="pi-meta">2026-07-15</div>
+            </div>
+          </div>
+          <div class="pi-score big"><span class="got">16</span><span class="total">/25</span></div>
+        </div>
+
+        <div class="paper-item" onclick="window.location.href='tiezidetail.html?id=3'">
+          <div class="pi-left">
+            <div class="pi-icon green">
+              <svg viewBox="0 0 16 16" fill="none">
+                <path d="M13.333 2.667L6 10L2.667 6.667L1.333 8L6 12.667L14.667 4L13.333 2.667Z" fill="#20DCAD"/>
+              </svg>
+            </div>
+            <div class="pi-info">
+              <div class="pi-name-row">
+                <span class="pi-name">11月期中摸底</span>
+                <span class="pi-tag">数学</span>
+              </div>
+              <div class="pi-meta">2026-07-15</div>
+            </div>
+          </div>
+          <div class="pi-score big"><span class="got">16</span><span class="total">/25</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部导航 -->
+  <div class="bottom-nav">
+    <a class="nav-item active" href="fenxi.html">
+      <div class="nav-icon-wrap">
+        <div class="nav-icon-bg"></div>
+        <svg viewBox="0 0 26 26" fill="none">
+          <path d="M2 13L13 2L24 13V22C24 22.5523 23.5523 23 23 23H17V16H9V23H3C2.44772 23 2 22.5523 2 22V13Z" fill="#111112"/>
+          <path d="M10.5 3.5V1.5H15.5V8.5H10.5V3.5Z" fill="#20DCAD"/>
+        </svg>
+      </div>
+      <span class="nav-label">首页</span>
+    </a>
+    <a class="nav-item" href="shequ.html">
+      <div class="nav-icon-wrap">
+        <svg viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="8.5" stroke="#B6B8C5" stroke-width="1.2" fill="none"/>
+          <path d="M6 7.5C6 6.67 6.67 6 7.5 6H12.5C13.33 6 14 6.67 14 7.5V12.5C14 12.9 13.75 13.3 13.35 13.45L10.5 14.8C10.2 14.95 9.8 14.95 9.5 14.8L6.65 13.45C6.25 13.3 6 12.9 6 12.5V7.5Z" stroke="#B6B8C5" stroke-width="0.9"/>
+          <path d="M8 9H12" stroke="#B6B8C5" stroke-width="0.9" stroke-linecap="round"/>
+          <path d="M8 11H12" stroke="#B6B8C5" stroke-width="0.9" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="nav-label">社区</span>
+    </a>
+    <a class="nav-item" href="xiaoxi.html">
+      <div class="nav-icon-wrap">
+        <svg viewBox="0 0 20 20" fill="none">
+          <rect x="2.5" y="3.5" width="15" height="12.5" rx="2" stroke="#B6B8C5" stroke-width="1.2" fill="none"/>
+          <path d="M3 4.5L10 9.5L17 4.5" stroke="#B6B8C5" stroke-width="0.9" stroke-linecap="round"/>
+          <circle cx="14.5" cy="7.5" r="2.5" fill="#B6B8C5"/>
+        </svg>
+      </div>
+      <span class="nav-label">消息</span>
+    </a>
+    <a class="nav-item" href="wode.html">
+      <div class="nav-icon-wrap">
+        <svg viewBox="0 0 20 20" fill="none">
+          <rect x="3.5" y="2.5" width="13" height="13" rx="4" stroke="#B6B8C5" stroke-width="1.2"/>
+          <circle cx="10" cy="7.5" r="2.5" fill="#B6B8C5"/>
+          <path d="M5 15C6 13.5 8 13 10 13C12 13 14 13.5 15 15" stroke="#B6B8C5" stroke-width="1.1" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="nav-label">我的</span>
+    </a>
+    <div class="home-indicator">
+      <div class="home-bar"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function checkReportBanner(){
+  const task = JSON.parse(localStorage.getItem('reportTask') || 'null');
+  const banner = document.getElementById('reportBanner');
+  if(!task || task.status === 'read'){
+    banner.style.display = 'none';
+    return;
+  }
+  banner.style.display = 'flex';
+  if(task.status === 'generating'){
+    banner.className = 'report-banner generating';
+    banner.innerHTML = `
+      <div class="rb-icon"><span class="material-icons">sync</span></div>
+      <div class="rb-text">
+        <div class="rb-title">${task.subject || '试卷'} 报告生成中...</div>
+        <div class="rb-sub">AI 正在深度分析，完成后将通知您</div>
+      </div>
+      <span class="rb-action">查看进度<span class="material-icons" style="font-size:14px">chevron_right</span></span>`;
+    setTimeout(() => {
+      task.status = 'completed';
+      task.updatedAt = Date.now();
+      localStorage.setItem('reportTask', JSON.stringify(task));
+      checkReportBanner();
+    }, 8000);
+  } else if(task.status === 'completed'){
+    banner.className = 'report-banner completed';
+    banner.innerHTML = `
+      <div class="rb-icon"><span class="material-icons">check_circle</span></div>
+      <div class="rb-text">
+        <div class="rb-title">${task.subject || '试卷'} 诊断报告已就绪</div>
+        <div class="rb-sub">点击查看完整分析结果</div>
+      </div>
+      <span class="rb-action">立即查看<span class="material-icons" style="font-size:14px">chevron_right</span></span>`;
+  }
+}
+
+function handleBannerClick(){
+  const task = JSON.parse(localStorage.getItem('reportTask') || 'null');
+  if(!task) return;
+  if(task.status === 'generating'){
+    window.location.href = 'loading.html';
+  } else if(task.status === 'completed'){
+    task.status = 'read';
+    task.updatedAt = Date.now();
+    localStorage.setItem('reportTask', JSON.stringify(task));
+    window.location.href = 'fenxibaogao.html';
+  }
+}
+
+function filterSubject(el, subj) {
+  const tabs = document.querySelectorAll('.sub-tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function switchStudent(){
+  location.reload();
+}
+
+checkReportBanner();
+</script>
+
+<script id="prototypeAnnotationData" type="application/json">
+{
+  "prototypeId": "fenxi",
+  "version": 2,
+  "mobile": {
+    "appRoot": "[data-proto-app]",
+    "deviceWidth": 375,
+    "scrollContainers": [
+      "[data-proto-scroll-container]",
+      ".page-body"
+    ]
+  },
+  "globalMeta": {
+    "name": "高考志愿与陪读社区 · 学习分析与诊断报告 PRD",
+    "version": "V1.0",
+    "updatedAt": "2026-09-08"
+  },
+  "globalSections": [
+    {
+      "id": "overview",
+      "title": "1. 业务背景与产品定位",
+      "format": "markdown",
+      "content": "### 1.1 业务背景\n本页面为考生与家长提供多维度的学情诊断、错题归因走势以及智能化提分策略建议。通过整合历次模拟考与每日刷题数据，生成动态可视化分析。\n\n### 1.2 核心价值\n- **走势洞察**：按学年、学期动态追踪各科目得分率变化。\n- **能力画像**：五维雷达图直观呈现基础题、中档题与拔高题攻坚能力。\n- **行动闭环**：联动最新日程、错题本与 AI 提分指导方案。"
+    },
+    {
+      "id": "rules",
+      "title": "2. 核心计算口径与变更规范",
+      "format": "markdown",
+      "content": "### 2.1 综合得分率计算口径\n综合得分率 = `(所有科目加权得分 / 所有科目满分) × 100%`，保留一位小数。\n\n### 2.2 变动标记规范（每日同步测试与教研）\n- 🟢 **【新增】**：新上线的错题日程卡片与 AI 诊断建议推送。\n- 🟡 **【修改】**：优化了五维雷达图算法模型与统计范围筛选联动。\n- ⚪ **【原有】**：基础学科得分率走势折线图与历史成绩归档。"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "anno-schedule",
+      "scope": "page:default",
+      "target": ".schedule-wrap",
+      "x": 0.85,
+      "y": 0.12,
+      "type": "add",
+      "typeLabel": "新增",
+      "badge": "新增",
+      "title": "最新日程卡片联动错题复习",
+      "format": "markdown",
+      "content": "**业务规则（本轮新增）**：\n1. 左侧卡片展示待处理错题复习任务及倒计时，点击穿透至 `cuoti.html`。\n2. 右侧展示今日课程与考试日程，支持点击右上角「查看全部 ›」跳转 `quanburicheng.html`。\n3. 无待办日程时自动展示「今日已完成所有学习任务」的轻量占位插画。"
+    },
+    {
+      "id": "anno-radar",
+      "scope": "page:default",
+      "target": ".sc-cards-box",
+      "x": 0.88,
+      "y": 0.35,
+      "type": "modify",
+      "typeLabel": "修改",
+      "badge": "修改",
+      "title": "综合能力雷达模型与指标计算",
+      "format": "markdown",
+      "content": "**变更逻辑（本轮修改）**：\n1. 算法模型由原有的 3 维升级为 5 维能力评估（基础固化、中档攻坚、难点突破、答题速度、失误率控制）。\n2. 增加与“首次诊断”对照虚线，直观呈现提分进步轨迹。\n3. 切换统计范围（如 2025-2026学年）时，雷达图带动画平滑刷新。"
+    },
+    {
+      "id": "anno-ai-advice",
+      "scope": "page:default",
+      "target": ".welcome-text",
+      "x": 0.85,
+      "y": 0.05,
+      "type": "add",
+      "typeLabel": "新增",
+      "badge": "新增",
+      "title": "AI 陪读提分建议智能推送",
+      "format": "markdown",
+      "content": "**业务规则（本轮新增）**：\n1. 系统每日凌晨结合学生失分知识点自动生成 1~2 句个性化提分策略。\n2. 针对得分率低于 70% 的科目（如物理），高亮提供专项突破入口。\n3. 支持家长一键将该建议分享至私信或家长讨论区。"
+    },
+    {
+      "id": "anno-trend",
+      "scope": "page:default",
+      "target": ".page-body",
+      "x": 0.88,
+      "y": 0.72,
+      "type": "original",
+      "typeLabel": "原有",
+      "badge": "原有",
+      "title": "各科得分率走势与历史曲线",
+      "format": "markdown",
+      "content": "**原有功能**：\n1. 展示语文、数学、物理等多科目的模拟考历次得分率折线图。\n2. 支持点击科目 Chip 切换单科或多科叠加对比。\n3. 数据来源于学生绑定的历次考卷录入数据。"
+    },
+    {
+      "id": "note-mtscw763-1-1709f70120",
+      "scope": "page:default",
+      "target": "#app span.hl:nth-of-type(3)",
+      "x": 0.812767094017094,
+      "y": 0.9537259265560031,
+      "title": "【物理受力分析图】业务说明",
+      "content": "<p>请补充该功能点的业务规则、数据口径、角色权限或异常处理逻辑。</p>",
+      "format": "html",
+      "type": "add",
+      "typeLabel": "新增",
+      "badge": "新增"
+    },
+    {
+      "id": "note-mtscwdus-2-38e60fd670",
+      "scope": "page:default",
+      "target": "#app div.sc-header",
+      "x": 0.5382143399900937,
+      "y": 0.25,
+      "title": "最新日程 查看日程业务说明",
+      "content": "<p>请补充该功能点的业务规则、数据口径、角色权限或异常处理逻辑。</p>",
+      "format": "html",
+      "type": "original",
+      "typeLabel": "原有",
+      "badge": "原有"
+    }
+  ]
+}
+</script>
+
+
+
+
+
+
+
+<div class="protoMobile-stage" id="protoMobileStage" hidden>
+  <aside class="protoMobile-review-panel protoMobile-docs-panel" id="protoMobileDocsPanel" aria-label="原型说明">
+    <header class="protoMobile-panel-header">
+      <strong>原型说明</strong>
+      <button class="protoMobile-compact-close" id="protoMobileCompactDocsClose" type="button" aria-label="关闭原型说明">×</button>
+    </header>
+    <div class="protoMobile-doc-layout">
+      <nav class="protoMobile-doc-nav" id="protoMobileDocNav" aria-label="原型说明目录"></nav>
+      <div class="protoMobile-doc-content" id="protoMobileDocContent"></div>
+    </div>
+  </aside>
+
+  <div class="protoMobile-desktop-splitter" id="protoMobileDocsSplitter" role="separator" aria-label="调整原型说明宽度" aria-orientation="vertical" tabindex="0"></div>
+
+  <main class="protoMobile-device" id="protoMobileDevice" aria-label="移动端原型画板"></main>
+
+  <aside class="protoMobile-review-panel protoMobile-notes-panel" aria-label="当前页面标注">
+    <header class="protoMobile-panel-header">
+      <strong>当前标注</strong>
+      <label class="protoMobile-desktop-toggle-label">
+        <span>显示标注</span>
+        <button class="protoMobile-switch" id="protoMobileDesktopToggle" type="button" role="switch" aria-checked="true" aria-label="隐藏页面标注"></button>
+      </label>
+    </header>
+    <div class="protoMobile-filter-bar" id="protoMobileFilterBar"></div>
+    <div class="protoMobile-note-list" id="protoMobileNoteList"></div>
+  </aside>
+</div>
+
+<div class="protoMobile-overlay-root" id="prototypeAnnotationRoot" popover="manual" aria-label="移动端原型标注层">
+  <div class="protoMobile-marker-layer" id="protoMobileMarkerLayer"></div>
+
+  <button class="protoMobile-compact-docs-trigger" id="protoMobileCompactDocsTrigger" type="button">说明</button>
+  <div class="protoMobile-compact-backdrop" id="protoMobileCompactBackdrop"></div>
+
+  <div class="protoMobile-mobile-controls" id="protoMobileMobileControls">
+    <div class="protoMobile-mobile-menu" id="protoMobileMobileMenu" role="menu" aria-label="原型标注菜单">
+      <div class="protoMobile-mobile-menu-row">
+        <span class="protoMobile-mobile-menu-copy">
+          <strong>页面标注</strong>
+          <small id="protoMobileMobileMenuMeta">当前页面 0 条</small>
+        </span>
+        <button class="protoMobile-switch" id="protoMobileMobileToggle" type="button" role="switch" aria-checked="false" aria-label="显示页面标注"></button>
+      </div>
+      <button class="protoMobile-mobile-menu-link" id="protoMobileMobileDocsOpen" type="button" role="menuitem">
+        <span class="protoMobile-mobile-menu-copy">
+          <strong>原型说明</strong>
+          <small>查看整体需求与跨页面规则</small>
+        </span>
+        <span aria-hidden="true">›</span>
+      </button>
+    </div>
+    <button class="protoMobile-mobile-launcher" id="protoMobileMobileLauncher" type="button" aria-label="打开原型标注菜单" aria-expanded="false">
+      <span>注</span>
+      <small id="protoMobileMobileCount">0</small>
+    </button>
+  </div>
+
+  <div class="protoMobile-mobile-note-layer" id="protoMobileMobileNoteLayer" aria-hidden="true">
+    <button class="protoMobile-mobile-mask" id="protoMobileMobileNoteMask" type="button" aria-label="关闭标注详情"></button>
+    <section class="protoMobile-mobile-sheet" id="protoMobileMobileSheet" role="dialog" aria-modal="true" aria-label="标注详情">
+      <div class="protoMobile-sheet-handle" id="protoMobileMobileSheetHandle" aria-label="拖动调整标注详情高度"><span></span></div>
+      <header class="protoMobile-mobile-sheet-header">
+        <strong id="protoMobileMobileSheetTitle">标注详情</strong>
+        <span class="protoMobile-mobile-sheet-tools">
+          <button id="protoMobileMobileSheetSize" type="button" aria-label="切换标注详情高度" title="切换高度">↕</button>
+          <button id="protoMobileMobileNoteClose" type="button" aria-label="关闭标注详情" title="关闭">×</button>
+        </span>
+      </header>
+      <article class="protoMobile-rich-content protoMobile-mobile-sheet-body" id="protoMobileMobileSheetBody"></article>
+    </section>
+  </div>
+
+  <section class="protoMobile-mobile-docs-layer" id="protoMobileMobileDocsLayer" aria-hidden="true" aria-label="原型说明">
+    <header class="protoMobile-mobile-docs-header">
+      <strong>原型说明</strong>
+      <button id="protoMobileMobileDocsClose" type="button" aria-label="关闭原型说明">×</button>
+    </header>
+    <div class="protoMobile-mobile-docs-content" id="protoMobileMobileDocsContent"></div>
+  </section>
+</div>
+
+<script id="protoMobileMobileAnnotationRuntime">
+(() => {
+  const dataNode = document.getElementById("prototypeAnnotationData");
+  const stage = document.getElementById("protoMobileStage");
+  const device = document.getElementById("protoMobileDevice");
+  const docsPanel = document.getElementById("protoMobileDocsPanel");
+  const docsSplitter = document.getElementById("protoMobileDocsSplitter");
+  const docNav = document.getElementById("protoMobileDocNav");
+  const docContent = document.getElementById("protoMobileDocContent");
+  const noteList = document.getElementById("protoMobileNoteList");
+  const filterBar = document.getElementById("protoMobileFilterBar");
+  let activeFilter = "all";
+  const desktopToggle = document.getElementById("protoMobileDesktopToggle");
+  const overlayRoot = document.getElementById("prototypeAnnotationRoot");
+  const markerLayer = document.getElementById("protoMobileMarkerLayer");
+  const compactTrigger = document.getElementById("protoMobileCompactDocsTrigger");
+  const compactClose = document.getElementById("protoMobileCompactDocsClose");
+  const compactBackdrop = document.getElementById("protoMobileCompactBackdrop");
+  const mobileLauncher = document.getElementById("protoMobileMobileLauncher");
+  const mobileCount = document.getElementById("protoMobileMobileCount");
+  const mobileMenu = document.getElementById("protoMobileMobileMenu");
+  const mobileMenuMeta = document.getElementById("protoMobileMobileMenuMeta");
+  const mobileToggle = document.getElementById("protoMobileMobileToggle");
+  const mobileDocsOpen = document.getElementById("protoMobileMobileDocsOpen");
+  const mobileNoteLayer = document.getElementById("protoMobileMobileNoteLayer");
+  const mobileSheet = document.getElementById("protoMobileMobileSheet");
+  const mobileSheetHandle = document.getElementById("protoMobileMobileSheetHandle");
+  const mobileSheetTitle = document.getElementById("protoMobileMobileSheetTitle");
+  const mobileSheetBody = document.getElementById("protoMobileMobileSheetBody");
+  const mobileDocsLayer = document.getElementById("protoMobileMobileDocsLayer");
+  const mobileDocsContent = document.getElementById("protoMobileMobileDocsContent");
+
+  if (!dataNode || !stage || !overlayRoot) return;
+
+  let annotationData;
+  try {
+    annotationData = JSON.parse(dataNode.textContent);
+  } catch (error) {
+    console.error("移动端原型标注数据解析失败", error);
+    return;
+  }
+
+  const annotations = Array.isArray(annotationData.annotations) ? annotationData.annotations : [];
+  const globalSections = Array.isArray(annotationData.globalSections) ? annotationData.globalSections : [];
+  const mobileConfig = annotationData.mobile || {};
+  const appSelector = mobileConfig.appRoot || "[data-proto-app]";
+  const approvedScrollSelectors = Array.isArray(mobileConfig.scrollContainers) && mobileConfig.scrollContainers.length
+    ? mobileConfig.scrollContainers.filter(item => typeof item === "string" && item.trim())
+    : ["[data-proto-scroll-container]", ".main-scroller"];
+  const appRoot = document.querySelector(appSelector);
+  if (!appRoot) {
+    console.error(`移动端标注框架找不到业务根节点：${appSelector}`);
+    return;
+  }
+
+  const deviceWidth = Math.min(480, Math.max(320, Number(mobileConfig.deviceWidth) || 414));
+  document.documentElement.style.setProperty("--protoMobile-device-width", `${deviceWidth}px`);
+  document.documentElement.classList.add("protoMobile-ready");
+  document.body.appendChild(stage);
+  document.body.appendChild(overlayRoot);
+  device.appendChild(appRoot);
+  stage.hidden = false;
+
+  let currentScope = "";
+  let currentNotes = [];
+  let activeNoteId = "";
+  let desktopEnabled = true;
+  let mobileEnabled = false;
+  let layoutFrame = 0;
+  let contextRefreshFrame = 0;
+  let contextRefreshUntil = 0;
+  let mermaidCounter = 0;
+  let sheetSnap = 1;
+  let layerAuditTimer = 0;
+  const sheetSnaps = [0.44, 0.68, 0.94];
+  const rootMaxZIndex = 2147483646;
+  const docsWidthStorageKey = `protoMobile:docs-width:${annotationData.prototypeId || "prototype"}`;
+  const desktopDocsMinWidth = 320;
+  const desktopDocsHardMaxWidth = 820;
+  let lastLayoutIssueSignature = "";
+
+  if (window.mermaid) {
+    window.mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: "base",
+      themeVariables: {
+        primaryColor: "#F0F9FF",
+        primaryTextColor: "#223355",
+        primaryBorderColor: "#3388FF",
+        lineColor: "#6B7A99",
+        secondaryColor: "#E8F4FF",
+        tertiaryColor: "#F5F7FA",
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif',
+        fontSize: "14px"
+      }
+    });
+  }
+
+  function isMobileViewport() {
+    return window.matchMedia("(max-width: 767px)").matches;
+  }
+
+  function getDesktopDocsWidth() {
+    return Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--protoMobile-docs-width")) || 520;
+  }
+
+  function getDesktopDocsMaxWidth() {
+    const reservedWidth = deviceWidth + 320 + 104;
+    return Math.max(desktopDocsMinWidth, Math.min(desktopDocsHardMaxWidth, window.innerWidth - reservedWidth));
+  }
+
+  function setDesktopDocsWidth(requestedWidth, persist = false) {
+    const maximum = getDesktopDocsMaxWidth();
+    const width = Math.round(Math.min(maximum, Math.max(desktopDocsMinWidth, Number(requestedWidth) || 520)));
+    document.documentElement.style.setProperty("--protoMobile-docs-width", `${width}px`);
+    docsSplitter?.setAttribute("aria-valuemin", String(desktopDocsMinWidth));
+    docsSplitter?.setAttribute("aria-valuemax", String(maximum));
+    docsSplitter?.setAttribute("aria-valuenow", String(width));
+    if (persist) {
+      try { localStorage.setItem(docsWidthStorageKey, String(width)); } catch (error) {}
+    }
+    return width;
+  }
+
+  function restoreDesktopDocsWidth() {
+    let stored = 0;
+    try { stored = Number(localStorage.getItem(docsWidthStorageKey)); } catch (error) {}
+    setDesktopDocsWidth(stored || 520, false);
+  }
+
+  function makeDesktopDocsResizable() {
+    if (!docsSplitter) return;
+    let dragState = null;
+    docsSplitter.addEventListener("pointerdown", event => {
+      if (event.button !== 0 || window.innerWidth < 1180) return;
+      dragState = { pointerId: event.pointerId, startX: event.clientX, startWidth: getDesktopDocsWidth() };
+      docsSplitter.setPointerCapture(event.pointerId);
+      docsSplitter.classList.add("is-dragging");
+      stage.classList.add("is-resizing");
+      event.preventDefault();
+    });
+    docsSplitter.addEventListener("pointermove", event => {
+      if (!dragState || event.pointerId !== dragState.pointerId) return;
+      setDesktopDocsWidth(dragState.startWidth + event.clientX - dragState.startX, false);
+      scheduleMarkerLayout();
+    });
+    const endDrag = event => {
+      if (!dragState || event.pointerId !== dragState.pointerId) return;
+      dragState = null;
+      docsSplitter.classList.remove("is-dragging");
+      stage.classList.remove("is-resizing");
+      setDesktopDocsWidth(getDesktopDocsWidth(), true);
+      scheduleMarkerLayout();
+      requestAnimationFrame(() => auditLayout(true));
+    };
+    docsSplitter.addEventListener("pointerup", endDrag);
+    docsSplitter.addEventListener("pointercancel", endDrag);
+    docsSplitter.addEventListener("keydown", event => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key) || window.innerWidth < 1180) return;
+      const next = event.key === "Home"
+        ? desktopDocsMinWidth
+        : event.key === "End"
+          ? getDesktopDocsMaxWidth()
+          : getDesktopDocsWidth() + (event.key === "ArrowRight" ? 24 : -24);
+      setDesktopDocsWidth(next, true);
+      scheduleMarkerLayout();
+      event.preventDefault();
+    });
+  }
+
+  function isVisible(element) {
+    if (!element) return false;
+    const style = getComputedStyle(element);
+    if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+    if (element.hidden || element.getAttribute("aria-hidden") === "true") return false;
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }
+
+  function serializeRect(rect) {
+    return {
+      left: Math.round(rect.left),
+      top: Math.round(rect.top),
+      right: Math.round(rect.right),
+      bottom: Math.round(rect.bottom),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height)
+    };
+  }
+
+  function inspectLayout() {
+    const issues = [];
+    const stageRect = stage.getBoundingClientRect();
+    const deviceRect = device.getBoundingClientRect();
+    const docsRect = docsPanel.getBoundingClientRect();
+    const notesPanel = noteList.closest(".protoMobile-notes-panel");
+    const notesRect = notesPanel?.getBoundingClientRect() || new DOMRect();
+    const desktopWide = window.innerWidth >= 1180;
+    if (stage.parentElement !== document.body) issues.push("STAGE_NOT_MOUNTED_TO_BODY");
+    if (Math.abs(stageRect.left) > 2 || Math.abs(stageRect.top) > 2
+      || Math.abs(stageRect.width - window.innerWidth) > 3
+      || Math.abs(stageRect.height - window.innerHeight) > 3) issues.push("STAGE_NOT_VIEWPORT_SIZED");
+    if (desktopWide) {
+      const hasDocs = globalSections.length > 0;
+      if ((hasDocs && !isVisible(docsPanel)) || !isVisible(device) || !isVisible(notesPanel)) issues.push("DESKTOP_COLUMNS_MISSING");
+      if (Math.abs(deviceRect.width - deviceWidth) > 3) issues.push("DEVICE_WIDTH_INVALID");
+      if ((hasDocs && docsRect.right > deviceRect.left + 1) || deviceRect.right > notesRect.left + 1) issues.push("DESKTOP_COLUMNS_OVERLAP");
+      if (hasDocs && (docsRect.width < desktopDocsMinWidth - 2 || docsRect.width > getDesktopDocsMaxWidth() + 2)) issues.push("DOCS_WIDTH_OUT_OF_RANGE");
+    } else if (isMobileViewport()) {
+      if (Math.abs(deviceRect.width - window.innerWidth) > 3) issues.push("MOBILE_DEVICE_NOT_VIEWPORT_SIZED");
+    }
+    const markerOutsideDeviceIds = Array.from(markerLayer.querySelectorAll(".protoMobile-marker:not([hidden])"))
+      .filter(marker => getComputedStyle(marker).display !== "none")
+      .filter(marker => {
+        const rect = marker.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        return x < deviceRect.left - 2 || x > deviceRect.right + 2 || y < deviceRect.top - 2 || y > deviceRect.bottom + 2;
+      })
+      .map(marker => marker.dataset.noteId);
+    if (markerOutsideDeviceIds.length) issues.push("MARKERS_OUTSIDE_DEVICE");
+    return {
+      status: issues.length ? "fail" : "pass",
+      issues,
+      stageMountedToBody: stage.parentElement === document.body,
+      docsWidthMaximum: getDesktopDocsMaxWidth(),
+      markerOutsideDeviceIds,
+      rects: {
+        stage: serializeRect(stageRect),
+        docs: serializeRect(docsRect),
+        device: serializeRect(deviceRect),
+        notes: serializeRect(notesRect)
+      }
+    };
+  }
+
+  function auditLayout(logFailure = false) {
+    const report = inspectLayout();
+    stage.dataset.protoMobileLayoutStatus = report.status;
+    const signature = report.issues.join("|");
+    if (logFailure && report.status === "fail" && signature !== lastLayoutIssueSignature) {
+      console.error("移动端标注审阅框架布局检查未通过", report);
+    }
+    lastLayoutIssueSignature = signature;
+    return report;
+  }
+
+  function isTargetRenderable(target, scopeNode) {
+    if (!target || !target.isConnected) return false;
+    let current = target;
+    while (current && current.nodeType === 1) {
+      const style = getComputedStyle(current);
+      if (current.hidden || current.getAttribute("aria-hidden") === "true") return false;
+      if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+      if (current === scopeNode || current === appRoot) break;
+      current = current.parentElement;
+    }
+    const rect = target.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }
+
+  function isTargetUndersized(target) {
+    const rect = target.getBoundingClientRect();
+    return rect.width < 4 || rect.height < 4;
+  }
+
+  function isPopoverOpen() {
+    try {
+      return overlayRoot.matches(":popover-open");
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function ensureOverlayLayer(reorder = false) {
+    if (typeof overlayRoot.showPopover === "function" && typeof overlayRoot.hidePopover === "function") {
+      try {
+        if (reorder && isPopoverOpen()) overlayRoot.hidePopover();
+        if (!isPopoverOpen()) overlayRoot.showPopover();
+        overlayRoot.dataset.protoMobileLayerMode = "top-layer";
+        overlayRoot.style.zIndex = String(rootMaxZIndex);
+        return;
+      } catch (error) {
+        console.warn("移动端标注层进入 top layer 失败，已使用 z-index 兜底", error);
+      }
+    }
+    overlayRoot.removeAttribute("popover");
+    overlayRoot.style.zIndex = String(rootMaxZIndex);
+    overlayRoot.dataset.protoMobileLayerMode = "z-index";
+  }
+
+  function scheduleLayerAudit() {
+    window.clearTimeout(layerAuditTimer);
+    layerAuditTimer = window.setTimeout(() => {
+      ensureOverlayLayer(false);
+      if (!isMobileViewport()) return;
+      const rect = mobileLauncher.getBoundingClientRect();
+      const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      const clickable = Boolean(hit && (hit === mobileLauncher || mobileLauncher.contains(hit)));
+      overlayRoot.dataset.protoMobileLauncherClickable = String(clickable);
+      if (!clickable) {
+        ensureOverlayLayer(true);
+        requestAnimationFrame(() => {
+          const nextHit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+          if (!(nextHit && (nextHit === mobileLauncher || mobileLauncher.contains(nextHit)))) {
+            console.error("移动端原型标注入口被业务界面遮挡");
+          }
+        });
+      }
+    }, 40);
+  }
+
+  function getScopeContext() {
+    const candidates = Array.from(appRoot.querySelectorAll("[data-proto-scope]"));
+    if (appRoot.matches("[data-proto-scope]")) candidates.unshift(appRoot);
+    const visible = candidates
+      .map((node, index) => ({ node, index, scope: node.dataset.protoScope, layer: Number(node.dataset.protoLayer) || 0 }))
+      .filter(item => item.scope && isVisible(item.node));
+    if (visible.length) {
+      visible.sort((a, b) => a.layer - b.layer || a.index - b.index);
+      return visible[visible.length - 1];
+    }
+    return { node: appRoot, scope: appRoot.dataset.protoScope || "page:default", layer: 0 };
+  }
+
+  function notesForScope(scope) {
+    const acceptedScopes = new Set([scope, "page:*", "page:default", "page:fenxi"]);
+    if (scope && scope.startsWith("page:")) {
+      const parts = scope.split(":");
+      if (parts.length >= 3) acceptedScopes.add(`${parts.slice(0, 2).join(":")}:*`);
+      acceptedScopes.add("page:*");
+      acceptedScopes.add("page:default");
+      acceptedScopes.add("page:fenxi");
+    }
+    return annotations.filter(note => {
+      if (!note.scope) return true;
+      if (acceptedScopes.has(note.scope)) return true;
+      if (note.scope.startsWith("page:") && (!scope || scope.startsWith("page:"))) return true;
+      return false;
+    });
+  }
+
+  function findTarget(note, scopeNode = getScopeContext().node) {
+    try {
+      if (scopeNode?.matches?.(note.target)) return scopeNode;
+      return scopeNode?.querySelector?.(note.target) || appRoot.querySelector(note.target);
+    } catch (error) {
+      console.warn(`移动端标注 ${note.id || note.title || "未命名"} 的 target 无效`, error);
+      return null;
+    }
+  }
+
+  function resolveNotesForContext(context) {
+    return notesForScope(context.scope).filter(note => {
+      const target = findTarget(note, context.node);
+      return isTargetRenderable(target, context.node);
+    });
+  }
+
+  function getClippedTargetRect(target) {
+    if (!isVisible(target)) return null;
+    const original = target.getBoundingClientRect();
+    const deviceRect = device.getBoundingClientRect();
+    let left = Math.max(original.left, deviceRect.left);
+    let top = Math.max(original.top, deviceRect.top);
+    let right = Math.min(original.right, deviceRect.right);
+    let bottom = Math.min(original.bottom, deviceRect.bottom);
+    let parent = target.parentElement;
+    while (parent && parent !== appRoot.parentElement) {
+      const style = getComputedStyle(parent);
+      if (/(auto|scroll|hidden|clip)/.test(`${style.overflow}${style.overflowX}${style.overflowY}`)) {
+        const rect = parent.getBoundingClientRect();
+        left = Math.max(left, rect.left);
+        top = Math.max(top, rect.top);
+        right = Math.min(right, rect.right);
+        bottom = Math.min(bottom, rect.bottom);
+      }
+      if (parent === appRoot) break;
+      parent = parent.parentElement;
+    }
+    if (right <= left || bottom <= top) return null;
+    return { original, visible: { left, top, right, bottom } };
+  }
+
+  function setActive(noteId) {
+    activeNoteId = noteId;
+    document.querySelectorAll(".protoMobile-marker, .protoMobile-note-card").forEach(element => {
+      element.classList.toggle("is-active", element.dataset.noteId === noteId);
+    });
+  }
+
+  function scheduleMarkerLayout() {
+    if (layoutFrame) return;
+    layoutFrame = requestAnimationFrame(() => {
+      layoutFrame = 0;
+      positionMarkers();
+    });
+  }
+
+  function positionMarkers() {
+    const deviceRect = device.getBoundingClientRect();
+    const occupied = [];
+    markerLayer.querySelectorAll(".protoMobile-marker").forEach(marker => {
+      const note = currentNotes.find(item => item.id === marker.dataset.noteId);
+      const target = note ? findTarget(note) : null;
+      const clipped = target ? getClippedTargetRect(target) : null;
+      if (!note || !clipped) {
+        marker.hidden = true;
+        return;
+      }
+      const anchorX = Number.isFinite(Number(note.x)) ? Math.min(1, Math.max(0, Number(note.x))) : 0.5;
+      const anchorY = Number.isFinite(Number(note.y)) ? Math.min(1, Math.max(0, Number(note.y))) : 0.5;
+      let left = clipped.original.left + clipped.original.width * anchorX;
+      let top = clipped.original.top + clipped.original.height * anchorY;
+      left = Math.max(clipped.visible.left, Math.min(clipped.visible.right, left));
+      top = Math.max(clipped.visible.top, Math.min(clipped.visible.bottom, top));
+      left = Math.max(deviceRect.left + 18, Math.min(deviceRect.right - 18, left));
+      top = Math.max(deviceRect.top + 18, Math.min(deviceRect.bottom - 18, top));
+      for (let attempt = 0; attempt < 5; attempt += 1) {
+        if (!occupied.some(point => Math.hypot(point.left - left, point.top - top) < 36)) break;
+        top = Math.min(deviceRect.bottom - 18, top + 36);
+      }
+      occupied.push({ left, top });
+      marker.hidden = false;
+      marker.style.left = `${left}px`;
+      marker.style.top = `${top}px`;
+    });
+  }
+
+  function renderMarkers() {
+    markerLayer.replaceChildren();
+    const shouldHide = isMobileViewport() ? !mobileEnabled : !desktopEnabled;
+    const docsOpen = mobileDocsLayer.classList.contains("is-open") || docsPanel.classList.contains("is-compact-open");
+    markerLayer.classList.toggle("is-hidden", shouldHide || docsOpen);
+    currentNotes.forEach((note, index) => {
+      const marker = document.createElement("button");
+      marker.type = "button";
+      marker.className = "protoMobile-marker";
+      marker.dataset.noteId = note.id;
+      marker.textContent = String(index + 1);
+      marker.title = note.title;
+      marker.setAttribute("aria-label", `标注 ${index + 1}：${note.title}`);
+      marker.addEventListener("click", event => {
+        event.stopPropagation();
+        openNote(note);
+      });
+      markerLayer.appendChild(marker);
+    });
+    setActive(activeNoteId);
+    scheduleMarkerLayout();
+  }
+
+  async function renderMermaidBlocks(root) {
+    if (!window.mermaid) return;
+    const blocks = Array.from(root.querySelectorAll("pre code.language-mermaid"));
+    for (const block of blocks) {
+      const pre = block.closest("pre");
+      const container = document.createElement("div");
+      container.className = "protoMobile-mermaid";
+      try {
+        const result = await window.mermaid.render(`protoMobile-mermaid-${++mermaidCounter}`, block.textContent.trim());
+        container.innerHTML = result.svg;
+        if (result.bindFunctions) result.bindFunctions(container);
+        pre.replaceWith(container);
+      } catch (error) {
+        pre.classList.add("protoMobile-mermaid-error");
+        console.error("移动端标注流程图渲染失败", error);
+      }
+    }
+  }
+
+  async function renderRichContent(root, item) {
+    if (item.format === "html" || !window.marked) root.innerHTML = item.content || "";
+    else root.innerHTML = window.marked.parse(item.content || "", { gfm: true, breaks: true });
+    await renderMermaidBlocks(root);
+  }
+
+  
+  function getNoteType(note) {
+    if (note.type) return note.type;
+    if (note.typeLabel?.includes('新')) return 'add';
+    if (note.typeLabel?.includes('修')) return 'modify';
+    if (note.typeLabel?.includes('删') || note.typeLabel?.includes('下')) return 'delete';
+    if (note.typeLabel?.includes('原')) return 'original';
+    return note.typeLabel ? 'custom' : 'original';
+  }
+
+  function renderFilterBar() {
+    if (!filterBar) return;
+    filterBar.replaceChildren();
+
+    const counts = {
+      all: currentNotes.length,
+      add: 0,
+      modify: 0,
+      original: 0,
+      delete: 0
+    };
+
+    currentNotes.forEach(note => {
+      const type = getNoteType(note);
+      if (counts[type] !== undefined) {
+        counts[type] += 1;
+      } else {
+        counts.original += 1;
+      }
+    });
+
+    const filterDefs = [
+      { key: "all", label: "全部", count: counts.all, chipClass: "chip-all" },
+      { key: "original", label: "⚪ 原有", count: counts.original, chipClass: "chip-original" },
+      { key: "add", label: "🟢 新增", count: counts.add, chipClass: "chip-add" },
+      { key: "modify", label: "🟡 修改", count: counts.modify, chipClass: "chip-modify" }
+    ];
+
+    if (counts.delete > 0) {
+      filterDefs.push({ key: "delete", label: "🔴 下线", count: counts.delete, chipClass: "chip-delete" });
+    }
+
+    filterDefs.forEach(def => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = `protoMobile-filter-chip ${def.chipClass}${activeFilter === def.key ? " is-active" : ""}`;
+      chip.innerHTML = `<span>${def.label}</span><span class="protoMobile-filter-count">${def.count}</span>`;
+      chip.addEventListener("click", () => {
+        if (activeFilter === def.key) {
+          activeFilter = "all";
+        } else {
+          activeFilter = def.key;
+        }
+        renderFilterBar();
+        renderNoteList();
+      });
+      filterBar.appendChild(chip);
+    });
+  }
+
+  function renderNoteList() {
+    renderFilterBar();
+    noteList.replaceChildren();
+    if (!currentNotes.length) {
+      noteList.innerHTML = '<div class="protoMobile-empty">当前页面暂无标注</div>';
+      return;
+    }
+    const visibleNotes = activeFilter === "all"
+      ? currentNotes
+      : currentNotes.filter(note => getNoteType(note) === activeFilter);
+
+    if (!visibleNotes.length) {
+      noteList.innerHTML = '<div class="protoMobile-empty">暂无该分类的标注</div>';
+      return;
+    }
+    visibleNotes.forEach((note, index) => {
+      const globalIndex = currentNotes.indexOf(note);
+      const displayIndex = globalIndex >= 0 ? globalIndex + 1 : index + 1;
+      const card = document.createElement("article");
+      const noteType = note.type || (note.typeLabel?.includes('新') ? 'add' : (note.typeLabel?.includes('修') ? 'modify' : (note.typeLabel?.includes('删') || note.typeLabel?.includes('下') ? 'delete' : (note.typeLabel?.includes('原') ? 'original' : (note.typeLabel ? 'custom' : 'original')))));
+      const typeLabel = note.typeLabel || note.badge || (noteType === 'add' ? '新增' : (noteType === 'modify' ? '修改' : (noteType === 'delete' ? '下线' : (noteType === 'original' ? '原有' : '说明'))));
+      const tagClass = noteType === 'add' ? 'tag-add' : (noteType === 'modify' ? 'tag-modify' : (noteType === 'delete' ? 'tag-delete' : (noteType === 'original' ? 'tag-original' : 'tag-custom')));
+      const cardClass = noteType === 'add' ? 'card-add' : (noteType === 'modify' ? 'card-modify' : (noteType === 'delete' ? 'card-delete' : (noteType === 'original' ? 'card-original' : 'card-custom')));
+
+      card.className = `protoMobile-note-card ${cardClass}`;
+      card.dataset.noteId = note.id;
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", `定位标注 ${displayIndex}：[${typeLabel}] ${note.title}`);
+
+      const number = document.createElement("span");
+      number.className = "protoMobile-note-index";
+      number.textContent = String(displayIndex);
+
+      const copy = document.createElement("div");
+      copy.className = "protoMobile-rich-content";
+
+      const headerRow = document.createElement("div");
+      headerRow.className = "protoMobile-note-header";
+
+      const tagEl = document.createElement("span");
+      tagEl.className = `protoMobile-note-tag ${tagClass}`;
+      tagEl.textContent = typeLabel;
+
+      const heading = document.createElement("h3");
+      heading.textContent = note.title;
+
+      headerRow.append(tagEl, heading);
+
+      const body = document.createElement("div");
+      copy.append(headerRow, body);
+      card.append(number, copy);
+
+      const locate = () => locateTarget(note);
+      card.addEventListener("click", locate);
+      card.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          locate();
+        }
+      });
+      noteList.appendChild(card);
+      renderRichContent(body, note).catch(error => console.error("移动端标注列表渲染失败", error));
+    });
+    setActive(activeNoteId);
+  }
+
+  function highlightTarget(target) {
+    document.querySelectorAll(".protoMobile-target-highlight").forEach(element => element.classList.remove("protoMobile-target-highlight"));
+    target.classList.add("protoMobile-target-highlight");
+    window.setTimeout(() => target.classList.remove("protoMobile-target-highlight"), 1100);
+  }
+
+  function matchesApprovedScrollContainer(element) {
+    return approvedScrollSelectors.some(selector => {
+      try {
+        return element.matches(selector);
+      } catch (error) {
+        console.warn(`移动端标注滚动容器选择器无效：${selector}`, error);
+        return false;
+      }
+    });
+  }
+
+  function findScrollParent(target) {
+    let parent = target.parentElement;
+    while (parent && parent !== document.body && parent !== device && parent !== stage) {
+      const style = getComputedStyle(parent);
+      if (matchesApprovedScrollContainer(parent)
+        && /(auto|scroll)/.test(style.overflowY)
+        && parent.scrollHeight > parent.clientHeight + 1) return parent;
+      if (parent === appRoot) break;
+      parent = parent.parentElement;
+    }
+    return null;
+  }
+
+  function isFullyVisibleInDevice(target, scroller = null) {
+    const targetRect = target.getBoundingClientRect();
+    const deviceRect = device.getBoundingClientRect();
+    const scrollRect = scroller ? scroller.getBoundingClientRect() : deviceRect;
+    const viewport = {
+      left: Math.max(deviceRect.left, scrollRect.left),
+      top: Math.max(deviceRect.top, scrollRect.top),
+      right: Math.min(deviceRect.right, scrollRect.right),
+      bottom: Math.min(deviceRect.bottom, scrollRect.bottom)
+    };
+    return targetRect.left >= viewport.left - 1
+      && targetRect.top >= viewport.top - 1
+      && targetRect.right <= viewport.right + 1
+      && targetRect.bottom <= viewport.bottom + 1;
+  }
+
+  function trackScrollUntilSettled(scroller, target) {
+    let last = scroller.scrollTop;
+    let stableFrames = 0;
+    let frameCount = 0;
+    function track() {
+      scheduleMarkerLayout();
+      const current = scroller.scrollTop;
+      stableFrames = Math.abs(current - last) < 0.5 ? stableFrames + 1 : 0;
+      last = current;
+      frameCount += 1;
+      if (stableFrames >= 3 || frameCount > 90) {
+        highlightTarget(target);
+        scheduleMarkerLayout();
+        return;
+      }
+      requestAnimationFrame(track);
+    }
+    requestAnimationFrame(track);
+  }
+
+  function locateTarget(note) {
+    const target = findTarget(note);
+    if (!target) return;
+    setActive(note.id);
+    if (note.scroll === false || target.closest('[data-proto-scroll="none"]')) {
+      highlightTarget(target);
+      scheduleMarkerLayout();
+      return;
+    }
+    const scroller = findScrollParent(target);
+    if (!scroller || isFullyVisibleInDevice(target, scroller)) {
+      highlightTarget(target);
+      scheduleMarkerLayout();
+      return;
+    }
+    const scrollRect = scroller.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const targetTop = targetRect.top - scrollRect.top + scroller.scrollTop;
+    const maxScrollTop = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+    const desiredTop = Math.min(maxScrollTop, Math.max(0, targetTop - (scroller.clientHeight - targetRect.height) / 2));
+    if (Math.abs(desiredTop - scroller.scrollTop) < 0.5) {
+      highlightTarget(target);
+      scheduleMarkerLayout();
+      return;
+    }
+    scroller.scrollTo({ top: desiredTop, behavior: "smooth" });
+    trackScrollUntilSettled(scroller, target);
+  }
+
+  async function openNote(note) {
+    setActive(note.id);
+    if (!isMobileViewport()) {
+      const card = noteList.querySelector(`[data-note-id="${CSS.escape(note.id)}"]`);
+      if (card) {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        card.focus({ preventScroll: true });
+      }
+      return;
+    }
+    mobileSheetTitle.textContent = note.title;
+    await renderRichContent(mobileSheetBody, note);
+    mobileNoteLayer.classList.add("is-open");
+    mobileNoteLayer.setAttribute("aria-hidden", "false");
+    closeMobileMenu();
+    applySheetSnap();
+  }
+
+  function closeMobileNote() {
+    mobileNoteLayer.classList.remove("is-open");
+    mobileNoteLayer.setAttribute("aria-hidden", "true");
+  }
+
+  function applySheetSnap() {
+    mobileSheet.style.setProperty("--protoMobile-sheet-height", `${Math.round(sheetSnaps[sheetSnap] * 100)}dvh`);
+  }
+
+  async function renderGlobalDocs() {
+    docNav.replaceChildren();
+    docContent.replaceChildren();
+    if (!globalSections.length) {
+      stage.classList.add("no-docs");
+      mobileDocsOpen.hidden = true;
+      docsPanel.hidden = true;
+      return;
+    }
+    for (const [index, section] of globalSections.entries()) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = section.title;
+      button.classList.toggle("is-active", index === 0);
+      const sectionNode = document.createElement("section");
+      sectionNode.className = "protoMobile-doc-section";
+      sectionNode.id = `protoMobile-doc-${section.id}`;
+      const heading = document.createElement("h3");
+      heading.textContent = section.title;
+      const body = document.createElement("div");
+      body.className = "protoMobile-rich-content";
+      sectionNode.append(heading, body);
+      docNav.appendChild(button);
+      docContent.appendChild(sectionNode);
+      await renderRichContent(body, section);
+      button.addEventListener("click", () => {
+        docNav.querySelectorAll("button").forEach(item => item.classList.toggle("is-active", item === button));
+        const contentRect = docContent.getBoundingClientRect();
+        const targetRect = sectionNode.getBoundingClientRect();
+        docContent.scrollTo({ top: targetRect.top - contentRect.top + docContent.scrollTop, behavior: "smooth" });
+      });
+    }
+  }
+
+  function openMobileDocs() {
+    if (!globalSections.length) return;
+    closeMobileMenu();
+    closeMobileNote();
+    mobileDocsContent.innerHTML = docContent.innerHTML;
+    mobileDocsContent.querySelectorAll("[id]").forEach(element => element.removeAttribute("id"));
+    mobileDocsLayer.classList.add("is-open");
+    mobileDocsLayer.setAttribute("aria-hidden", "false");
+    markerLayer.classList.add("is-hidden");
+  }
+
+  function closeMobileDocs() {
+    mobileDocsLayer.classList.remove("is-open");
+    mobileDocsLayer.setAttribute("aria-hidden", "true");
+    renderMarkers();
+  }
+
+  function syncContext() {
+    ensureOverlayLayer(true);
+    const context = getScopeContext();
+    const nextNotes = resolveNotesForContext(context);
+    const scopeChanged = context.scope !== currentScope;
+    const notesChanged = nextNotes.length !== currentNotes.length
+      || nextNotes.some((note, index) => note.id !== currentNotes[index]?.id);
+    if (scopeChanged || notesChanged) {
+      currentScope = context.scope;
+      currentNotes = nextNotes;
+      if (!currentNotes.some(note => note.id === activeNoteId)) activeNoteId = "";
+      closeMobileNote();
+      renderNoteList();
+      renderMarkers();
+    } else {
+      setActive(activeNoteId);
+      scheduleMarkerLayout();
+    }
+    mobileCount.textContent = String(currentNotes.length);
+    mobileMenuMeta.textContent = `当前页面 ${currentNotes.length} 条`;
+    scheduleLayerAudit();
+  }
+
+  function runContextRefresh() {
+    contextRefreshFrame = 0;
+    syncContext();
+    if (performance.now() < contextRefreshUntil) {
+      contextRefreshFrame = requestAnimationFrame(runContextRefresh);
+    }
+  }
+
+  function scheduleContextRefresh(settle = false) {
+    if (settle === true) {
+      contextRefreshUntil = Math.max(contextRefreshUntil, performance.now() + 900);
+    }
+    if (!contextRefreshFrame) contextRefreshFrame = requestAnimationFrame(runContextRefresh);
+  }
+
+  function positionMobileMenu() {
+    if (!mobileMenu.classList.contains("is-open")) return;
+    const launcherRect = mobileLauncher.getBoundingClientRect();
+    const menuRect = mobileMenu.getBoundingClientRect();
+    const margin = 8;
+    const left = Math.min(Math.max(margin, launcherRect.right - menuRect.width), window.innerWidth - menuRect.width - margin);
+    let top = launcherRect.top - menuRect.height - 10;
+    if (top < margin) top = launcherRect.bottom + 10;
+    mobileMenu.style.left = `${left}px`;
+    mobileMenu.style.top = `${Math.min(top, window.innerHeight - menuRect.height - margin)}px`;
+  }
+
+  function closeMobileMenu() {
+    mobileMenu.classList.remove("is-open");
+    mobileLauncher.setAttribute("aria-expanded", "false");
+  }
+
+  function toggleMobileMenu() {
+    const willOpen = !mobileMenu.classList.contains("is-open");
+    mobileMenu.classList.toggle("is-open", willOpen);
+    mobileLauncher.setAttribute("aria-expanded", String(willOpen));
+    if (willOpen) positionMobileMenu();
+  }
+
+  function inspectCompactDocsLayer() {
+    const open = docsPanel.classList.contains("is-compact-open");
+    if (!open) return { status: "closed", open: false };
+    const rect = docsPanel.getBoundingClientRect();
+    const sampleX = Math.max(rect.left + 1, Math.min(rect.right - 1, rect.left + Math.min(80, rect.width / 2)));
+    const sampleY = Math.max(rect.top + 1, Math.min(rect.bottom - 1, rect.top + Math.min(32, rect.height / 2)));
+    const hit = document.elementFromPoint(sampleX, sampleY);
+    const issues = [];
+    if (docsPanel.parentElement !== overlayRoot) issues.push("DOCS_NOT_IN_OVERLAY_ROOT");
+    if (!compactBackdrop.classList.contains("is-open")) issues.push("COMPACT_BACKDROP_NOT_OPEN");
+    if (!isVisible(docsPanel)) issues.push("COMPACT_DOCS_NOT_VISIBLE");
+    if (!(hit && (hit === docsPanel || docsPanel.contains(hit)))) issues.push("COMPACT_DOCS_NOT_CLICKABLE");
+    if (!markerLayer.classList.contains("is-hidden")) issues.push("MARKERS_VISIBLE_BEHIND_DOCS");
+    return {
+      status: issues.length ? "fail" : "pass",
+      open: true,
+      issues,
+      mountedToOverlayRoot: docsPanel.parentElement === overlayRoot,
+      markersHidden: markerLayer.classList.contains("is-hidden"),
+      hitInsidePanel: Boolean(hit && (hit === docsPanel || docsPanel.contains(hit))),
+      rect: serializeRect(rect)
+    };
+  }
+
+  function auditCompactDocsLayer(logFailure = false) {
+    const report = inspectCompactDocsLayer();
+    docsPanel.dataset.protoMobileLayerStatus = report.status;
+    if (logFailure && report.status === "fail") console.error("移动端中宽原型说明层级检查未通过", report);
+    return report;
+  }
+
+  function restoreCompactDocsToStage() {
+    if (docsPanel.parentElement !== stage) stage.insertBefore(docsPanel, docsSplitter || device);
+  }
+
+  function openCompactDocs() {
+    if (isMobileViewport() || window.innerWidth >= 1180) return;
+    ensureOverlayLayer(false);
+    overlayRoot.appendChild(docsPanel);
+    compactBackdrop.classList.add("is-open");
+    docsPanel.classList.add("is-compact-open");
+    renderMarkers();
+    requestAnimationFrame(() => auditCompactDocsLayer(true));
+  }
+
+  function closeCompactDocs() {
+    const wasOpen = docsPanel.classList.contains("is-compact-open");
+    docsPanel.classList.remove("is-compact-open");
+    compactBackdrop.classList.remove("is-open");
+    restoreCompactDocsToStage();
+    docsPanel.dataset.protoMobileLayerStatus = "closed";
+    if (wasOpen) renderMarkers();
+  }
+
+  desktopToggle.addEventListener("click", () => {
+    desktopEnabled = !desktopEnabled;
+    desktopToggle.setAttribute("aria-checked", String(desktopEnabled));
+    desktopToggle.setAttribute("aria-label", desktopEnabled ? "隐藏页面标注" : "显示页面标注");
+    renderMarkers();
+  });
+
+  compactTrigger.addEventListener("click", openCompactDocs);
+  compactClose.addEventListener("click", closeCompactDocs);
+  compactBackdrop.addEventListener("click", closeCompactDocs);
+
+  let launcherDrag = null;
+  let suppressLauncherClick = false;
+  mobileLauncher.addEventListener("pointerdown", event => {
+    if (event.button !== 0) return;
+    const rect = mobileLauncher.getBoundingClientRect();
+    launcherDrag = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, left: rect.left, top: rect.top, moved: false };
+    mobileLauncher.style.left = `${rect.left}px`;
+    mobileLauncher.style.top = `${rect.top}px`;
+    mobileLauncher.style.right = "auto";
+    mobileLauncher.style.bottom = "auto";
+    mobileLauncher.setPointerCapture(event.pointerId);
+  });
+  mobileLauncher.addEventListener("pointermove", event => {
+    if (!launcherDrag || event.pointerId !== launcherDrag.pointerId) return;
+    const dx = event.clientX - launcherDrag.startX;
+    const dy = event.clientY - launcherDrag.startY;
+    if (Math.hypot(dx, dy) > 5) launcherDrag.moved = true;
+    if (!launcherDrag.moved) return;
+    mobileLauncher.style.left = `${Math.max(8, Math.min(window.innerWidth - 60, launcherDrag.left + dx))}px`;
+    mobileLauncher.style.top = `${Math.max(8, Math.min(window.innerHeight - 60, launcherDrag.top + dy))}px`;
+    closeMobileMenu();
+  });
+  mobileLauncher.addEventListener("pointerup", event => {
+    if (!launcherDrag || event.pointerId !== launcherDrag.pointerId) return;
+    suppressLauncherClick = launcherDrag.moved;
+    launcherDrag = null;
+  });
+  mobileLauncher.addEventListener("click", event => {
+    if (suppressLauncherClick) {
+      suppressLauncherClick = false;
+      event.preventDefault();
+      return;
+    }
+    toggleMobileMenu();
+  });
+
+  mobileToggle.addEventListener("click", event => {
+    event.stopPropagation();
+    mobileEnabled = !mobileEnabled;
+    mobileToggle.setAttribute("aria-checked", String(mobileEnabled));
+    mobileToggle.setAttribute("aria-label", mobileEnabled ? "隐藏页面标注" : "显示页面标注");
+    renderMarkers();
+  });
+  mobileDocsOpen.addEventListener("click", openMobileDocs);
+  document.getElementById("protoMobileMobileDocsClose").addEventListener("click", closeMobileDocs);
+  document.getElementById("protoMobileMobileNoteClose").addEventListener("click", closeMobileNote);
+  document.getElementById("protoMobileMobileNoteMask").addEventListener("click", closeMobileNote);
+  document.getElementById("protoMobileMobileSheetSize").addEventListener("click", () => {
+    sheetSnap = (sheetSnap + 1) % sheetSnaps.length;
+    applySheetSnap();
+  });
+
+  let sheetDrag = null;
+  mobileSheetHandle.addEventListener("pointerdown", event => {
+    sheetDrag = { pointerId: event.pointerId, startY: event.clientY, startHeight: mobileSheet.getBoundingClientRect().height };
+    mobileSheetHandle.setPointerCapture(event.pointerId);
+  });
+  mobileSheetHandle.addEventListener("pointermove", event => {
+    if (!sheetDrag || event.pointerId !== sheetDrag.pointerId) return;
+    const height = Math.max(window.innerHeight * 0.36, Math.min(window.innerHeight * 0.94, sheetDrag.startHeight + sheetDrag.startY - event.clientY));
+    mobileSheet.style.setProperty("--protoMobile-sheet-height", `${height}px`);
+  });
+  mobileSheetHandle.addEventListener("pointerup", event => {
+    if (!sheetDrag || event.pointerId !== sheetDrag.pointerId) return;
+    const ratio = mobileSheet.getBoundingClientRect().height / window.innerHeight;
+    sheetSnap = sheetSnaps.reduce((best, value, index) => Math.abs(value - ratio) < Math.abs(sheetSnaps[best] - ratio) ? index : best, 0);
+    sheetDrag = null;
+    applySheetSnap();
+  });
+
+  document.addEventListener("click", event => {
+    if (!mobileMenu.contains(event.target) && !mobileLauncher.contains(event.target)) closeMobileMenu();
+  });
+  document.addEventListener("scroll", scheduleMarkerLayout, true);
+  document.addEventListener("prototype-annotation:scopechange", () => scheduleContextRefresh(true));
+  document.addEventListener("animationstart", () => scheduleContextRefresh(true), true);
+  document.addEventListener("animationend", () => scheduleContextRefresh(true), true);
+  document.addEventListener("animationcancel", () => scheduleContextRefresh(true), true);
+  document.addEventListener("transitionrun", () => scheduleContextRefresh(true), true);
+  document.addEventListener("transitionend", () => scheduleContextRefresh(true), true);
+  document.addEventListener("transitioncancel", () => scheduleContextRefresh(true), true);
+  window.addEventListener("resize", () => {
+    closeCompactDocs();
+    closeMobileMenu();
+    closeMobileNote();
+    setDesktopDocsWidth(getDesktopDocsWidth(), false);
+    applySheetSnap();
+    scheduleContextRefresh(true);
+    requestAnimationFrame(() => auditLayout(true));
+  });
+
+  const scopeObserver = new MutationObserver(() => scheduleContextRefresh(true));
+  scopeObserver.observe(appRoot, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["class", "hidden", "style", "aria-hidden", "aria-selected", "data-proto-scope", "data-proto-layer"]
+  });
+  if (window.ResizeObserver) {
+    const resizeObserver = new ResizeObserver(() => scheduleContextRefresh(true));
+    resizeObserver.observe(device);
+    resizeObserver.observe(appRoot);
+    resizeObserver.observe(stage);
+  }
+
+  function inspectCurrentScopeAnnotations() {
+    const context = getScopeContext();
+    const configured = notesForScope(context.scope);
+    const invalidTargetIds = [];
+    const hiddenTargetIds = [];
+    const undersizedTargetIds = [];
+    configured.forEach(note => {
+      const target = findTarget(note, context.node);
+      if (!target) invalidTargetIds.push(note.id);
+      else if (!isTargetRenderable(target, context.node)) hiddenTargetIds.push(note.id);
+      else if (isTargetUndersized(target)) undersizedTargetIds.push(note.id);
+    });
+    return {
+      scope: context.scope,
+      configuredCount: configured.length,
+      listCount: currentNotes.length,
+      markerNodeCount: markerLayer.querySelectorAll(".protoMobile-marker").length,
+      invalidTargetIds,
+      hiddenTargetIds,
+      undersizedTargetIds,
+      currentIds: currentNotes.map(note => note.id)
+    };
+  }
+
+  window.__prototypeMobileDiagnostics = {
+    inspect() {
+      const rect = mobileLauncher.getBoundingClientRect();
+      const hit = isMobileViewport() ? document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2) : null;
+      return {
+        viewportMode: isMobileViewport() ? "mobile" : "desktop",
+        layerMode: overlayRoot.dataset.protoMobileLayerMode || "unknown",
+        scope: getScopeContext().scope,
+        annotationCount: currentNotes.length,
+        annotationIds: currentNotes.map(note => note.id),
+        deviceScrollTop: device.scrollTop,
+        stageScrollTop: stage.scrollTop,
+        windowScrollY: window.scrollY,
+        annotationAudit: inspectCurrentScopeAnnotations(),
+        layoutAudit: auditLayout(false),
+        compactDocsAudit: inspectCompactDocsLayer(),
+        launcherClickable: !isMobileViewport() || Boolean(hit && (hit === mobileLauncher || mobileLauncher.contains(hit)))
+      };
+    },
+    repair() {
+      ensureOverlayLayer(true);
+      if (docsPanel.classList.contains("is-compact-open")) overlayRoot.appendChild(docsPanel);
+      syncContext();
+      requestAnimationFrame(() => auditCompactDocsLayer(true));
+    }
+  };
+
+  restoreDesktopDocsWidth();
+  makeDesktopDocsResizable();
+  ensureOverlayLayer(false);
+  renderGlobalDocs()
+    .then(() => {
+      syncContext();
+      requestAnimationFrame(() => requestAnimationFrame(() => auditLayout(true)));
+    })
+    .catch(error => {
+      console.error("移动端原型说明渲染失败", error);
+      syncContext();
+    });
+  applySheetSnap();
+})();
+
+</script>
+</body>
+</html>
