@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>陪读社区与学习分析 · 统一产品需求文档(PRD) 工作台</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  background: #edf0f6;
+  color: #223355;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 顶部极简浅色导航总控台 */
+.top-hub-header {
+  height: 48px;
+  background: #ffffff;
+  border-bottom: 1px solid #dde1eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  flex-shrink: 0;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hub-tag {
+  background: #3388ff;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.hub-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* 页面切换 Tab 胶囊 */
+.hub-tabs-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  margin: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.hub-tabs-container::-webkit-scrollbar { display: none; }
+
+.hub-tab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: none;
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.hub-tab-chip:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+.hub-tab-chip.is-active {
+  background: #3388ff;
+  color: #ffffff;
+  border-color: #3388ff;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(51, 136, 255, 0.25);
+}
+
+.hub-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.hub-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+.hub-btn.primary {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #93c5fd;
+  font-weight: 600;
+}
+
+/* 主体容器：100% 呈现目标页面原汁原味的三栏审阅器 */
+.hub-viewport {
+  flex: 1;
+  width: 100%;
+  height: calc(100vh - 48px);
+  position: relative;
+  background: #edf0f6;
+}
+.hub-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  display: block;
+}
+
+/* 页面管理弹窗 */
+.hub-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.hub-modal.show { display: flex; }
+.hub-modal-box {
+  background: #ffffff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 540px;
+  padding: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+.hub-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.hub-modal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+}
+.hub-modal-list {
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px;
+  margin-bottom: 14px;
+}
+.hub-modal-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+}
+.hub-modal-item:last-child { border-bottom: none; }
+.hub-input-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.hub-input {
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 12.5px;
+  outline: none;
+}
+.hub-input:focus { border-color: #3388ff; }
+</style>
+
+<style id="cleanScrollbarFix">
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+html, body, #app, .page-body {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+</style>
+
+</head>
+<body>
+
+<!-- 顶部工作台总控台 -->
+<header class="top-hub-header">
+  <div class="hub-brand">
+    <span class="hub-tag">PRD HUB</span>
+    <span class="hub-title">陪读社区与学习分析</span>
+  </div>
+
+  <!-- 页面切换胶囊 Tab 栏 -->
+  <nav class="hub-tabs-container" id="hubTabsBar">
+    <!-- 动态插入可切换页面 -->
+  </nav>
+
+  <!-- 工具栏 -->
+  <div class="hub-tools">
+    <button class="hub-btn" onclick="openModal()" title="选择需要演示的页面">
+      <span class="material-icons" style="font-size:15px">tune</span>
+      <span>页面管理</span>
+    </button>
+    <button class="hub-btn" onclick="reloadFrame()" title="刷新当前页面">
+      <span class="material-icons" style="font-size:15px">refresh</span>
+      <span>刷新</span>
+    </button>
+  </div>
+</header>
+
+<!-- 主视口：直接 100% 渲染目标页面的三栏审阅器 -->
+<main class="hub-viewport">
+  <iframe class="hub-frame" id="hubFrame" src="about:blank"></iframe>
+</main>
+
+<!-- 页面展示管理弹窗 -->
+<div class="hub-modal" id="hubModal" onclick="closeModal(event)">
+  <div class="hub-modal-box" onclick="event.stopPropagation()">
+    <div class="hub-modal-head">
+      <strong class="hub-modal-title">⚙️ 页面展示管理 (勾选向开发公开的页面)</strong>
+      <button style="border:none;background:none;font-size:18px;cursor:pointer;color:#64748b" onclick="closeModal()">&times;</button>
+    </div>
+
+    <div style="font-size:12px;color:#64748b;margin-bottom:10px">
+      勾选需要在顶部 Tab 演示的页面，支持设置展示序号（按 1, 2, 3... 升序排序）：
+    </div>
+
+    <div class="hub-modal-list" id="modalPageList"></div>
+
+    <div class="hub-input-row">
+      <input type="text" class="hub-input" id="newPgName" placeholder="页面名称 (如 错题集)" style="flex:1">
+      <input type="text" class="hub-input" id="newPgPath" placeholder="文件路径 (如 cuoti.html)" style="flex:1.2">
+      <button class="hub-btn primary" type="button" onclick="handleAddPage()">添加</button>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <button class="hub-btn" onclick="resetDefaults()">恢复默认清单</button>
+      <div style="display:flex;gap:8px">
+        <button class="hub-btn" onclick="closeModal()">取消</button>
+        <button class="hub-btn primary" onclick="savePages()">💾 保存并应用配置</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const UNIFIED_STORAGE_KEY = 'PRD_PAGES_REGISTRY_BUILD_1790145645926';
+const DEFAULT_PAGES = [
+  {
+    "id": "fenxi",
+    "name": "学情分析",
+    "path": "fenxi.html",
+    "filename": "fenxi.html",
+    "isWrapperHub": false,
+    "hasAnnotations": false,
+    "visible": true,
+    "order": 1
+  },
+  {
+    "id": "rili",
+    "name": "备考日程",
+    "path": "rili.html",
+    "filename": "rili.html",
+    "isWrapperHub": false,
+    "hasAnnotations": false,
+    "visible": true,
+    "order": 2,
+    "globalSections": [
+      {
+        "id": "sec_overview",
+        "title": "一.业务背景概述",
+        "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作用。</span></p><p>2.日程:</p><ul><li>日程需要提供编辑功能。</li><li>多考生隔离:既需要总览全家的考试日程，新建日程可多选孩子。</li></ul><p><span>3.考试诊断:</span></p><ul><li>原流程试卷上传后直接跳出诊断报告，AI识别的错题准确率低。</li><li>同一场大考重复录入会产生脏数据，需要检测到已有该考试时，自动拦截并提供「覆盖重新诊断」与「补充未录入科目」通道，限制重新诊断入口。</li></ul>",
+        "format": "html"
+      }
+    ]
+  },
+  {
+    "id": "fenxibaogao",
+    "name": "试卷诊断报告",
+    "path": "fenxibaogao.html",
+    "filename": "fenxibaogao.html",
+    "isWrapperHub": false,
+    "hasAnnotations": false,
+    "visible": true,
+    "order": 3,
+    "globalSections": [
+      {
+        "id": "sec_overview",
+        "title": "一.业务背景概述",
+        "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作用。</span></p><p>2.日程:</p><ul><li>日程需要提供编辑功能。</li><li>多考生隔离:既需要总览全家的考试日程，新建日程可多选孩子。</li></ul><p><span>3.考试诊断:</span></p><ul><li>原流程试卷上传后直接跳出诊断报告，AI识别的错题准确率低。</li><li>同一场大考重复录入会产生脏数据，需要检测到已有该考试时，自动拦截并提供「覆盖重新诊断」与「补充未录入科目」通道，限制重新诊断入口。</li></ul>",
+        "format": "html"
+      }
+    ]
+  },
+  {
+    "id": "xuanzhexingzhi",
+    "name": "试卷分析",
+    "path": "xuanzhexingzhi.html",
+    "filename": "xuanzhexingzhi.html",
+    "isWrapperHub": false,
+    "hasAnnotations": false,
+    "visible": true,
+    "order": 4,
+    "globalSections": [
+      {
+        "id": "sec_overview",
+        "title": "一.业务背景概述",
+        "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作用。</span></p><p>2.日程:</p><ul><li>日程需要提供编辑功能。</li><li>多考生隔离:既需要总览全家的考试日程，新建日程可多选孩子。</li></ul><p><span>3.考试诊断:</span></p><ul><li>原流程试卷上传后直接跳出诊断报告，AI识别的错题准确率低。</li><li>同一场大考重复录入会产生脏数据，需要检测到已有该考试时，自动拦截并提供「覆盖重新诊断」与「补充未录入科目」通道，限制重新诊断入口。</li></ul>",
+        "format": "html"
+      }
+    ]
+  },
+  {
+    "id": "buluxueke",
+    "name": "补录学科试卷",
+    "path": "buluxueke.html",
+    "visible": true,
+    "order": 5,
+    "globalSections": [
+      {
+        "id": "sec_overview",
+        "title": "一.业务背景概述",
+        "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作用。</span></p><p>2.日程:</p><ul><li>日程需要提供编辑功能。</li><li>多考生隔离:既需要总览全家的考试日程，新建日程可多选孩子。</li></ul><p><span>3.考试诊断:</span></p><ul><li>原流程试卷上传后直接跳出诊断报告，AI识别的错题准确率低。</li><li>同一场大考重复录入会产生脏数据，需要检测到已有该考试时，自动拦截并提供「覆盖重新诊断」与「补充未录入科目」通道，限制重新诊断入口。</li></ul>",
+        "format": "html"
+      }
+    ]
+  },
+  {
+    "id": "shangchuanfupan",
+    "name": "上传试卷",
+    "path": "shangchuanfupan.html",
+    "visible": true,
+    "order": 6,
+    "globalSections": [
+      {
+        "id": "sec_overview",
+        "title": "一.业务背景概述",
+        "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作用。</span></p><p>2.日程:</p><ul><li>日程需要提供编辑功能。</li><li>多考生隔离:既需要总览全家的考试日程，新建日程可多选孩子。</li></ul><p><span>3.考试诊断:</span></p><ul><li>原流程试卷上传后直接跳出诊断报告，AI识别的错题准确率低。</li><li>同一场大考重复录入会产生脏数据，需要检测到已有该考试时，自动拦截并提供「覆盖重新诊断」与「补充未录入科目」通道，限制重新诊断入口。</li></ul>",
+        "format": "html"
+      }
+    ]
+  },
+  {
+    "id": "jinru_querencuoti",
+    "name": "进入确认错题引导",
+    "path": "jinru_querencuoti.html",
+    "visible": true,
+    "order": 7
+  },
+  {
+    "id": "gouxuancuoti",
+    "name": "确认错题信息",
+    "path": "gouxuancuoti.html",
+    "filename": "gouxuancuoti.html",
+    "isWrapperHub": false,
+    "hasAnnotations": false,
+    "visible": true,
+    "order": 8,
+    "globalSections": [
+      {
+        "id": "sec_overview",
+        "title": "一.业务背景概述",
+        "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作用。</span></p><p>2.日程:</p><ul><li>日程需要提供编辑功能。</li><li>多考生隔离:既需要总览全家的考试日程，新建日程可多选孩子。</li></ul><p><span>3.考试诊断:</span></p><ul><li>原流程试卷上传后直接跳出诊断报告，AI识别的错题准确率低。</li><li>同一场大考重复录入会产生脏数据，需要检测到已有该考试时，自动拦截并提供「覆盖重新诊断」与「补充未录入科目」通道，限制重新诊断入口。</li></ul>",
+        "format": "html"
+      }
+    ]
+  },
+  {
+    "id": "xueqing_xiaoxi",
+    "name": "学情诊断提醒",
+    "path": "xueqing_xiaoxi.html",
+    "filename": "xueqing_xiaoxi.html",
+    "isWrapperHub": false,
+    "hasAnnotations": false,
+    "visible": true,
+    "order": 9
+  },
+  {
+    "id": "fenxi_new",
+    "name": "今日日程显示",
+    "path": "fenxi_new.html",
+    "visible": true,
+    "order": 10,
+    "globalSections": [
+      {
+        "id": "sec_overview",
+        "title": "一.业务背景概述",
+        "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作用。</span></p><p>2.日程:</p><ul><li>日程需要提供编辑功能。</li><li>多考生隔离:既需要总览全家的考试日程，新建日程可多选孩子。</li></ul><p><span>3.考试诊断:</span></p><ul><li>原流程试卷上传后直接跳出诊断报告，AI识别的错题准确率低。</li><li>同一场大考重复录入会产生脏数据，需要检测到已有该考试时，自动拦截并提供「覆盖重新诊断」与「补充未录入科目」通道，限制重新诊断入口。</li></ul>",
+        "format": "html"
+      }
+    ]
+  }
+];
+const DEFAULT_PAGES_SIG = 'sig_' + DEFAULT_PAGES.map(p => `${p.id}:${p.visible}:${p.order || ''}`).join('|');
+
+
+let pageList = [];
+try {
+  const savedSig = localStorage.getItem(UNIFIED_STORAGE_KEY + '_SIG');
+  const saved = localStorage.getItem(UNIFIED_STORAGE_KEY);
+  if (saved && savedSig === DEFAULT_PAGES_SIG) {
+    pageList = JSON.parse(saved);
+  } else {
+    pageList = JSON.parse(JSON.stringify(DEFAULT_PAGES));
+    try {
+      localStorage.setItem(UNIFIED_STORAGE_KEY, JSON.stringify(pageList));
+      localStorage.setItem(UNIFIED_STORAGE_KEY + '_SIG', DEFAULT_PAGES_SIG);
+    } catch(e) {}
+  }
+} catch(e) {
+  pageList = JSON.parse(JSON.stringify(DEFAULT_PAGES));
+}
+
+let activePageId = 'fenxi';
+
+function init() {
+  let seq = 1;
+  pageList.forEach(p => {
+    if (p.visible && (p.order === undefined || p.order === null || isNaN(p.order))) {
+      p.order = seq++;
+    }
+  });
+
+  renderTabs();
+  const hash = window.location.hash.replace('#page=', '').toLowerCase();
+  const matched = pageList.find(p => p.id.toLowerCase() === hash || p.path.toLowerCase().includes(hash));
+  if (matched && matched.visible) {
+    switchPage(matched.id);
+  } else {
+    const visiblePages = pageList
+      .filter(p => p.visible)
+      .sort((a, b) => (Number(a.order) || 9999) - (Number(b.order) || 9999));
+    const firstVis = visiblePages[0] || pageList[0];
+    if (firstVis) switchPage(firstVis.id);
+  }
+}
+
+function renderTabs() {
+  const bar = document.getElementById('hubTabsBar');
+  bar.innerHTML = '';
+
+  const visiblePages = pageList
+    .filter(p => p.visible)
+    .sort((a, b) => (Number(a.order) || 9999) - (Number(b.order) || 9999));
+
+  visiblePages.forEach(p => {
+    const chip = document.createElement('button');
+    chip.className = `hub-tab-chip ${p.id === activePageId ? 'is-active' : ''}`;
+    chip.textContent = p.name;
+    chip.onclick = () => switchPage(p.id);
+    bar.appendChild(chip);
+  });
+}
+
+function switchPage(pageId) {
+  const pg = pageList.find(p => p.id === pageId);
+  if (!pg) return;
+
+  activePageId = pg.id;
+  window.location.hash = `page=${pg.id}`;
+
+  renderTabs();
+
+  const frame = document.getElementById('hubFrame');
+  const targetBase = pg.path.split('?')[0];
+  const currentBase = (frame.src || "").split('#')[0].split('?')[0];
+  const cacheBuster = `_t=${Date.now()}`;
+  const targetSrc = pg.path + (pg.path.includes('?') ? '&' : '?') + cacheBuster;
+  if (!currentBase.endsWith(targetBase)) {
+    frame.src = targetSrc;
+  }
+}
+
+function reloadFrame() {
+  const frame = document.getElementById('hubFrame');
+  frame.src = frame.src;
+}
+
+// 页面管理弹窗
+function openModal() {
+  renderModalList();
+  document.getElementById('hubModal').classList.add('show');
+}
+function closeModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('hubModal').classList.remove('show');
+}
+
+function renderModalList() {
+  const container = document.getElementById('modalPageList');
+  container.innerHTML = '';
+
+  let seq = 1;
+  pageList.forEach(p => {
+    if (p.visible && (p.order === undefined || p.order === null || isNaN(p.order))) {
+      p.order = seq++;
+    }
+  });
+
+  pageList.forEach((p, idx) => {
+    const row = document.createElement('div');
+    row.className = 'hub-modal-item';
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9;gap:10px;';
+
+    const left = document.createElement('label');
+    left.style.cssText = 'display:flex;align-items:center;gap:8px;cursor:pointer;flex:1;overflow:hidden;';
+    
+    const chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.className = 'hub-modal-chk';
+    chk.checked = p.visible;
+
+    const text = document.createElement('span');
+    text.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;';
+    text.innerHTML = `${p.name} <span style="color:#94a3b8;font-size:11.5px">(${p.path})</span>`;
+
+    left.appendChild(chk);
+    left.appendChild(text);
+
+    const right = document.createElement('div');
+    right.style.cssText = 'display:flex;align-items:center;gap:6px;flex-shrink:0;';
+
+    const orderLabel = document.createElement('span');
+    orderLabel.textContent = '排序:';
+    orderLabel.style.cssText = 'font-size:12px;color:#64748b;';
+
+    const orderInput = document.createElement('input');
+    orderInput.type = 'number';
+    orderInput.min = '1';
+    orderInput.max = '99';
+    orderInput.className = 'hub-modal-order-input';
+    orderInput.value = p.visible && p.order ? p.order : '';
+    orderInput.placeholder = '-';
+    orderInput.disabled = !p.visible;
+    orderInput.style.cssText = `width:46px;height:26px;text-align:center;border:1px solid ${p.visible ? '#2563eb' : '#cbd5e1'};border-radius:4px;font-size:12px;font-weight:600;color:${p.visible ? '#2563eb' : '#94a3b8'};background:${p.visible ? '#eff6ff' : '#f8fafc'};`;
+
+    chk.onchange = () => {
+      p.visible = chk.checked;
+      if (chk.checked) {
+        const maxOrder = pageList.reduce((max, item) => {
+          return item.visible && item.order ? Math.max(max, Number(item.order)) : max;
+        }, 0);
+        p.order = maxOrder + 1;
+        orderInput.value = p.order;
+        orderInput.disabled = false;
+        orderInput.style.border = '1px solid #2563eb';
+        orderInput.style.color = '#2563eb';
+        orderInput.style.background = '#eff6ff';
+      } else {
+        p.order = null;
+        orderInput.value = '';
+        orderInput.disabled = true;
+        orderInput.style.border = '1px solid #cbd5e1';
+        orderInput.style.color = '#94a3b8';
+        orderInput.style.background = '#f8fafc';
+      }
+    };
+
+    orderInput.oninput = () => {
+      const val = parseInt(orderInput.value, 10);
+      p.order = isNaN(val) ? 999 : val;
+    };
+
+    const delBtn = document.createElement('button');
+    delBtn.style.cssText = 'border:none;background:none;color:#ef4444;cursor:pointer;font-size:12px;padding:2px 4px;';
+    delBtn.textContent = '删除';
+    delBtn.onclick = () => {
+      pageList.splice(idx, 1);
+      renderModalList();
+    };
+
+    right.appendChild(orderLabel);
+    right.appendChild(orderInput);
+    right.appendChild(delBtn);
+
+    row.appendChild(left);
+    row.appendChild(right);
+    container.appendChild(row);
+  });
+}
+
+function handleAddPage() {
+  const name = document.getElementById('newPgName').value.trim();
+  const path = document.getElementById('newPgPath').value.trim();
+  if (!name || !path) {
+    alert('请填写页面名称和文件路径');
+    return;
+  }
+  const maxOrder = pageList.reduce((max, item) => {
+    return item.visible && item.order ? Math.max(max, Number(item.order)) : max;
+  }, 0);
+  pageList.push({
+    id: path.replace('.html', ''),
+    name: name,
+    path: path,
+    visible: true,
+    order: maxOrder + 1
+  });
+  document.getElementById('newPgName').value = '';
+  document.getElementById('newPgPath').value = '';
+  renderModalList();
+}
+
+function resetDefaults() {
+  if (confirm('确认恢复默认 42 页面清单？')) {
+    pageList = JSON.parse(JSON.stringify(DEFAULT_PAGES));
+    renderModalList();
+  }
+}
+
+function savePages() {
+  // 核心：按用户设定的序号升序排序?
+  pageList.sort((a, b) => {
+    const aVis = a.visible !== false;
+    const bVis = b.visible !== false;
+    if (aVis && bVis) {
+      return (Number(a.order) || 9999) - (Number(b.order) || 9999);
+    }
+    if (aVis) return -1;
+    if (bVis) return 1;
+    return 0;
+  });
+
+  // 规整为连续的 1, 2, 3...
+  let seq = 1;
+  pageList.forEach(p => {
+    if (p.visible) p.order = seq++;
+  });
+
+  localStorage.setItem(UNIFIED_STORAGE_KEY, JSON.stringify(pageList));
+  renderTabs();
+  closeModal();
+}
+
+
+// 挂载 iframe 内部路由守护与拦截未勾选页面
+function attachHubFrameNavigationGuard() {
+  const frame = document.getElementById('hubFrame');
+  if (!frame) return;
+  try {
+    const iframeWin = frame.contentWindow;
+    const iframeDoc = frame.contentDocument;
+    if (!iframeWin || !iframeDoc) return;
+
+    // 1. 同步当前实际加载的页面
+    const pathname = iframeWin.location.pathname || '';
+    const rawFile = pathname.split(/[?#]/)[0].split('/').pop();
+    if (rawFile && pageList) {
+      const matched = pageList.find(p => p.path === rawFile || p.id === rawFile.replace(/\.html$/i, ''));
+      if (matched) {
+        if (!matched.visible) {
+          const curPg = pageList.find(p => p.id === activePageId);
+          if (curPg && curPg.visible && curPg.path !== rawFile) {
+            showHubToast(`⚠️ 页面「${matched.name || rawFile}」未在「页面管理」中勾选，已拦截跳转`);
+            frame.src = curPg.path;
+            return;
+          }
+        } else if (activePageId !== matched.id) {
+          activePageId = matched.id;
+          window.location.hash = `page=${matched.id}`;
+          renderTabs();
+        }
+      }
+    }
+
+    // 2. 捕获 iframe 内的所有点击
+    iframeDoc.addEventListener('click', function(e) {
+      const link = e.target.closest('a');
+      if (link) {
+        const href = link.getAttribute('href');
+        if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('tel:') && !href.startsWith('mailto:')) {
+          const targetFile = href.split(/[?#]/)[0].split('/').pop();
+          if (targetFile && targetFile.endsWith('.html')) {
+            const matched = pageList.find(p => p.path === targetFile || p.id === targetFile.replace(/\.html$/i, ''));
+            if (matched) {
+              if (!matched.visible) {
+                // 不在勾选页面中：无反应 + 轻提示！
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                showHubToast(`⚠️「${matched.name}」未在页面管理中勾选，暂不开放跳转`);
+                return;
+              } else {
+                // 已勾选页面：联动切换
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                switchPage(matched.id);
+                return;
+              }
+            }
+          }
+        }
+      }
+
+      const clickEl = e.target.closest('[onclick]');
+      if (clickEl) {
+        const onclickStr = clickEl.getAttribute('onclick') || '';
+        const match = onclickStr.match(/(?:window\.)?location(?:\.href)?\s*=\s*['"`]([^'"`]+)['"`]/);
+        if (match && match[1]) {
+          const href = match[1];
+          const targetFile = href.split(/[?#]/)[0].split('/').pop();
+          if (targetFile && targetFile.endsWith('.html')) {
+            const matched = pageList.find(p => p.path === targetFile || p.id === targetFile.replace(/\.html$/i, ''));
+            if (matched) {
+              if (!matched.visible) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                showHubToast(`⚠️「${matched.name}」未在页面管理中勾选，暂不开放跳转`);
+                return;
+              } else {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                switchPage(matched.id);
+                return;
+              }
+            }
+          }
+        }
+      }
+    }, true);
+  } catch(err) {
+    console.warn('attachHubFrameNavigationGuard error:', err);
+  }
+}
+
+function showHubToast(msg) {
+  let toast = document.getElementById('hub-nav-guard-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'hub-nav-guard-toast';
+    toast.style.cssText = `
+      position: fixed;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 18px;
+      border-radius: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      z-index: 999999;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    `;
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  toast.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(window._hubToastTimer);
+  window._hubToastTimer = setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(-6px)';
+  }, 2200);
+}
+
+window.addEventListener('message', function(e) {
+  if (!e.data) return;
+  if (e.data.type === 'SWITCH_PAGE') {
+    const target = (e.data.pageId || e.data.path || '').replace(/\.html$/i, '');
+    if (target && typeof switchPage === 'function') {
+      switchPage(target);
+    }
+  }
+});
+window.addEventListener('DOMContentLoaded', () => {
+  init();
+  const frame = document.getElementById('hubFrame');
+  if (frame) {
+    frame.addEventListener('load', attachHubFrameNavigationGuard);
+  }
+});
+</script>
+
+</body>
+</html>

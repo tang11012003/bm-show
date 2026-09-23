@@ -1,0 +1,4618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>补录学科试卷</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+<style>
+/* 彻底隐藏各端滚动条 */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+html, body, #app, .content-body, .page-body { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+
+/* ── 全局基础 ── */
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #F5F6FA; font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif; }
+
+/* ── #app 容器 ── */
+#app {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  background: #F5F6FA;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── 背景光晕装饰 ── */
+.bg-glow-decor {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 280px;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.glow-circle-1 {
+  position: absolute;
+  width: 320px; height: 320px;
+  top: -120px; right: -80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(8,206,154,0.18) 0%, rgba(8,206,154,0) 70%);
+}
+.glow-circle-2 {
+  position: absolute;
+  width: 240px; height: 240px;
+  top: -60px; left: -60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(125,237,190,0.14) 0%, rgba(125,237,190,0) 70%);
+}
+
+/* ── 顶部导航栏 ── */
+.top-header-bar {
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+  padding: 10px 16px 0;
+}
+.top-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+}
+.back-btn {
+  width: 36px; height: 36px;
+  border: none; background: rgba(255,255,255,0.85);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #111112;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+
+/* ── 主滚动容器 ── */
+.scroll-main-container {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 16px 120px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Hero 标题行 ── */
+.hero-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin: 8px 0 16px;
+}
+.title-group-box {
+  position: relative;
+  flex: 1;
+}
+.hero-page-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111112;
+  line-height: 1.2;
+  position: relative;
+  z-index: 1;
+}
+.ai-pill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: linear-gradient(135deg, #08CE9A, #3AEBCA);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-top: 4px;
+}
+.ai-text { font-style: italic; }
+.title-underline-svg {
+  position: absolute;
+  bottom: -6px; left: 0;
+  width: 100%; height: 30px;
+  z-index: 0;
+}
+.mascot-hero-wrap {
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+/* ── 便签卡片 ── */
+.memo-card-wrap {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px 16px 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.note-pin-svg {
+  position: absolute;
+  top: -8px; right: 16px;
+  width: 25px; height: 23px;
+}
+.memo-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.memo-title-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111112;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.memo-quote-mark { color: #08CE9A; font-size: 18px; flex-shrink: 0; }
+.memo-date-badge {
+  flex-shrink: 0;
+  background: #F0FDF8;
+  color: #058866;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-left: 8px;
+}
+.memo-desc-text {
+  font-size: 13px;
+  color: #6C6D7A;
+  line-height: 1.6;
+}
+.memo-desc-text strong { color: #111112; }
+
+/* ── 小考上传卡片 ── */
+.small-exam-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.sec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.sec-title { font-size: 15px; font-weight: 600; color: #111112; }
+.sec-status-text { font-size: 13px; color: #08CE9A; }
+.sec-status-text.empty { color: #B6B8C5; }
+.count-num { font-weight: 700; }
+.sec-desc { font-size: 12px; color: #9293A0; margin-bottom: 12px; }
+
+/* ── 空上传框 ── */
+.empty-upload-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #F8FFFE;
+  border: 1.5px dashed #B2F0E3;
+  border-radius: 12px;
+  padding: 28px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.empty-upload-box:active { background: #EDFDF8; }
+.camera-circle-btn {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E6FAF6, #C8F5EB);
+  display: flex; align-items: center; justify-content: center;
+}
+.camera-btn-text { font-size: 14px; font-weight: 600; color: #111112; }
+.camera-sub-hint { font-size: 12px; color: #9293A0; }
+
+/* ── 缩略图网格（2列大图，MasterGo 300:15797）── */
+
+/* ── 批改解析中抽屉 (MasterGo 300:19250 组 58734 & 组 58712) ── */
+.loading-sheet-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 17, 18, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 220;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.loading-sheet-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.grading-sheet-panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(100%);
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 20px 20px 0 0;
+  padding: 12px 16px 24px;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.16);
+  z-index: 250;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+.grading-sheet-panel.show {
+  transform: translateY(0);
+}
+
+.gsp-handle {
+  width: 31px;
+  height: 4px;
+  border-radius: 222px;
+  background: #D8D8D8;
+  margin: 2px auto 14px;
+}
+
+.gsp-content-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.gsp-mascot-box {
+  width: 76px;
+  height: 76px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.gsp-glow-circle {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(120, 255, 30, 0.35) 0%, rgba(5, 210, 217, 0.15) 50%, transparent 75%);
+  animation: pulseGlow 1.8s infinite ease-in-out;
+}
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(0.92); opacity: 0.7; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.gsp-avatar-circle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #05D2D9 0%, #78FF1E 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(5, 210, 217, 0.4);
+  position: relative;
+  z-index: 2;
+}
+.gsp-center-icon {
+  font-size: 30px !important;
+  color: #FFFFFF !important;
+  animation: rotateGrading 4s linear infinite;
+}
+@keyframes rotateGrading {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.gsp-sparkle {
+  position: absolute;
+  font-size: 14px;
+  color: #05D2D9;
+  z-index: 3;
+  animation: floatSparkle 1.6s infinite ease-in-out;
+}
+.gsp-sparkle.s1 { top: 4px; right: 8px; animation-delay: 0.2s; }
+.gsp-sparkle.s2 { bottom: 6px; left: 6px; animation-delay: 0.8s; color: #78FF1E; }
+@keyframes floatSparkle {
+  0%, 100% { transform: scale(0.8) translateY(0); opacity: 0.6; }
+  50% { transform: scale(1.2) translateY(-4px); opacity: 1; }
+}
+
+.gsp-info-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.gsp-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.gsp-main-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111112;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: linear-gradient(90deg, #111112 0%, #00B383 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.gsp-dots {
+  font-size: 15px;
+  font-weight: 800;
+  color: #00B383;
+  animation: blinkDots 1.2s infinite steps(4, start);
+}
+@keyframes blinkDots {
+  0% { opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+.gsp-status-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #6C6D7A;
+}
+.gsp-percent-num {
+  font-size: 14px;
+  font-weight: 700;
+  color: #00B383;
+}
+
+.gsp-progress-track {
+  width: 100%;
+  height: 8px;
+  background: #F0F0F4;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+.gsp-progress-bar {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #05D2D9 0%, #00B383 100%);
+  transition: width 0.35s ease;
+  width: 30%;
+}
+
+.gsp-footer-actions {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #F0F0F4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-gsp-back-home {
+  border: none;
+  background: #F4F4F8;
+  color: #4B4C53;
+  border-radius: 20px;
+  padding: 7px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-gsp-back-home:active {
+  background: #E8E8EE;
+  transform: scale(0.97);
+}
+
+/* ── 学科卡片列表 (MasterGo 300:15038) ── */
+.subject-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.subject-card-unit {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scu-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+
+.scu-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scu-icon-illus {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.scu-icon-illus .material-icons {
+  font-size: 18px !important;
+  color: #FFFFFF !important;
+}
+
+.scu-title-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111112;
+}
+
+.scu-status-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: #00B383;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.scu-status-tag .scu-count-num {
+  font-size: 16px;
+  font-weight: 700;
+  color: #00B383;
+}
+.scu-status-tag.pending {
+  color: #00B383;
+}
+
+/* ── 内容卡片框 (MasterGo 组 58678) ── */
+.scu-content-box {
+  background: #FFFFFF;
+  border: 1px solid #D6E7DA;
+  border-radius: 8px;
+  min-height: 107px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* 未上传态 */
+.scu-unuploaded-inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.scu-ub-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.scu-ub-illus {
+  width: 44px;
+  height: 38px;
+  position: relative;
+  flex-shrink: 0;
+}
+.scu-ub-hint {
+  font-size: 13.5px;
+  color: #999999;
+}
+.scu-ub-btn {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 8px;
+  background: #111111;
+  color: #FFFFFF;
+  font-size: 13.5px;
+  font-weight: 600;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(17,17,17,0.15);
+  flex-shrink: 0;
+  transition: transform 0.12s;
+}
+.scu-ub-btn:active {
+  transform: scale(0.96);
+}
+
+/* 已上传态：83x83 方形缩略图横向滚动条 (MasterGo 组 55654) */
+.scu-thumbs-scroll-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  width: 100%;
+  padding: 1px;
+}
+.scu-thumbs-scroll-row::-webkit-scrollbar { display: none; }
+
+.scu-thumb-square {
+  position: relative;
+  width: 83px;
+  height: 83px;
+  border-radius: 8.5px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  cursor: pointer;
+  background: #F0F0F4;
+}
+.scu-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.scu-thumb-delete-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #333333;
+  color: #FFFFFF;
+  border: 1px solid #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s;
+}
+.scu-thumb-delete-btn:active {
+  transform: scale(0.9);
+}
+
+.scu-add-square-btn {
+  width: 83px;
+  height: 83px;
+  border-radius: 8.5px;
+  border: 1px solid #E2E3EA;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.scu-add-square-btn:active {
+  background: #F8FFFE;
+  border-color: #00B383;
+}
+.scu-add-plus-icon {
+  font-size: 26px;
+  color: #333333;
+}
+
+/* ── 底部固定栏 (MasterGo 组 58714) ── */
+.bottom-fixed-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(12px);
+  padding: 10px 16px calc(8px + env(safe-area-inset-bottom));
+  z-index: 100;
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.06);
+}
+.btn-submit-diag {
+  width: 100%;
+  max-width: 348px;
+  height: 46px;
+  margin: 0 auto;
+  border: none;
+  border-radius: 26px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #111112;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(17,17,18,0.2);
+  transition: opacity 0.2s, transform 0.12s;
+}
+.btn-submit-diag:disabled {
+  background: #E2E3EA;
+  color: #B6B8C5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btn-submit-diag:not(:disabled):active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+.home-indicator-bar {
+  width: 134px; height: 5px;
+  background: #111112;
+  border-radius: 2.5px;
+  margin: 8px auto 4px;
+  opacity: 0.18;
+}
+
+/* ── 大图预览遮罩 ── */
+.preview-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.preview-overlay.show { display: flex; }
+.preview-overlay img {
+  max-width: 92%;
+  max-height: 80vh;
+  border-radius: 10px;
+  object-fit: contain;
+}
+.preview-close-btn {
+  position: absolute;
+  top: 16px; right: 16px;
+  border: none; background: rgba(255,255,255,0.18);
+  border-radius: 50%;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* ── Toast ── */
+.toast {
+  display: none;
+  position: absolute;
+  bottom: 110px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17,17,18,0.85);
+  color: #fff;
+  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  z-index: 300;
+  white-space: nowrap;
+}
+.hidden-input { display: none; }
+
+.gsp-pause-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.gsp-pause-btn:hover {
+  background: #E2E8F0;
+}
+.gsp-pause-btn.is-paused {
+  background: #FEF3C7;
+  border-color: #F59E0B;
+  color: #B45309;
+  font-weight: 600;
+}
+.gsp-progress-track {
+  cursor: pointer;
+}
+
+</style>
+
+<style id="protoMobileAnnotationCss">
+:root {
+  --protoMobile-accent: #3388ff;
+  --protoMobile-accent-dark: #2167d9;
+  --protoMobile-accent-soft: #f0f9ff;
+  --protoMobile-ink: #223355;
+  --protoMobile-muted: #6b7a99;
+  --protoMobile-line: #dde1eb;
+  --protoMobile-bg: #edf0f6;
+  --protoMobile-device-width: 390px;
+  --protoMobile-device-height: 844px;
+  --protoMobile-docs-width: 1fr;
+}
+
+html.protoMobile-ready,
+html.protoMobile-ready body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.protoMobile-stage,
+.protoMobile-stage *,
+.protoMobile-overlay-root,
+.protoMobile-overlay-root * {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+
+.protoMobile-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: minmax(320px, var(--protoMobile-docs-width, 1fr)) 8px var(--protoMobile-device-width) minmax(320px, 1fr);
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--protoMobile-bg);
+  color: var(--protoMobile-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+}
+
+.protoMobile-stage.no-docs {
+  grid-template-columns: var(--protoMobile-device-width) minmax(320px, 1fr);
+  justify-content: center;
+}
+.protoMobile-stage.no-docs .protoMobile-desktop-splitter { display: none; }
+.protoMobile-stage.no-docs .protoMobile-device { grid-column: 1; }
+.protoMobile-stage.no-docs .protoMobile-notes-panel { grid-column: 2; }
+
+.protoMobile-docs-panel { grid-column: 1; grid-row: 1; }
+.protoMobile-desktop-splitter { grid-column: 2; grid-row: 1; }
+.protoMobile-device { grid-column: 3; grid-row: 1; }
+.protoMobile-notes-panel { grid-column: 4; grid-row: 1; }
+
+.protoMobile-desktop-splitter {
+  position: relative;
+  width: 8px;
+  min-width: 8px;
+  height: min(var(--protoMobile-device-height, 844px), calc(100dvh - 32px));
+  align-self: center;
+  cursor: col-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.protoMobile-desktop-splitter::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 56px;
+  border-radius: 2px;
+  background: #b8c2d3;
+  transform: translate(-50%, -50%);
+  transition: height 0.15s ease, background 0.15s ease;
+}
+
+.protoMobile-desktop-splitter:hover::after,
+.protoMobile-desktop-splitter:focus-visible::after,
+.protoMobile-desktop-splitter.is-dragging::after { height: 84px; background: var(--protoMobile-accent); }
+.protoMobile-stage.is-resizing { cursor: col-resize; user-select: none; }
+
+.protoMobile-device,
+.protoMobile-review-panel {
+  height: min(var(--protoMobile-device-height, 844px), calc(100dvh - 32px));
+  min-height: 0;
+}
+
+.protoMobile-device {
+  position: relative;
+  width: var(--protoMobile-device-width);
+  min-width: 0;
+  justify-self: center;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(34, 51, 85, 0.12);
+}
+
+.protoMobile-device > [data-proto-app] {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  max-height: 100% !important;
+  margin: 0 !important;
+}
+
+.protoMobile-review-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(51, 136, 255, 0.22);
+  border-top: 3px solid rgba(51, 136, 255, 0.82);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 44px rgba(34, 51, 85, 0.1);
+}
+
+.protoMobile-panel-header {
+  height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid #e9edf5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  font-size: 16px;
+}
+
+.protoMobile-doc-layout {
+  height: calc(100% - 56px);
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  min-height: 0;
+}
+
+.protoMobile-doc-nav {
+  padding: 12px 8px;
+  border-right: 1px solid #e9edf5;
+  overflow-y: auto;
+  background: #fbfcff;
+}
+
+.protoMobile-doc-nav button {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--protoMobile-muted);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.protoMobile-doc-nav button:hover,
+.protoMobile-doc-nav button.is-active {
+  border-left-color: var(--protoMobile-accent);
+  color: #235cb3;
+  background: #e8f1ff;
+}
+
+.protoMobile-doc-content {
+  min-width: 0;
+  padding: 0 16px 24px;
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+.protoMobile-doc-section {
+  padding: 20px 0;
+  border-bottom: 1px solid #e9edf5;
+  scroll-margin-top: 12px;
+}
+
+.protoMobile-doc-section:last-child { border-bottom: 0; }
+.protoMobile-doc-section > h3 { margin: 0 0 12px; color: var(--protoMobile-ink); font-size: 16px; line-height: 24px; }
+
+.protoMobile-desktop-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--protoMobile-muted);
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.protoMobile-switch {
+  position: relative;
+  width: 40px;
+  height: 24px;
+  min-height: 0;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: #ced4e0;
+  cursor: pointer;
+}
+
+.protoMobile-switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(34, 51, 85, 0.2);
+  transition: transform 180ms ease;
+}
+.protoMobile-switch[aria-checked="true"] {
+  background: #2563eb !important;
+}
+
+.protoMobile-switch[aria-checked="true"]::after {
+  transform: translateX(16px) !important;
+}
+
+
+.protoMobile-notes-panel {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.protoMobile-note-list {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  padding: 12px;
+  padding-bottom: 60px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.protoMobile-note-card {
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 12px 14px 12px 62px;
+  position: relative;
+  border: 1px solid #e1e6ef;
+  border-left: 4px solid #79a8ff;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(34, 51, 85, 0.06);
+  color: var(--protoMobile-ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.protoMobile-note-card:hover,
+.protoMobile-note-card.is-active {
+  border-color: #9bbcff;
+  border-left-color: var(--protoMobile-accent-dark);
+  box-shadow: 0 8px 20px rgba(33, 103, 217, 0.13);
+}
+
+.protoMobile-note-index {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  width: 32px;
+  height: 32px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--protoMobile-accent);
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(33, 103, 217, 0.42), 0 5px 12px rgba(33, 103, 217, 0.2);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.protoMobile-note-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+
+.protoMobile-note-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+.protoMobile-note-tag.tag-add {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.protoMobile-note-tag.tag-modify {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.protoMobile-note-tag.tag-original {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.protoMobile-note-tag.tag-delete {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.protoMobile-note-tag.tag-custom {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.protoMobile-note-card.card-add { border-left-color: #10b981; }
+.protoMobile-note-card.card-modify { border-left-color: #f59e0b; }
+.protoMobile-note-card.card-original { border-left-color: #94a3b8; }
+.protoMobile-note-card.card-delete { border-left-color: #ef4444; }
+.protoMobile-note-card.card-custom { border-left-color: #3b82f6; }
+
+.protoMobile-note-card h3 { margin: 0; font-size: 14px; line-height: 21px; color: var(--protoMobile-ink); font-weight: 700; }
+.protoMobile-note-card .protoMobile-rich-content { font-size: 12px; line-height: 19px; }
+.protoMobile-empty { padding: 40px 16px; color: #8b96ab; font-size: 13px; text-align: center; }
+
+.protoMobile-overlay-root {
+  --protoMobile-layer-root: 2147483000;
+  position: fixed;
+  inset: 0;
+  z-index: var(--protoMobile-layer-root);
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  background: transparent;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  letter-spacing: 0;
+}
+
+.protoMobile-overlay-root::backdrop { background: transparent; pointer-events: none; }
+.protoMobile-marker-layer { position: fixed; inset: 0; pointer-events: none; }
+.protoMobile-marker-layer.is-hidden { visibility: hidden; }
+.protoMobile-marker[hidden] { display: none; }
+
+.protoMobile-marker {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--protoMobile-accent);
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(51, 136, 255, 0.28), 0 8px 18px rgba(33, 103, 217, 0.28);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.protoMobile-marker:hover,
+.protoMobile-marker.is-active {
+  background: var(--protoMobile-accent-dark);
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(51, 136, 255, 0.28), 0 10px 22px rgba(33, 103, 217, 0.34);
+}
+
+.protoMobile-target-highlight {
+  outline: 3px solid rgba(51, 136, 255, 0.45) !important;
+  outline-offset: 3px !important;
+}
+
+.protoMobile-compact-docs-trigger,
+.protoMobile-compact-backdrop,
+.protoMobile-compact-close,
+.protoMobile-mobile-controls,
+.protoMobile-mobile-note-layer,
+.protoMobile-mobile-docs-layer { display: none; }
+
+.protoMobile-rich-content { color: var(--protoMobile-muted); font-size: 14px; line-height: 1.65; overflow-wrap: anywhere; }
+.protoMobile-rich-content > :first-child { margin-top: 0; }
+.protoMobile-rich-content > :last-child { margin-bottom: 0; }
+.protoMobile-rich-content h1,
+.protoMobile-rich-content h2,
+.protoMobile-rich-content h3,
+.protoMobile-rich-content h4 { color: var(--protoMobile-ink); }
+.protoMobile-rich-content p,
+.protoMobile-rich-content ul,
+.protoMobile-rich-content ol,
+.protoMobile-rich-content blockquote,
+.protoMobile-rich-content pre,
+.protoMobile-rich-content table { margin: 8px 0; }
+.protoMobile-rich-content ul,
+.protoMobile-rich-content ol { padding-left: 20px; }
+.protoMobile-rich-content blockquote { padding: 8px 12px; border-left: 3px solid var(--protoMobile-accent); background: #f6f9ff; }
+.protoMobile-rich-content table { width: 100%; border-collapse: collapse; color: var(--protoMobile-ink); font-size: 12px; }
+.protoMobile-rich-content th,
+.protoMobile-rich-content td { padding: 7px 8px; border: 1px solid var(--protoMobile-line); text-align: left; vertical-align: top; }
+.protoMobile-rich-content th { background: #f5f7fa; }
+.protoMobile-rich-content pre { padding: 12px; border-radius: 4px; overflow: auto; background: #172033; color: #eaf1ff; }
+.protoMobile-rich-content code { font-family: Consolas, "SFMono-Regular", monospace; }
+.protoMobile-rich-content :not(pre) > code { padding: 2px 5px; border-radius: 3px; background: #edf3ff; color: #235cb3; }
+.protoMobile-rich-content img { display: block; max-width: 100%; height: auto; margin: 10px auto; border-radius: 4px; }
+.protoMobile-rich-content .protoMobile-mermaid { max-width: 100%; overflow: auto; }
+.protoMobile-rich-content .protoMobile-mermaid svg { max-width: 100%; height: auto; }
+
+@media (min-width: 768px) and (max-width: 1179px) {
+  .protoMobile-stage { grid-template-columns: var(--protoMobile-device-width) minmax(320px, 1fr); justify-content: center; }
+  .protoMobile-docs-panel { display: none; }
+  .protoMobile-desktop-splitter { display: none; }
+  .protoMobile-device { grid-column: 1; }
+  .protoMobile-notes-panel { grid-column: 2; }
+  .protoMobile-docs-panel.is-compact-open {
+    position: fixed;
+    inset: 16px auto 16px 16px;
+    z-index: 2147483500;
+    width: min(520px, calc(100vw - 32px));
+    height: auto;
+    display: block;
+    pointer-events: auto;
+  }
+  .protoMobile-compact-close { display: grid; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; place-items: center; background: #f5f7fa; color: var(--protoMobile-ink); font-size: 20px; cursor: pointer; }
+  .protoMobile-compact-docs-trigger { position: fixed; top: 18px; left: 18px; z-index: 2147483400; display: block; min-width: 54px; height: 34px; border: 1px solid #9bbcff; border-radius: 17px; background: #fff; color: #235cb3; pointer-events: auto; cursor: pointer; }
+  .protoMobile-compact-backdrop.is-open { position: fixed; inset: 0; z-index: 2147483450; display: block; background: rgba(20, 32, 55, 0.38); pointer-events: auto; }
+}
+
+@media (max-width: 767px) {
+  .protoMobile-stage { display: block; padding: 0; background: #fff; }
+  .protoMobile-review-panel { display: none; }
+  .protoMobile-desktop-splitter { display: none; }
+  .protoMobile-device { width: 100%; height: 100dvh; max-height: none; box-shadow: none; }
+  .protoMobile-mobile-controls { display: block; }
+  .protoMobile-mobile-launcher {
+    position: fixed;
+    right: 16px;
+    bottom: calc(112px + env(safe-area-inset-bottom));
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--protoMobile-accent), var(--protoMobile-accent-dark));
+    color: #fff;
+    box-shadow: 0 0 0 2px rgba(33, 103, 217, 0.48), 0 10px 24px rgba(33, 103, 217, 0.36);
+    pointer-events: auto;
+    touch-action: none;
+    cursor: grab;
+  }
+  .protoMobile-mobile-launcher > span { font-size: 18px; font-weight: 700; }
+  .protoMobile-mobile-launcher > small { position: absolute; top: -6px; right: -5px; min-width: 20px; height: 20px; padding: 0 4px; border: 2px solid #fff; border-radius: 10px; display: grid; place-items: center; background: #4d79d8; color: #fff; font-size: 10px; }
+  .protoMobile-mobile-menu {
+    position: fixed;
+    width: min(276px, calc(100vw - 16px));
+    padding: 6px;
+    border: 1px solid rgba(51, 136, 255, 0.28);
+    border-radius: 8px;
+    display: none;
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(33, 103, 217, 0.22), 0 4px 12px rgba(8, 17, 38, 0.12);
+    pointer-events: auto;
+  }
+  .protoMobile-mobile-menu.is-open { display: block; }
+  .protoMobile-mobile-menu-row,
+  .protoMobile-mobile-menu-link { width: 100%; min-height: 58px; padding: 10px 12px; border: 0; border-radius: 5px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; color: var(--protoMobile-ink); font: inherit; text-align: left; }
+  .protoMobile-mobile-menu-link { cursor: pointer; }
+  .protoMobile-mobile-menu-link:hover { background: #f5f8ff; }
+  .protoMobile-mobile-menu-copy { display: grid; gap: 3px; }
+  .protoMobile-mobile-menu-copy strong { font-size: 14px; }
+  .protoMobile-mobile-menu-copy small { color: var(--protoMobile-muted); font-size: 11px; }
+  .protoMobile-mobile-note-layer.is-open { position: fixed; inset: 0; display: block; pointer-events: auto; }
+  .protoMobile-mobile-mask { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: rgba(24, 37, 62, 0.46); }
+  .protoMobile-mobile-sheet {
+    --protoMobile-sheet-height: 68dvh;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--protoMobile-sheet-height);
+    min-height: 36dvh;
+    max-height: 94dvh;
+    border-radius: 16px 16px 0 0;
+    display: grid;
+    grid-template-rows: 28px auto minmax(0, 1fr);
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 -12px 36px rgba(34, 51, 85, 0.18);
+  }
+  .protoMobile-sheet-handle { display: grid; place-items: center; touch-action: none; cursor: ns-resize; }
+  .protoMobile-sheet-handle span { width: 40px; height: 4px; border-radius: 2px; background: #c7cedb; }
+  .protoMobile-mobile-sheet-header { min-height: 56px; padding: 0 16px; border-bottom: 1px solid #e9edf5; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .protoMobile-mobile-sheet-header > strong { min-width: 0; color: var(--protoMobile-ink); font-size: 15px; line-height: 22px; }
+  .protoMobile-mobile-sheet-tools { display: flex; gap: 8px; }
+  .protoMobile-mobile-sheet-tools button,
+  .protoMobile-mobile-docs-header button { width: 38px; height: 38px; min-height: 0; padding: 0; border: 0; border-radius: 50%; display: grid; place-items: center; background: #f5f7fa; color: var(--protoMobile-muted); font-size: 20px; cursor: pointer; }
+  .protoMobile-mobile-sheet-body { padding: 16px; overflow: auto; }
+  .protoMobile-mobile-docs-layer.is-open { position: fixed; inset: 0; display: grid; grid-template-rows: 58px minmax(0, 1fr); background: #fff; pointer-events: auto; }
+  .protoMobile-mobile-docs-header { padding: 0 16px; border-bottom: 1px solid #e9edf5; display: flex; align-items: center; justify-content: space-between; color: var(--protoMobile-ink); }
+  .protoMobile-mobile-docs-content { padding: 0 16px 24px; overflow: auto; }
+  .protoMobile-mobile-docs-content .protoMobile-doc-section { padding: 18px 0; }
+}
+
+/* 页面切换导航栏与管理 (极简白底风格) */
+.protoMobile-page-nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e9edf5;
+  flex-shrink: 0;
+}
+.protoMobile-page-tabs-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.protoMobile-page-tabs-wrap::-webkit-scrollbar { display: none; }
+.protoMobile-page-tab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  background: #fff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.protoMobile-page-tab-chip:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+.protoMobile-page-tab-chip.is-active {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #3b82f6;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.15);
+}
+.protoMobile-page-manage-btn {
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #64748b;
+  flex-shrink: 0;
+}
+.protoMobile-page-manage-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+
+.protoMobile-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px 6px;
+  border-bottom: 1px solid #eef2f6;
+  background: #fafbfc;
+  flex-shrink: 0;
+}
+
+.protoMobile-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  transition: all 0.15s ease;
+  user-select: none;
+  line-height: 1.4;
+}
+
+.protoMobile-filter-chip:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.protoMobile-filter-count {
+  display: inline-block;
+  font-size: 10px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.06);
+  font-weight: 700;
+  min-width: 14px;
+  text-align: center;
+  line-height: 14px;
+}
+
+.protoMobile-filter-chip.is-active {
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.protoMobile-filter-chip.chip-all.is-active {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #1e293b;
+}
+
+.protoMobile-filter-chip.chip-add.is-active {
+  background: #059669;
+  color: #ffffff;
+  border-color: #059669;
+}
+
+.protoMobile-filter-chip.chip-modify.is-active {
+  background: #d97706;
+  color: #ffffff;
+  border-color: #d97706;
+}
+
+.protoMobile-filter-chip.chip-original.is-active {
+  background: #475569;
+  color: #ffffff;
+  border-color: #475569;
+}
+
+.protoMobile-filter-chip.chip-delete.is-active {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
+.protoMobile-filter-chip.is-active .protoMobile-filter-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* 原型说明跨页同步与管理组件 */
+.protoMobile-doc-sync-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.protoMobile-doc-sync-btn:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.15);
+}
+
+.protoMobile-sync-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+.protoMobile-sync-modal[hidden] { display: none; }
+
+.protoMobile-sync-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.protoMobile-sync-dialog {
+  position: relative;
+  width: min(640px, calc(100vw - 32px));
+  max-height: min(720px, calc(100dvh - 48px));
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #1e293b;
+}
+
+.protoMobile-sync-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+}
+.protoMobile-sync-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+}
+.protoMobile-sync-close:hover { color: #0f172a; }
+
+.protoMobile-sync-global-bar {
+  padding: 12px 18px;
+  background: #eff6ff;
+  border-bottom: 1px solid #dbeafe;
+}
+.protoMobile-sync-switch-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.protoMobile-sync-switch-label input[type="checkbox"] {
+  display: none;
+}
+.protoMobile-sync-switch-core {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  background: #cbd5e1;
+  border-radius: 11px;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+.protoMobile-sync-switch-core::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.protoMobile-sync-switch-label input:checked + .protoMobile-sync-switch-core {
+  background: #2563eb;
+}
+.protoMobile-sync-switch-label input:checked + .protoMobile-sync-switch-core::after {
+  transform: translateX(16px);
+}
+
+.protoMobile-sync-tabs {
+  display: flex;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+  padding: 0 18px;
+  gap: 8px;
+}
+.protoMobile-sync-tab {
+  padding: 10px 14px;
+  border: none;
+  background: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+.protoMobile-sync-tab:hover { color: #1e293b; }
+.protoMobile-sync-tab.is-active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+  font-weight: 600;
+}
+
+.protoMobile-sync-pane {
+  display: none;
+  padding: 16px 18px;
+  flex: 1;
+  overflow-y: auto;
+}
+.protoMobile-sync-pane.is-active { display: block; }
+
+.protoMobile-sync-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #ffffff;
+  color: #1e293b;
+  outline: none;
+}
+.protoMobile-sync-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.protoMobile-sync-preview-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.protoMobile-sync-preview-content {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #334155;
+}
+
+.protoMobile-sync-checklist {
+  max-height: 240px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+.protoMobile-sync-check-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  background: #fafafa;
+  border: 1px solid #f1f5f9;
+}
+.protoMobile-sync-check-item:hover {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+.protoMobile-sync-check-item.is-self {
+  opacity: 0.6;
+}
+
+.protoMobile-sync-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+}
+.protoMobile-sync-textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.protoMobile-sync-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+.protoMobile-sync-action-btn.primary {
+  background: #2563eb;
+  color: #ffffff;
+}
+.protoMobile-sync-action-btn.primary:hover {
+  background: #1d4ed8;
+}
+.protoMobile-sync-action-btn.secondary {
+  background: #f1f5f9;
+  color: #475569;
+  border-color: #cbd5e1;
+}
+.protoMobile-sync-action-btn.secondary:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+.protoMobile-sync-link-btn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #2563eb;
+  cursor: pointer;
+  padding: 2px 4px;
+  text-decoration: underline;
+}
+
+.protoMobile-sync-footer {
+  padding: 12px 18px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+}
+
+.protoMobile-sync-toast {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+</style>
+</head>
+<body>
+
+<div id="app" data-proto-app data-proto-platform="mobile">
+  <!-- 顶部渐变光晕背景 (MasterGo 蒙版组 408) -->
+  <div class="bg-glow-decor">
+    <div class="glow-circle-1"></div>
+    <div class="glow-circle-2"></div>
+  </div>
+
+  <!-- 顶部透明导航栏 (只包含返回键) -->
+  <header class="top-header-bar">
+    <div class="top-nav-row">
+      <button class="back-btn" onclick="handleBack()">
+        <span class="material-icons" style="font-size:22px">arrow_back</span>
+      </button>
+      <div style="width:36px"></div>
+    </div>
+  </header>
+
+  <!-- 上下滑动主容器 (包含 Hero、便签、上传卡片与科目列表) -->
+  <main class="scroll-main-container" id="scrollContainer">
+    <!-- 动态渲染内容 -->
+  </main>
+
+  <!-- 底部固定吸附操作栏 (MasterGo 组 58710) -->
+  <footer class="bottom-fixed-bar" id="bottomAction">
+    <!-- 动态渲染底部提交按钮 -->
+  </footer>
+
+  <!-- 大图预览遮罩 -->
+  <div class="preview-overlay" id="previewOverlay" onclick="closePreview()">
+    <button class="preview-close-btn"><span class="material-icons">close</span></button>
+    <img id="previewImg" src="">
+  </div>
+
+    <!-- 批改解析中 Bottom Sheet 抽屉 (MasterGo 300:19250 组 58734) -->
+  <div class="loading-sheet-overlay" id="loadingSheetOverlay"></div>
+  <div class="grading-sheet-panel" id="gradingSheetPanel">
+    <div class="gsp-handle"></div>
+    <div class="gsp-content-row">
+      <!-- 左侧 88x88 吉祥物解析动画 (MasterGo 300:19252 组 58712) -->
+      <div class="gsp-mascot-box">
+        <div class="gsp-glow-circle"></div>
+        <div class="gsp-sparkle s1">✦</div>
+        <div class="gsp-sparkle s2">✦</div>
+        <div class="gsp-avatar-circle">
+          <span class="material-icons gsp-center-icon">auto_awesome</span>
+        </div>
+      </div>
+
+      <!-- 右侧进度文案与进度条 (MasterGo 容器 55673 & 组 58737) -->
+      <div class="gsp-info-box">
+        <div class="gsp-title-row">
+          <span class="gsp-main-title">正在认真的批改，内容解析中</span>
+          <span class="gsp-dots">...</span>
+        </div>
+        <div class="gsp-status-row" style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <span class="gsp-completed-text">已完成</span>
+            <span class="gsp-percent-num" id="gradingPercentText">46%</span>
+          </div>
+          <button type="button" class="gsp-pause-btn" id="gradingPauseBtn" onclick="toggleGradingPause()" title="点击暂停/继续进度，便于查看标注与向他人演示">
+            <span class="material-icons" id="gradingPauseIcon" style="font-size:13px;vertical-align:middle;">pause</span>
+            <span id="gradingPauseText">暂停演示</span>
+          </button>
+        </div>
+        <div class="gsp-progress-track" onclick="toggleGradingPause()" title="点击可暂停/继续进度">
+          <div class="gsp-progress-bar" id="gradingProgressBar" style="width: 30%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部返回首页等待（后台批改）入口 (对齐需求文档) -->
+    <div class="gsp-footer-actions">
+      <button type="button" class="btn-gsp-back-home" onclick="handleBackHomeInBackground()">
+        <span class="material-icons" style="font-size:16px;color:#00B383">home</span>
+        <span>返回首页等待（后台持续批改）</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast 提示 -->
+  <div class="toast" id="toast"></div>
+</div>
+
+<input type="file" accept="image/*" class="hidden-input" id="galleryInput" onchange="handleFileSelect(event)">
+
+<script>
+// 读取 URL 参数或 localStorage 中的考试信息
+const urlParams = new URLSearchParams(window.location.search);
+const urlType = urlParams.get('type');
+const currentMode = 'supplement'; // 're_diagnose' | 'supplement' | null
+const paramSubject = urlParams.get('subject');
+
+const storedStep1 = JSON.parse(localStorage.getItem('uploadStep1') || 'null');
+const step1 = storedStep1 || {
+  examName: urlType === 'big' ? '期末考前综合冲刺模考' : '这边是日程标题 超出显示...',
+  examDate: '2026-08-27',
+  examType: urlType || 'big',
+  note: '试卷综合复盘与学情诊断。'
+};
+if (urlType) {
+  step1.examType = urlType;
+}
+
+// 9 大学科定义及 MasterGo 300:15797 精确渐变配置
+const allSubjects = [
+  { name: '语文', fullName: '语文学科', color: '#1FDCC0', grad: 'linear-gradient(170deg, #1FDCC0 0%, #17BEA5 100%)', bgLight: '#E6FAF6', icon: 'auto_stories' },
+  { name: '数学', fullName: '数学学科', color: '#F36759', grad: 'linear-gradient(170deg, #F36759 0%, #E85041 100%)', bgLight: '#FEECEB', icon: 'calculate' },
+  { name: '英语', fullName: '英语学科', color: '#FFC766', grad: 'linear-gradient(170deg, #FFC766 0%, #F5AB35 100%)', bgLight: '#FFF7E8', icon: 'translate' },
+  { name: '物理', fullName: '物理学科', color: '#C48AFF', grad: 'linear-gradient(170deg, #C48AFF 0%, #A865F5 100%)', bgLight: '#F6EDFF', icon: 'lightbulb' },
+  { name: '化学', fullName: '化学学科', color: '#37D4FF', grad: 'linear-gradient(170deg, #37D4FF 0%, #1EB5E8 100%)', bgLight: '#E8F9FF', icon: 'science' },
+  { name: '生物', fullName: '生物学科', color: '#1FDCC0', grad: 'linear-gradient(170deg, #1FDCC0 0%, #17BEA5 100%)', bgLight: '#E6FAF6', icon: 'eco' },
+  { name: '政治', fullName: '政治学科', color: '#F36759', grad: 'linear-gradient(170deg, #F36759 0%, #E85041 100%)', bgLight: '#FEECEB', icon: 'gavel' },
+  { name: '历史', fullName: '历史学科', color: '#FFC766', grad: 'linear-gradient(170deg, #FFC766 0%, #F5AB35 100%)', bgLight: '#FFF7E8', icon: 'history_edu' },
+  { name: '地理', fullName: '地理学科', color: '#C48AFF', grad: 'linear-gradient(170deg, #C48AFF 0%, #A865F5 100%)', bgLight: '#F6EDFF', icon: 'public' }
+];
+
+// 已有报告学科列表
+const existingReportSubjects = JSON.parse(localStorage.getItem('reportSubjects') || '["语文", "数学", "英语"]');
+
+// uploadData: { '_single': [url1, url2, ...] } 或 { '语文': [url1,...], '数学': [...] }
+let uploadData = {};
+let currentTarget = '_single';
+
+// 初始化数据
+// 补录模式预置
+uploadData['物理'] = [
+  generateMockPhoto('物理', 1),
+  generateMockPhoto('物理', 2)
+];
+currentTarget = '物理';
+
+function getTotalPhotos() {
+  return Object.values(uploadData).reduce((sum, arr) => sum + arr.length, 0);
+}
+
+function getUploadedSubjectCount() {
+  return allSubjects.filter(s => (uploadData[s.name] || []).length > 0).length;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 2200);
+}
+
+function handleBack() {
+  window.history.back();
+}
+
+function formatDateHeader(dateStr) {
+  if (!dateStr) return '周四 08/27';
+  const d = new Date(dateStr.replace(/-/g, '/'));
+  const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  const w = days[d.getDay()] || '周四';
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${w} ${m}/${day}`;
+}
+
+function renderSubjectCard(s, photos) {
+  const isUploaded = photos.length > 0;
+  const statusHtml = isUploaded
+    ? `<span class="scu-status-tag uploaded">已上传 <strong class="scu-count-num">${photos.length}</strong></span>`
+    : `<span class="scu-status-tag pending">待上传</span>`;
+
+  let innerBoxHtml = '';
+  if (isUploaded) {
+    let thumbsHtml = '';
+    photos.forEach((url, idx) => {
+      thumbsHtml += `
+        <div class="scu-thumb-square" onclick="openPreview('${url}')">
+          <img src="${url}" class="scu-thumb-img" alt="${s.name}第${idx+1}页">
+          <button class="scu-thumb-delete-btn" type="button" onclick="removePhoto('${s.name}', ${idx}); event.stopPropagation();">×</button>
+        </div>
+      `;
+    });
+    innerBoxHtml = `
+      <div class="scu-thumbs-scroll-row">
+        ${thumbsHtml}
+        <div class="scu-add-square-btn" onclick="triggerUpload('${s.name}')" title="加页">
+          <span class="material-icons scu-add-plus-icon">add</span>
+        </div>
+      </div>
+    `;
+  } else {
+    innerBoxHtml = `
+      <div class="scu-unuploaded-inner" onclick="triggerUpload('${s.name}')">
+        <div class="scu-ub-left">
+          <div class="scu-ub-illus">
+            <svg width="42" height="36" viewBox="0 0 42 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="16" y="4" width="22" height="26" rx="3" fill="#D5F9F1" transform="rotate(12 27 17)"/>
+              <rect x="9" y="3" width="22" height="26" rx="3" fill="#E6FAF6" transform="rotate(6 20 16)"/>
+              <rect x="2" y="2" width="22" height="26" rx="3" fill="#FFFFFF" stroke="#00B383" stroke-width="1.2"/>
+              <rect x="6" y="7" width="10" height="4" rx="2" fill="#00B383"/>
+              <line x1="6" y1="15" x2="18" y2="15" stroke="#D8D8D8" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="6" y1="19" x2="16" y2="19" stroke="#D8D8D8" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="6" y1="23" x2="14" y2="23" stroke="#D8D8D8" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="scu-ub-hint">上传照片越清晰，识别更准确</span>
+        </div>
+        <button class="scu-ub-btn" type="button" onclick="triggerUpload('${s.name}'); event.stopPropagation();">
+          <span class="material-icons" style="font-size:16px">photo_camera</span>
+          <span>上传</span>
+        </button>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="subject-card-unit">
+      <div class="scu-header-row">
+        <div class="scu-header-left">
+          <div class="scu-icon-illus" style="background:${s.grad}">
+            <span class="material-icons">${s.icon}</span>
+          </div>
+          <span class="scu-title-text">${s.fullName || s.name + '学科'}</span>
+        </div>
+        ${statusHtml}
+      </div>
+      <div class="scu-content-box">
+        ${innerBoxHtml}
+      </div>
+    </div>
+  `;
+}
+
+// 主渲染流程
+function render() {
+  const isSmall = step1.examType === 'small';
+  const scrollContainer = document.getElementById('scrollContainer');
+  const bottomEl = document.getElementById('bottomAction');
+
+  scrollContainer.innerHTML = renderSupplementMode();
+
+  // 渲染底部提交按钮 (MasterGo 300:15038 组 58714)
+  const total = getTotalPhotos();
+  const upSubjCount = getUploadedSubjectCount();
+
+  if (total === 0) {
+    let defaultText = '请先上传试卷照片';
+    if (isSmall) defaultText = '请先上传试卷资料';
+    else if (currentMode === 're_diagnose') defaultText = `请上传【${paramSubject || '语文'}】试卷`;
+    else if (currentMode === 'supplement') defaultText = '请选择未上传科目拍照';
+
+    bottomEl.innerHTML = `
+      <button class="btn-submit-diag" disabled>${defaultText}</button>
+      <div class="home-indicator-bar"></div>
+    `;
+  } else {
+    let submitText = `确认提交（${upSubjCount}科 共${total}张）`;
+    if (currentMode === 're_diagnose') {
+      submitText = `确认重新提交【${paramSubject || '语文'}】（共${total}张）`;
+    } else if (currentMode === 'supplement') {
+      submitText = `确认提交补录（${upSubjCount}科 共${total}张）`;
+    }
+
+    bottomEl.innerHTML = `
+      <button class="btn-submit-diag" onclick="doSubmit()">${submitText}</button>
+      <div class="home-indicator-bar"></div>
+    `;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+   渲染大考首次全科模式 (MasterGo 300:15038)
+   ────────────────────────────────────────────────────────── */
+function renderBigMode() {
+  const dateHeader = formatDateHeader(step1.examDate);
+  const titleText = step1.examName || '期末模拟考试';
+
+  let subjectCardsHtml = '';
+  allSubjects.forEach(s => {
+    const photos = uploadData[s.name] || [];
+    subjectCardsHtml += renderSubjectCard(s, photos);
+  });
+
+  return `
+    <div class="hero-header-row">
+      <div class="title-group-box">
+        <div class="hero-page-title">上传学科试卷</div>
+        <div class="ai-pill-tag"><span class="ai-text">AI</span>解读</div>
+        ${getTitleUnderlineSvg()}
+      </div>
+      ${getMascotSvg()}
+    </div>
+
+    <div class="memo-card-wrap">
+      ${getPinSvg()}
+      <div class="memo-top-row">
+        <div class="memo-title-left">
+          <span class="memo-quote-mark">“</span>
+          <span>${titleText}</span>
+          <span class="memo-quote-mark">”</span>
+        </div>
+        <div class="memo-date-badge">${dateHeader}</div>
+      </div>
+      <div class="memo-desc-text">
+        小苗将识别本次大考的所有试卷/答题卡照片，帮您分析学生各学科的<strong>【学情状况】</strong>！
+      </div>
+    </div>
+
+    <div class="subject-cards-list">
+      ${subjectCardsHtml}
+    </div>
+  `;
+}
+
+/* ──────────────────────────────────────────────────────────
+   渲染全科「补录科目」模式
+   ────────────────────────────────────────────────────────── */
+function renderSupplementMode() {
+  const dateHeader = formatDateHeader(step1.examDate);
+  const titleText = step1.examName || '期末考试周';
+  const unUploadedSubjects = allSubjects.filter(s => !existingReportSubjects.includes(s.name));
+
+  let subjectCardsHtml = '';
+  unUploadedSubjects.forEach(s => {
+    const photos = uploadData[s.name] || [];
+    subjectCardsHtml += renderSubjectCard(s, photos);
+  });
+
+  return `
+    <div class="hero-header-row">
+      <div class="title-group-box">
+        <div class="hero-page-title">补录学科试卷</div>
+        <div class="ai-pill-tag"><span class="ai-text">AI</span>解读</div>
+        ${getTitleUnderlineSvg()}
+      </div>
+      ${getMascotSvg()}
+    </div>
+
+    <div class="memo-card-wrap">
+      ${getPinSvg()}
+      <div class="memo-top-row">
+        <div class="memo-title-left">
+          <span class="memo-quote-mark">“</span>
+          <span>${titleText} · 补录</span>
+          <span class="memo-quote-mark">”</span>
+        </div>
+        <div class="memo-date-badge">${dateHeader}</div>
+      </div>
+      <div class="memo-desc-text">
+        已完成诊断：<strong>${existingReportSubjects.join('、')}</strong>。<br>
+        小苗将识别本次所有待补录试卷照片，帮您分析学生各学科的【学情状况】！
+      </div>
+    </div>
+
+    <div class="subject-cards-list">
+      ${subjectCardsHtml}
+    </div>
+  `;
+}
+
+/* ──────────────────────────────────────────────────────────
+   渲染单科「重新诊断」模式
+   ────────────────────────────────────────────────────────── */
+function renderReDiagnoseMode() {
+  const targetSubj = paramSubject || '语文';
+  const sObj = allSubjects.find(s => s.name === targetSubj) || allSubjects[0];
+  const photos = uploadData[targetSubj] || [];
+  const dateHeader = formatDateHeader(step1.examDate);
+  const titleText = step1.examName || '期末考试周';
+
+  return `
+    <div class="hero-header-row">
+      <div class="title-group-box">
+        <div class="hero-page-title">重新上传【${targetSubj}】</div>
+        <div class="ai-pill-tag"><span class="ai-text">AI</span>解读</div>
+        ${getTitleUnderlineSvg()}
+      </div>
+      ${getMascotSvg()}
+    </div>
+
+    <div class="memo-card-wrap">
+      ${getPinSvg()}
+      <div class="memo-top-row">
+        <div class="memo-title-left">
+          <span class="memo-quote-mark">“</span>
+          <span>${titleText} · 单科重传</span>
+          <span class="memo-quote-mark">”</span>
+        </div>
+        <div class="memo-date-badge">${dateHeader}</div>
+      </div>
+      <div class="memo-desc-text">
+        根据<strong>【单科独立诊断】</strong>规则，本次仅重新诊断并覆盖<strong>【${targetSubj}】</strong>的分析报告，其他科目报告保持不变！
+      </div>
+    </div>
+
+    <div class="subject-cards-list">
+      ${renderSubjectCard(sObj, photos)}
+    </div>
+  `;
+}
+
+/* ──────────────────────────────────────────────────────────
+   渲染小考模式
+   ────────────────────────────────────────────────────────── */
+function renderSmallMode() {
+  const photos = uploadData['_single'] || [];
+  const dateHeader = formatDateHeader(step1.examDate);
+  const titleText = step1.examName || '随堂小测';
+  const singleSubjObj = { name: '_single', fullName: '单科试卷/答题卡', icon: 'assignment', grad: 'linear-gradient(135deg, #00B383, #05B889)' };
+
+  return `
+    <div class="hero-header-row">
+      <div class="title-group-box">
+        <div class="hero-page-title">上传小考试卷</div>
+        <div class="ai-pill-tag"><span class="ai-text">AI</span>解读</div>
+        ${getTitleUnderlineSvg()}
+      </div>
+      ${getMascotSvg()}
+    </div>
+
+    <div class="memo-card-wrap">
+      ${getPinSvg()}
+      <div class="memo-top-row">
+        <div class="memo-title-left">
+          <span class="memo-quote-mark">“</span>
+          <span>${titleText}</span>
+          <span class="memo-quote-mark">”</span>
+        </div>
+        <div class="memo-date-badge">${dateHeader}</div>
+      </div>
+      <div class="memo-desc-text">
+        小苗将自动识别学科并根据小测的试卷/答题卡照片，帮您分析学生的<strong>【学情状况】</strong>！
+      </div>
+    </div>
+
+    <div class="subject-cards-list">
+      ${renderSubjectCard(singleSubjObj, photos)}
+    </div>
+  `;
+}
+
+function getCameraIconSvg() {
+  return `
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.95695 3.16946L6.73335 5.61667L8.26665 6.38333L9.49026 3.93611Q9.52974 3.85714 9.61803 3.85714L14.382 3.85714Q14.4703 3.85714 14.5097 3.93611L15.7333 6.38333L17.2667 5.61667L16.043 3.16946Q15.8071 2.69758 15.3583 2.42022Q14.9095 2.14286 14.382 2.14286L9.61803 2.14286Q9.09046 2.14286 8.64168 2.42022Q8.19289 2.69758 7.95695 3.16946Z" fill="#333333"/>
+      <path d="M8.56548 16.9345Q9.9881 18.3571 12 18.3571Q14.0119 18.3571 15.4345 16.9345Q16.8571 15.5119 16.8571 13.5Q16.8571 11.4881 15.4345 10.0655Q14.0119 8.64286 12 8.64286Q9.9881 8.64286 8.56548 10.0655Q7.14286 11.4881 7.14286 13.5Q7.14286 15.5119 8.56548 16.9345ZM14.2223 15.7223Q13.3018 16.6429 12 16.6429Q10.6982 16.6429 9.77766 15.7223Q8.85714 14.8018 8.85714 13.5Q8.85714 12.1982 9.77766 11.2777Q10.6982 10.3571 12 10.3571Q13.3018 10.3571 14.2223 11.2777Q15.1429 12.1982 15.1429 13.5Q15.1429 14.8018 14.2223 15.7223Z" fill="#333333"/>
+      <path d="M1.1424 9.42857L1.1424 17.5714Q1.1424 19.3466 2.39766 20.6019Q3.65292 21.8571 5.42812 21.8571L16 21.8571L16 20.1429L5.42812 20.1429Q4.363 20.1429 3.60984 19.3897Q2.85669 18.6365 2.85669 17.5714L2.85669 9.42857Q2.85669 8.36345 3.60984 7.6103Q4.363 6.85714 5.42812 6.85714L18.571 6.85714Q19.6361 6.85714 20.3892 7.6103Q21.1424 8.36345 21.1424 9.42857L21.1424 16L22.8567 16L22.8567 9.42857Q22.8567 7.65337 21.6014 6.39811Q20.3462 5.14286 18.571 5.14286L5.42812 5.14286Q3.65292 5.14286 2.39766 6.39811Q1.1424 7.65337 1.1424 9.42857Z" fill="#333333"/>
+      <path d="M20.5197 18.0005Q20.5642 18.0878 20.656 18.1222L22.3692 18.7638Q22.533 18.9619 22.533 19Q22.533 19.0381 22.5074 19.1108Q22.4881 19.1437 22.4357 19.199Q22.3692 19.2362 20.656 19.8778Q20.5642 19.9122 20.5197 19.9995L19.7247 21.5591Q19.6852 21.6158 19.6318 21.6596Q19.5685 21.6873 19.5 21.6968Q19.4315 21.6873 19.3682 21.6596Q19.3148 21.6158 19.2753 21.5591L18.4803 19.9995Q18.4358 19.9122 18.344 19.8778L16.6308 19.2362Q16.501 19.128 16.4785 19.0753Q16.467 19.0192 16.467 19Q16.467 18.9619 16.5119 18.8563Q16.5643 18.801 16.6308 18.7638L18.344 18.1222Q18.4358 18.0878 18.4803 18.0005L19.2753 16.4409Q19.3682 16.3404 19.5 16.3032Q19.6318 16.3404 19.7247 16.4409L20.5197 18.0005Z" fill="#333333"/>
+    </svg>
+  `;
+}
+
+function getCloseIconSvg() {
+  return `
+    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="8" cy="8" r="6.5" fill="#FFFFFF"/>
+      <path d="M8 0C3.58 0 0 3.58 0 8C0 12.42 3.58 16 8 16C12.42 16 16 12.42 16 8C16 3.58 12.42 0 8 0ZM10.47 10.47C10.21 10.73 9.79 10.73 9.53 10.47L8 8.94L6.47 10.47C6.21 10.73 5.79 10.73 5.53 10.47C5.27 10.21 5.27 9.79 5.53 9.53L7.06 8L5.53 6.47C5.27 6.21 5.27 5.79 5.53 5.53C5.79 5.27 6.21 5.27 6.47 5.53L8 7.06L9.53 5.53C9.79 5.27 10.21 5.27 10.47 5.53C10.73 5.79 10.73 6.21 10.47 6.47L8.94 8L10.47 9.53C10.73 9.79 10.73 10.21 10.47 10.47Z" fill="#4B4C53"/>
+    </svg>
+  `;
+}
+
+function getTitleUnderlineSvg() {
+  return `
+    <svg class="title-underline-svg" viewBox="0 0 155 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="hlGradBig" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="4%" stop-color="#EAED83"/>
+          <stop offset="97%" stop-color="#06FFD6"/>
+        </linearGradient>
+      </defs>
+      <path d="M53.638496,24.74690425Q37.381859,28.12029225,2.091582894,24.87466825L2.09156467,24.87486625Q2.045878738,24.87066425,2,24.87066425Q1.901528291,24.87066425,1.8049487,24.88987525Q1.70836911,24.90908625,1.61739314,24.94676925Q1.52641714,24.98445125,1.44454092,25.03916025Q1.3626647,25.09386825,1.29303467,25.16349825Q1.22340465,25.23312725,1.16869676,25.31500425Q1.11398882,25.39688125,1.07630533,25.48785625Q1.03862178,25.57883225,1.01941091,25.67541325Q1.00020003,25.77199125,1.0002,25.87046425Q1.00019991,25.96315425,1.01723915,26.05426425Q1.03427851,26.14537225,1.06777632,26.23179625Q1.10127413,26.31822225,1.15008873,26.39701425Q1.19890326,26.47580725,1.26137072,26.54428125Q1.32383811,26.61275825,1.39782917,26.66858325Q1.47182018,26.72440925,1.55481291,26.76568025Q1.63780558,26.80695325,1.72697106,26.83226425Q1.81613651,26.85757425,1.90843551,26.86606225L1.90841711,26.86626225Q39.456974,30.31958025,56.08432,26.15494725Q57.576603,26.79765725,59.523537,27.25119825Q66.626678,28.90588725,77.732315,27.67939025Q88.715729,26.46639025,98.895775,22.97037425Q109.97265,19.16636925,116.01727,13.95462325Q121.25746,9.32181871,125.56366,9.55903745Q127.28622,9.65392895,127.91821,10.83893535Q128.72787,12.35709955,127.90912,15.45756675Q126.83286,19.53314925,129.5565,21.96773925Q131.86353,24.02992125,136.41815,24.36614425Q145.73958,25.05425225,154.50958,19.86043025Q154.6216,19.79403425,154.71289,19.70116225Q154.80417,19.60828925,154.86865,19.49513625Q154.93311,19.38198325,154.96646,19.25609825Q154.99979,19.13021425,154.9998,19.00000025Q154.99979,18.90152725,154.98058,18.80494925Q154.96136,18.70836825,154.92368,18.61739225Q154.88599,18.52641675,154.83128,18.44454095Q154.77658,18.36266515,154.70697,18.29303455Q154.63733,18.22340485,154.55545,18.16869735Q154.47357,18.11398885,154.3826,18.07630445Q154.29163,18.03862195,154.19504,18.01941105Q154.09846,18.00020025,154,18.00020025Q153.72615,18.00020025,153.49054,18.13974095Q145.26065,23.01345625,136.56538,22.37157025Q132.68919,22.08543025,130.88937,20.47661825Q129.07949,18.85882425,129.84283,15.96821215Q130.86205,12.10868075,129.68291,9.89777255Q128.52087,7.71891147,125.67367,7.56206518Q120.54778,7.27969095,114.71126,12.43991085Q108.95853,17.39998815,98.246178,21.07880825Q88.275818,24.50281525,77.512772,25.69147825Q66.747215,26.88041725,59.977291,25.30335025Q59.69595,25.23781225,59.426304,25.16843625Q64.632015,23.36245925,67.092857,20.55700925Q70.928535,16.18419645,69.068069,12.94531055Q67.471092,10.16512525,62.932365,9.93966425Q58.553387,9.72213885,55.179657,12.09510515Q51.186047,14.90407655,51.186047,19.89758525Q51.186047,22.83246325,53.638496,24.74690425ZM56.388599,24.09205525Q62.882793,22.32369325,65.589317,19.23815725Q68.48201,15.94038155,67.333817,13.94149015Q66.280899,12.10846855,62.833141,11.93720125Q59.141281,11.75380845,56.330273,13.73097805Q53.186047,15.94252015,53.186047,19.89758525Q53.186047,22.52338025,56.388599,24.09205525Z" fill="url(#hlGradBig)"/>
+    </svg>
+  `;
+}
+
+function getMascotSvg() {
+  return `
+    <div class="mascot-hero-wrap">
+      <svg viewBox="0 0 100 86" width="100" height="86" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="56" cy="44" r="36" fill="url(#mascotGlow)"/>
+        <ellipse cx="56" cy="46" rx="30" ry="28" fill="url(#mHeadGrad)" stroke="#7DEDBE" stroke-width="1.8"/>
+        <ellipse cx="46" cy="44" rx="3" ry="4.2" fill="#111112"/>
+        <ellipse cx="66" cy="44" rx="3" ry="4.2" fill="#111112"/>
+        <circle cx="47.5" cy="42" r="1.2" fill="#FFFFFF"/>
+        <circle cx="67.5" cy="42" r="1.2" fill="#FFFFFF"/>
+        <ellipse cx="40" cy="49" rx="4" ry="2.2" fill="#FF8BA7" opacity="0.65"/>
+        <ellipse cx="72" cy="49" rx="4" ry="2.2" fill="#FF8BA7" opacity="0.65"/>
+        <path d="M52 49 Q56 53 60 49" stroke="#111112" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+        <path d="M56 18 C56 18, 49 10, 44 14 C39 18, 48 24, 56 24 C64 24, 73 18, 68 14 C63 10, 56 18, 56 18 Z" fill="#83F07C"/>
+        <polygon points="86,22 88,28 94,30 88,32 86,38 84,32 78,30 84,28" fill="#FFE853"/>
+        <polygon points="20,28 22,33 27,35 22,37 20,42 18,37 13,35 18,33" fill="#7DEDBE"/>
+      </svg>
+    </div>
+  `;
+}
+
+function getPinSvg() {
+  return `
+    <svg class="note-pin-svg" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="pinHeadGrad" cx="78%" cy="20%" r="84%">
+          <stop offset="0%" stop-color="#D5FFB1"/>
+          <stop offset="100%" stop-color="#7DEDBE"/>
+        </radialGradient>
+      </defs>
+      <path d="M10,18C10,20.7614,7.7614,23,5,23C2.23858,23,0,20.7614,0,18C0,15.2386,2.23858,13,5,13C7.7614,13,10,15.2386,10,18Z" fill="#FFFFFF" opacity="0.9"/>
+      <path d="M3.49099,17.8901L14.491,7.89009L16.509,10.1099L5.50901,20.1099L3.49099,17.8901Z" fill="#7DEDBE"/>
+      <circle cx="18.5" cy="6.5" r="6.5" fill="url(#pinHeadGrad)"/>
+    </svg>
+  `;
+}
+
+function triggerUpload(targetKey) {
+  currentTarget = targetKey;
+  // 模拟直接添加 2 张仿真试卷照片以方便体验
+  const n = (uploadData[targetKey] || []).length + 1;
+  if (!uploadData[targetKey]) uploadData[targetKey] = [];
+  uploadData[targetKey].push(generateMockPhoto(targetKey, n));
+  uploadData[targetKey].push(generateMockPhoto(targetKey, n + 1));
+  showToast(`已成功拍摄/上传【${targetKey === '_single' ? '小考' : targetKey}】试卷照片`);
+  render();
+}
+
+function handleFileSelect(e) {
+  const files = e.target.files;
+  if (!files || files.length === 0) return;
+  if (!uploadData[currentTarget]) uploadData[currentTarget] = [];
+  for (let i = 0; i < files.length; i++) {
+    const url = URL.createObjectURL(files[i]);
+    uploadData[currentTarget].push(url);
+  }
+  e.target.value = '';
+  render();
+}
+
+function removePhoto(key, index) {
+  if (uploadData[key]) {
+    uploadData[key].splice(index, 1);
+    if (uploadData[key].length === 0) delete uploadData[key];
+  }
+  render();
+}
+
+function openPreview(url) {
+  document.getElementById('previewImg').src = url;
+  document.getElementById('previewOverlay').classList.add('show');
+}
+
+function closePreview() {
+  document.getElementById('previewOverlay').classList.remove('show');
+}
+
+function generateMockPhoto(key, pageNum) {
+  const sObj = allSubjects.find(s => s.name === key);
+  const label = key === '_single' ? (step1.examName || '单科试卷') : `${key}学科试卷`;
+  const color = sObj ? sObj.color : '#08CE9A';
+  const n = pageNum || ((uploadData[key] || []).length + 1);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+    <rect fill="#ffffff" width="300" height="300" rx="10" stroke="#ECECF2" stroke-width="2"/>
+    <rect x="15" y="15" width="270" height="28" rx="6" fill="#F4FDF9"/>
+    <text x="150" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="${color}">${label} · 第${n}页</text>
+    <line x1="15" y1="52" x2="285" y2="52" stroke="#E2F9F4" stroke-width="1.5"/>
+    <text x="25" y="76" font-size="11" font-weight="bold" fill="#111112">一、选择题（每题5分）</text>
+    <text x="25" y="96" font-size="10" fill="#4B4C53">1. 本题考查学科核心素养与基础能力...</text>
+    <text x="25" y="114" font-size="9" fill="#8C8D9B">A. 选项A分析  B. 选项B分析  C. 选项C  D. 选项D</text>
+    <circle cx="265" cy="94" r="7" fill="none" stroke="#FF4D4F" stroke-width="1.5"/>
+    <text x="265" y="98" text-anchor="middle" font-size="9" fill="#FF4D4F" font-weight="bold">✗</text>
+    <text x="25" y="148" font-size="11" font-weight="bold" fill="#111112">二、主观大题与综合分析</text>
+    <text x="25" y="168" font-size="10" fill="#4B4C53">2. 针对题目要求进行规范书写与论述...</text>
+    <rect x="25" y="185" width="250" height="55" rx="6" fill="#F9F9FC" stroke="#ECECF2"/>
+    <text x="35" y="208" font-size="9" fill="#6C97A0">【学生作答】解题过程与步骤详细记录...</text>
+    <circle cx="265" cy="208" r="7" fill="none" stroke="#08CE9A" stroke-width="1.5"/>
+    <text x="265" y="212" text-anchor="middle" font-size="9" fill="#08CE9A" font-weight="bold">✓</text>
+    <text x="150" y="285" text-anchor="middle" font-size="10" fill="#B6B8C5">- 第 ${n} 页 / 共 ${n} 页 -</text>
+  </svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+// ──────────────────────────────────────────────────────────
+// 点击确认提交：携带模式与科目信息跳转至 loading.html
+// ──────────────────────────────────────────────────────────
+let gradingInterval = null;
+
+function handleBackHomeInBackground() {
+  if (gradingInterval) clearInterval(gradingInterval);
+  const examTitle = step1.examName || '期末考试周';
+  // 记录后台批改任务到 localStorage
+  const bgTask = {
+    examName: examTitle,
+    examDate: step1.examDate,
+    examType: step1.examType,
+    status: 'grading',
+    startTime: Date.now()
+  };
+  localStorage.setItem('backgroundGradingTask', JSON.stringify(bgTask));
+  showToast('已转入后台批改，完成后可在首页与日历查看报告');
+  setTimeout(() => {
+    window.location.href = 'fenxi.html';
+  }, 400);
+}
+
+
+let currentPercent = 46;
+let isGradingPaused = false;
+
+function pauseGrading() {
+  isGradingPaused = true;
+  if (gradingInterval) {
+    clearInterval(gradingInterval);
+    gradingInterval = null;
+  }
+  const btn = document.getElementById('gradingPauseBtn');
+  const icon = document.getElementById('gradingPauseIcon');
+  const text = document.getElementById('gradingPauseText');
+  if (btn) btn.classList.add('is-paused');
+  if (icon) icon.textContent = 'play_arrow';
+  if (text) text.textContent = '已暂停(点击继续)';
+}
+
+function resumeGrading() {
+  isGradingPaused = false;
+  const btn = document.getElementById('gradingPauseBtn');
+  const icon = document.getElementById('gradingPauseIcon');
+  const text = document.getElementById('gradingPauseText');
+  if (btn) btn.classList.remove('is-paused');
+  if (icon) icon.textContent = 'pause';
+  if (text) text.textContent = '暂停演示';
+  runGradingTimer();
+}
+
+function toggleGradingPause() {
+  if (isGradingPaused) {
+    resumeGrading();
+  } else {
+    pauseGrading();
+  }
+}
+
+function openGradingSheetDemo(pause = true) {
+  const overlay = document.getElementById('loadingSheetOverlay');
+  const panel = document.getElementById('gradingSheetPanel');
+  const bar = document.getElementById('gradingProgressBar');
+  const percentText = document.getElementById('gradingPercentText');
+
+  if (overlay) overlay.classList.add('show');
+  if (panel) panel.classList.add('show');
+
+  if (pause) {
+    pauseGrading();
+    currentPercent = 46;
+    if (bar) bar.style.width = '46%';
+    if (percentText) percentText.textContent = '46%';
+  }
+}
+
+function runGradingTimer() {
+  if (gradingInterval) clearInterval(gradingInterval);
+  const bar = document.getElementById('gradingProgressBar');
+  const percentText = document.getElementById('gradingPercentText');
+
+  gradingInterval = setInterval(() => {
+    if (isGradingPaused) {
+      clearInterval(gradingInterval);
+      return;
+    }
+    currentPercent += Math.floor(Math.random() * 10) + 5;
+    if (currentPercent >= 100) {
+      currentPercent = 100;
+      if (bar) bar.style.width = '100%';
+      if (percentText) percentText.textContent = '100%';
+      clearInterval(gradingInterval);
+
+      // 批改完成：进入确认错题页 (gouxuancuoti.html)
+      setTimeout(() => {
+        let targetUrl = 'gouxuancuoti.html?from=upload';
+        if (step1.examType === 'small') targetUrl += '&type=small';
+        if (currentMode) targetUrl += `&mode=${currentMode}`;
+        if (paramSubject) targetUrl += `&subject=${encodeURIComponent(paramSubject)}`;
+        if (step1.examName) targetUrl += `&exam=${encodeURIComponent(step1.examName)}`;
+        if (typeof subjects !== 'undefined' && subjects && subjects.length > 0) targetUrl += `&subjects=${encodeURIComponent(subjects.join(','))}`;
+        window.location.href = targetUrl;
+      }, 400);
+    } else {
+      if (bar) bar.style.width = currentPercent + '%';
+      if (percentText) percentText.textContent = currentPercent + '%';
+    }
+  }, 450);
+}
+
+function doSubmit() {
+  if (getTotalPhotos() === 0) return;
+
+  let subjects = [];
+  if (step1.examType === 'small') {
+    subjects = ['化学'];
+  } else if (currentMode === 're_diagnose') {
+    subjects = [paramSubject || '语文'];
+  } else {
+    subjects = Object.keys(uploadData).filter(k => (uploadData[k] || []).length > 0);
+  }
+
+  const uploadCtx = {
+    examName: step1.examName,
+    examType: step1.examType,
+    examDate: step1.examDate,
+    mode: currentMode || 'initial',
+    subjects: subjects,
+    totalPhotos: getTotalPhotos(),
+    uploadedAt: Date.now()
+  };
+  localStorage.setItem('uploadContext', JSON.stringify(uploadCtx));
+
+  if (currentMode === 'supplement') {
+    localStorage.setItem('supplementNewSubjects', JSON.stringify(subjects));
+  }
+
+  // 唤起 MasterGo 300:19250 批改加载抽屉
+  const overlay = document.getElementById('loadingSheetOverlay');
+  const panel = document.getElementById('gradingSheetPanel');
+  const bar = document.getElementById('gradingProgressBar');
+  const percentText = document.getElementById('gradingPercentText');
+
+  if (overlay) overlay.classList.add('show');
+  if (panel) panel.classList.add('show');
+
+  currentPercent = 18;
+  if (bar) bar.style.width = currentPercent + '%';
+  if (percentText) percentText.textContent = currentPercent + '%';
+  resumeGrading();
+}
+
+// 页面初始化渲染
+render();
+</script>
+
+<script id="prototypeAnnotationData" type="application/json">
+{
+  "prototypeId": "shangchuanfupan",
+  "version": 5,
+  "mobile": {
+    "appRoot": "[data-proto-app]",
+    "deviceWidth": 390
+  },
+  "globalMeta": {
+    "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+    "version": "V1.0",
+    "updatedAt": "2026-09-16"
+  },
+  "globalSections": [
+    {
+      "id": "sec_overview",
+      "title": "一.业务背景概述",
+      "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作用。</span></p><p>2.日程:</p><ul><li>日程需要提供编辑功能。</li><li>多考生隔离:既需要总览全家的考试日程，新建日程可多选孩子。</li></ul><p><span>3.考试诊断:</span></p><ul><li>原流程试卷上传后直接跳出诊断报告，AI识别的错题准确率低。</li><li>同一场大考重复录入会产生脏数据，需要检测到已有该考试时，自动拦截并提供「覆盖重新诊断」与「补充未录入科目」通道，限制重新诊断入口。</li></ul>",
+      "format": "html"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "note-grading-sheet-pause",
+      "scope": "page:default",
+      "target": "#gradingSheetPanel div.gsp-progress-track",
+      "x": 0.5,
+      "y": 0.5,
+      "title": "批改解析",
+      "content": "<div><br></div><ul><li><strong>进度条反馈：</strong> 试卷上传后自动拉起半屏抽屉，展示进度条。</li><li><strong>离线/后台批改：</strong> 用户可点击「返回首页等待（后台持续批改）」，系统后台处理，用户可进行其他操作；批改完成后在首页最新日程与通知栏同步推送结果。</li><li>&nbsp;进度达 100% 后自动平滑流转进入「确认错题」页面。</li></ul>",
+      "format": "html",
+      "type": "original",
+      "typeLabel": "原有",
+      "badge": "原有"
+    },
+    {
+      "id": "note-muana6ps-1-86ae2334fb",
+      "scope": "page:default",
+      "target": "#app div.hero-page-title",
+      "x": 0.69704150390625,
+      "y": 0.4871448961507747,
+      "title": "补录学科试卷说明",
+      "content": "<p>&nbsp;界面展示规则：</p><p></p><ul><li>&nbsp; 自动过滤并隐藏已完成诊断的科目。</li><li>仅展示当前未上传的科目卡片（例如语文、数学已上传，则仅显示英语、物理、化学、生物）。</li><li>顶部进度条与统计显示：待补充科目：N 科。</li><li>提交规则：提交后，仅对新补充的科目进行分析，完成后自动合并进该次考试。</li></ul>",
+      "format": "html",
+      "type": "original",
+      "typeLabel": "原有",
+      "badge": "原有"
+    }
+  ]
+}
+</script>
+
+<div class="protoMobile-stage" id="protoMobileStage" hidden>
+  <aside class="protoMobile-review-panel protoMobile-docs-panel" id="protoMobileDocsPanel" aria-label="原型说明">
+    <header class="protoMobile-panel-header">
+      <div style="display:flex;align-items:center;gap:8px">
+        <strong>原型说明</strong>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="protoMobile-doc-sync-btn" id="protoMobileDocSyncBtn" type="button" title="从其他页面复制或同步原型说明">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>跨页复制/同步</span>
+        </button>
+        <button class="protoMobile-compact-close" id="protoMobileCompactDocsClose" type="button" aria-label="关闭原型说明">×</button>
+      </div>
+    </header>
+    <div class="protoMobile-doc-layout">
+      <nav class="protoMobile-doc-nav" id="protoMobileDocNav" aria-label="原型说明目录"></nav>
+      <div class="protoMobile-doc-content" id="protoMobileDocContent"></div>
+    </div>
+  </aside>
+
+  <div class="protoMobile-desktop-splitter" id="protoMobileDocsSplitter" role="separator" aria-label="调整原型说明宽度" aria-orientation="vertical" tabindex="0"></div>
+
+  <main class="protoMobile-device" id="protoMobileDevice" aria-label="移动端原型画板"></main>
+
+  <aside class="protoMobile-review-panel protoMobile-notes-panel" aria-label="当前页面标注">
+    <header class="protoMobile-panel-header">
+      <strong>当前标注</strong>
+      <label class="protoMobile-desktop-toggle-label">
+        <span>显示标注</span>
+        <button class="protoMobile-switch" id="protoMobileDesktopToggle" type="button" role="switch" aria-checked="true" aria-label="隐藏页面标注"></button>
+      </label>
+    </header>
+    <div class="protoMobile-filter-bar" id="protoMobileFilterBar"></div>
+    <div class="protoMobile-note-list" id="protoMobileNoteList"></div>
+  </aside>
+</div>
+
+<div class="protoMobile-overlay-root" id="prototypeAnnotationRoot" popover="manual" aria-label="移动端原型标注层">
+  <div class="protoMobile-marker-layer" id="protoMobileMarkerLayer"></div>
+
+  <button class="protoMobile-compact-docs-trigger" id="protoMobileCompactDocsTrigger" type="button">说明</button>
+  <div class="protoMobile-compact-backdrop" id="protoMobileCompactBackdrop"></div>
+
+  <div class="protoMobile-mobile-controls" id="protoMobileMobileControls">
+    <div class="protoMobile-mobile-menu" id="protoMobileMobileMenu" role="menu" aria-label="原型标注菜单">
+      <div class="protoMobile-mobile-menu-row">
+        <span class="protoMobile-mobile-menu-copy">
+          <strong>页面标注</strong>
+          <small id="protoMobileMobileMenuMeta">当前页面 0 条</small>
+        </span>
+        <button class="protoMobile-switch" id="protoMobileMobileToggle" type="button" role="switch" aria-checked="false" aria-label="显示页面标注"></button>
+      </div>
+      <button class="protoMobile-mobile-menu-link" id="protoMobileMobileDocsOpen" type="button" role="menuitem">
+        <span class="protoMobile-mobile-menu-copy">
+          <strong>原型说明</strong>
+          <small>查看整体需求与跨页面规则</small>
+        </span>
+        <span aria-hidden="true">›</span>
+      </button>
+    </div>
+    <button class="protoMobile-mobile-launcher" id="protoMobileMobileLauncher" type="button" aria-label="打开原型标注菜单" aria-expanded="false">
+      <span>注</span>
+      <small id="protoMobileMobileCount">0</small>
+    </button>
+  </div>
+
+  <div class="protoMobile-mobile-note-layer" id="protoMobileMobileNoteLayer" aria-hidden="true">
+    <button class="protoMobile-mobile-mask" id="protoMobileMobileNoteMask" type="button" aria-label="关闭标注详情"></button>
+    <section class="protoMobile-mobile-sheet" id="protoMobileMobileSheet" role="dialog" aria-modal="true" aria-label="标注详情">
+      <div class="protoMobile-sheet-handle" id="protoMobileMobileSheetHandle" aria-label="拖动调整标注详情高度"><span></span></div>
+      <header class="protoMobile-mobile-sheet-header">
+        <strong id="protoMobileMobileSheetTitle">标注详情</strong>
+        <span class="protoMobile-mobile-sheet-tools">
+          <button id="protoMobileMobileSheetSize" type="button" aria-label="切换标注详情高度" title="切换高度">↕</button>
+          <button id="protoMobileMobileNoteClose" type="button" aria-label="关闭标注详情" title="关闭">×</button>
+        </span>
+      </header>
+      <article class="protoMobile-rich-content protoMobile-mobile-sheet-body" id="protoMobileMobileSheetBody"></article>
+    </section>
+  </div>
+
+  <section class="protoMobile-mobile-docs-layer" id="protoMobileMobileDocsLayer" aria-hidden="true" aria-label="原型说明">
+    <header class="protoMobile-mobile-docs-header">
+      <strong>原型说明</strong>
+      <button id="protoMobileMobileDocsClose" type="button" aria-label="关闭原型说明">×</button>
+    </header>
+    <div class="protoMobile-mobile-docs-content" id="protoMobileMobileDocsContent"></div>
+  </section>
+
+  <!-- 原型说明跨页管理与同步弹窗 -->
+  <div class="protoMobile-sync-modal" id="protoMobileDocSyncModal" hidden>
+    <div class="protoMobile-sync-backdrop" id="protoMobileSyncBackdrop"></div>
+    <div class="protoMobile-sync-dialog" role="dialog" aria-modal="true" aria-labelledby="protoMobileSyncTitle">
+      <div class="protoMobile-sync-header">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:16px">📋</span>
+          <strong id="protoMobileSyncTitle" style="font-size:15px;color:#1e293b">原型说明跨页管理与同步</strong>
+        </div>
+        <button class="protoMobile-sync-close" id="protoMobileSyncClose" type="button" aria-label="关闭">&times;</button>
+      </div>
+
+      <!-- 全局一致性开关卡片 -->
+      <div class="protoMobile-sync-global-bar">
+        <label class="protoMobile-sync-switch-label">
+          <input type="checkbox" id="protoMobileGlobalSyncToggle">
+          <span class="protoMobile-sync-switch-core"></span>
+          <div>
+            <strong style="display:block;font-size:13px;color:#0f172a">开启跨页面统一说明（保持所有 HTML 页面说明一致）</strong>
+            <small style="color:#64748b;font-size:11.5px">开启后，在本项目中切换任何 HTML 页面，都将自动保持这套最新的原型说明，无需逐页复制。</small>
+          </div>
+        </label>
+      </div>
+
+      <!-- 三栏统一比例设置栏 -->
+      <div style="padding: 10px 18px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px;">
+        <span style="font-weight: 600; color: #334155;">📐 三栏布局比例：</span>
+        <div style="display: flex; gap: 6px;">
+          <button class="protoMobile-sync-link-btn" id="protoMobileRatioEqualBtn" type="button" style="padding: 3px 8px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; text-decoration: none; cursor: pointer;">⚖️ 左右均衡 (1:1)</button>
+          <button class="protoMobile-sync-link-btn" id="protoMobileRatioDocBtn" type="button" style="padding: 3px 8px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; text-decoration: none; cursor: pointer;">📖 文档加宽 (560px)</button>
+          <button class="protoMobile-sync-link-btn" id="protoMobileRatioCompactBtn" type="button" style="padding: 3px 8px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; text-decoration: none; cursor: pointer;">📌 紧凑适中 (480px)</button>
+        </div>
+      </div>
+
+      <!-- Tab 切换导航 -->
+      <div class="protoMobile-sync-tabs">
+        <button class="protoMobile-sync-tab is-active" id="protoMobileTabBtnImport" type="button">📥 从其他 HTML 复制</button>
+        <button class="protoMobile-sync-tab" id="protoMobileTabBtnBatch" type="button">🚀 勾选同步到其他 HTML</button>
+        <button class="protoMobile-sync-tab" id="protoMobileTabBtnEdit" type="button">✏️ 直接编辑当前说明</button>
+      </div>
+
+      <!-- Tab 1: 从其他页面导入 -->
+      <div class="protoMobile-sync-pane is-active" id="protoMobilePaneImport">
+        <div style="font-size:12.5px;color:#475569;margin-bottom:10px">选择来源页面，将其【原型说明】复制应用到当前页面：</div>
+        <div style="display:flex;gap:12px;margin-bottom:12px">
+          <div style="flex:1">
+            <label style="display:block;font-size:11.5px;font-weight:600;color:#64748b;margin-bottom:4px">来源 HTML 页面：</label>
+            <select class="protoMobile-sync-select" id="protoMobileSourceSelect"></select>
+          </div>
+          <button class="protoMobile-sync-action-btn primary" id="protoMobileDoCopyBtn" type="button" style="align-self:flex-end">
+            <span>📥 复制并应用到当前页面</span>
+          </button>
+        </div>
+        <div class="protoMobile-sync-preview-box" id="protoMobilePreviewBox">
+          <div style="font-size:11.5px;font-weight:600;color:#64748b;margin-bottom:6px">📖 来源页面原型说明预览：</div>
+          <div class="protoMobile-sync-preview-content" id="protoMobilePreviewContent">正在加载预览...</div>
+        </div>
+      </div>
+
+      <!-- Tab 2: 批量同步到其他页面 -->
+      <div class="protoMobile-sync-pane" id="protoMobilePaneBatch">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-size:12.5px;color:#475569">勾选需要同步接收当前原型说明的页面：</div>
+          <div style="display:flex;gap:6px">
+            <button class="protoMobile-sync-link-btn" id="protoMobileSelectAllBtn" type="button">全选</button>
+            <button class="protoMobile-sync-link-btn" id="protoMobileDeselectAllBtn" type="button">取消全选</button>
+          </div>
+        </div>
+        <div class="protoMobile-sync-checklist" id="protoMobileBatchChecklist"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+          <span style="font-size:11.5px;color:#64748b" id="protoMobileBatchCountText">已勾选 0 个页面</span>
+          <button class="protoMobile-sync-action-btn primary" id="protoMobileDoBatchSyncBtn" type="button">
+            <span>🚀 同步到勾选的页面</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 3: 直接编辑当前说明 -->
+      <div class="protoMobile-sync-pane" id="protoMobilePaneEdit">
+        <div style="font-size:12.5px;color:#475569;margin-bottom:8px">直接在此编辑当前页面的原型说明正文（支持 Markdown）：</div>
+        <textarea class="protoMobile-sync-textarea" id="protoMobileEditTextarea" rows="8" placeholder="在此编辑说明内容..."></textarea>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px">
+          <button class="protoMobile-sync-action-btn primary" id="protoMobileSaveEditBtn" type="button">
+            <span>💾 保存修改</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="protoMobile-sync-footer">
+        <div class="protoMobile-sync-toast" id="protoMobileSyncToast" hidden></div>
+        <button class="protoMobile-sync-action-btn secondary" id="protoMobileSyncCloseBtn" type="button">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script id="protoMobileMobileAnnotationRuntime">
+(() => {
+  const dataNode = document.getElementById("prototypeAnnotationData");
+  const stage = document.getElementById("protoMobileStage");
+  const device = document.getElementById("protoMobileDevice");
+  const docsPanel = document.getElementById("protoMobileDocsPanel");
+  const docsSplitter = document.getElementById("protoMobileDocsSplitter");
+  const docNav = document.getElementById("protoMobileDocNav");
+  const docContent = document.getElementById("protoMobileDocContent");
+  const noteList = document.getElementById("protoMobileNoteList");
+  const filterBar = document.getElementById("protoMobileFilterBar");
+  let activeFilter = "all";
+  const desktopToggle = document.getElementById("protoMobileDesktopToggle");
+  const overlayRoot = document.getElementById("prototypeAnnotationRoot");
+  const markerLayer = document.getElementById("protoMobileMarkerLayer");
+  const compactTrigger = document.getElementById("protoMobileCompactDocsTrigger");
+  const compactClose = document.getElementById("protoMobileCompactDocsClose");
+  const compactBackdrop = document.getElementById("protoMobileCompactBackdrop");
+  const mobileLauncher = document.getElementById("protoMobileMobileLauncher");
+  const mobileCount = document.getElementById("protoMobileMobileCount");
+  const mobileMenu = document.getElementById("protoMobileMobileMenu");
+  const mobileMenuMeta = document.getElementById("protoMobileMobileMenuMeta");
+  const mobileToggle = document.getElementById("protoMobileMobileToggle");
+  const mobileDocsOpen = document.getElementById("protoMobileMobileDocsOpen");
+  const mobileNoteLayer = document.getElementById("protoMobileMobileNoteLayer");
+  const mobileSheet = document.getElementById("protoMobileMobileSheet");
+  const mobileSheetHandle = document.getElementById("protoMobileMobileSheetHandle");
+  const mobileSheetTitle = document.getElementById("protoMobileMobileSheetTitle");
+  const mobileSheetBody = document.getElementById("protoMobileMobileSheetBody");
+  const mobileDocsLayer = document.getElementById("protoMobileMobileDocsLayer");
+  const mobileDocsContent = document.getElementById("protoMobileMobileDocsContent");
+
+  if (!dataNode || !stage || !overlayRoot) return;
+
+  let annotationData;
+  try {
+    annotationData = JSON.parse(dataNode.textContent);
+  } catch (error) {
+    console.error("移动端原型标注数据解析失败", error);
+    return;
+  }
+
+  const annotations = Array.isArray(annotationData.annotations) ? annotationData.annotations : [];
+  const globalSections = Array.isArray(annotationData.globalSections) ? annotationData.globalSections : [];
+  const mobileConfig = annotationData.mobile || {};
+  const appSelector = mobileConfig.appRoot || "[data-proto-app]";
+  const approvedScrollSelectors = Array.isArray(mobileConfig.scrollContainers) && mobileConfig.scrollContainers.length
+    ? mobileConfig.scrollContainers.filter(item => typeof item === "string" && item.trim())
+    : ["[data-proto-scroll-container]", ".main-scroller"];
+  const appRoot = document.querySelector(appSelector);
+  if (!appRoot) {
+    console.error(`移动端标注框架找不到业务根节点：${appSelector}`);
+    return;
+  }
+
+  const deviceWidth = Math.min(480, Math.max(320, Number(mobileConfig.deviceWidth) || 390));
+  const deviceHeight = Number(mobileConfig.deviceHeight) || (deviceWidth <= 375 ? 812 : 844);
+  document.documentElement.style.setProperty("--protoMobile-device-width", `${deviceWidth}px`);
+  document.documentElement.style.setProperty("--protoMobile-device-height", `${deviceHeight}px`);
+  document.documentElement.classList.add("protoMobile-ready");
+  document.body.appendChild(stage);
+  document.body.appendChild(overlayRoot);
+  device.appendChild(appRoot);
+  stage.hidden = false;
+
+  let currentScope = "";
+  let currentNotes = [];
+  let activeNoteId = "";
+  let desktopEnabled = true;
+  let mobileEnabled = false;
+  let layoutFrame = 0;
+  let contextRefreshFrame = 0;
+  let contextRefreshUntil = 0;
+  let mermaidCounter = 0;
+  let sheetSnap = 1;
+  let layerAuditTimer = 0;
+  const sheetSnaps = [0.44, 0.68, 0.94];
+  const rootMaxZIndex = 2147483646;
+  const docsWidthStorageKey = "protoMobile:docs-width:global_unified";
+  const desktopDocsMinWidth = 320;
+  const desktopDocsHardMaxWidth = 820;
+  let lastLayoutIssueSignature = "";
+
+  if (window.mermaid) {
+    window.mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: "base",
+      themeVariables: {
+        primaryColor: "#F0F9FF",
+        primaryTextColor: "#223355",
+        primaryBorderColor: "#3388FF",
+        lineColor: "#6B7A99",
+        secondaryColor: "#E8F4FF",
+        tertiaryColor: "#F5F7FA",
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif',
+        fontSize: "14px"
+      }
+    });
+  }
+
+  function isMobileViewport() {
+    return window.matchMedia("(max-width: 767px)").matches;
+  }
+
+  function getDesktopDocsWidth() {
+    const val = getComputedStyle(document.documentElement).getPropertyValue("--protoMobile-docs-width").trim();
+    if (val && val.endsWith("px")) {
+      return Number.parseFloat(val);
+    }
+    return docsPanel ? Math.round(docsPanel.getBoundingClientRect().width) : 520;
+  }
+
+  function getDesktopDocsMaxWidth() {
+    const reservedWidth = deviceWidth + 320 + 104;
+    return Math.max(desktopDocsMinWidth, Math.min(desktopDocsHardMaxWidth, window.innerWidth - reservedWidth));
+  }
+
+  function setDesktopDocsWidth(requestedWidth, persist = false) {
+    if (requestedWidth === "1fr" || requestedWidth === "auto" || !requestedWidth) {
+      document.documentElement.style.setProperty("--protoMobile-docs-width", "1fr");
+      docsSplitter?.removeAttribute("aria-valuenow");
+      if (persist) {
+        try { localStorage.setItem(docsWidthStorageKey, "1fr"); } catch (error) {}
+      }
+      return getDesktopDocsWidth();
+    }
+    const maximum = getDesktopDocsMaxWidth();
+    const width = Math.round(Math.min(maximum, Math.max(desktopDocsMinWidth, Number(requestedWidth) || 520)));
+    document.documentElement.style.setProperty("--protoMobile-docs-width", `${width}px`);
+    docsSplitter?.setAttribute("aria-valuemin", String(desktopDocsMinWidth));
+    docsSplitter?.setAttribute("aria-valuemax", String(maximum));
+    docsSplitter?.setAttribute("aria-valuenow", String(width));
+    if (persist) {
+      try { localStorage.setItem(docsWidthStorageKey, `${width}px`); } catch (error) {}
+    }
+    return width;
+  }
+
+  function restoreDesktopDocsWidth() {
+    let stored = "";
+    try { stored = localStorage.getItem(docsWidthStorageKey); } catch (error) {}
+    if (stored && stored !== "1fr") {
+      setDesktopDocsWidth(stored, false);
+    } else {
+      setDesktopDocsWidth("1fr", false);
+    }
+  }
+
+  function makeDesktopDocsResizable() {
+    if (!docsSplitter) return;
+    let dragState = null;
+    docsSplitter.addEventListener("pointerdown", event => {
+      if (event.button !== 0 || window.innerWidth < 1180) return;
+      dragState = { pointerId: event.pointerId, startX: event.clientX, startWidth: getDesktopDocsWidth() };
+      docsSplitter.setPointerCapture(event.pointerId);
+      docsSplitter.classList.add("is-dragging");
+      stage.classList.add("is-resizing");
+      event.preventDefault();
+    });
+    docsSplitter.addEventListener("pointermove", event => {
+      if (!dragState || event.pointerId !== dragState.pointerId) return;
+      setDesktopDocsWidth(dragState.startWidth + event.clientX - dragState.startX, false);
+      scheduleMarkerLayout();
+    });
+    const endDrag = event => {
+      if (!dragState || event.pointerId !== dragState.pointerId) return;
+      dragState = null;
+      docsSplitter.classList.remove("is-dragging");
+      stage.classList.remove("is-resizing");
+      setDesktopDocsWidth(getDesktopDocsWidth(), true);
+      scheduleMarkerLayout();
+      requestAnimationFrame(() => auditLayout(true));
+    };
+    docsSplitter.addEventListener("pointerup", endDrag);
+    docsSplitter.addEventListener("pointercancel", endDrag);
+    docsSplitter.addEventListener("keydown", event => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key) || window.innerWidth < 1180) return;
+      const next = event.key === "Home"
+        ? desktopDocsMinWidth
+        : event.key === "End"
+          ? getDesktopDocsMaxWidth()
+          : getDesktopDocsWidth() + (event.key === "ArrowRight" ? 24 : -24);
+      setDesktopDocsWidth(next, true);
+      scheduleMarkerLayout();
+      event.preventDefault();
+    });
+  }
+
+  function isVisible(element) {
+    if (!element) return false;
+    const style = getComputedStyle(element);
+    if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+    if (element.hidden || element.getAttribute("aria-hidden") === "true") return false;
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }
+
+  function serializeRect(rect) {
+    return {
+      left: Math.round(rect.left),
+      top: Math.round(rect.top),
+      right: Math.round(rect.right),
+      bottom: Math.round(rect.bottom),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height)
+    };
+  }
+
+  function inspectLayout() {
+    const issues = [];
+    const stageRect = stage.getBoundingClientRect();
+    const deviceRect = device.getBoundingClientRect();
+    const docsRect = docsPanel.getBoundingClientRect();
+    const notesPanel = noteList.closest(".protoMobile-notes-panel");
+    const notesRect = notesPanel?.getBoundingClientRect() || new DOMRect();
+    const desktopWide = window.innerWidth >= 1180;
+    if (stage.parentElement !== document.body) issues.push("STAGE_NOT_MOUNTED_TO_BODY");
+    if (Math.abs(stageRect.left) > 2 || Math.abs(stageRect.top) > 2
+      || Math.abs(stageRect.width - window.innerWidth) > 3
+      || Math.abs(stageRect.height - window.innerHeight) > 3) issues.push("STAGE_NOT_VIEWPORT_SIZED");
+    if (desktopWide) {
+      const hasDocs = globalSections.length > 0;
+      if ((hasDocs && !isVisible(docsPanel)) || !isVisible(device) || !isVisible(notesPanel)) issues.push("DESKTOP_COLUMNS_MISSING");
+      if (Math.abs(deviceRect.width - deviceWidth) > 3) issues.push("DEVICE_WIDTH_INVALID");
+      if ((hasDocs && docsRect.right > deviceRect.left + 1) || deviceRect.right > notesRect.left + 1) issues.push("DESKTOP_COLUMNS_OVERLAP");
+      if (hasDocs && (docsRect.width < desktopDocsMinWidth - 2 || docsRect.width > getDesktopDocsMaxWidth() + 2)) issues.push("DOCS_WIDTH_OUT_OF_RANGE");
+    } else if (isMobileViewport()) {
+      if (Math.abs(deviceRect.width - window.innerWidth) > 3) issues.push("MOBILE_DEVICE_NOT_VIEWPORT_SIZED");
+    }
+    const markerOutsideDeviceIds = Array.from(markerLayer.querySelectorAll(".protoMobile-marker:not([hidden])"))
+      .filter(marker => getComputedStyle(marker).display !== "none")
+      .filter(marker => {
+        const rect = marker.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        return x < deviceRect.left - 2 || x > deviceRect.right + 2 || y < deviceRect.top - 2 || y > deviceRect.bottom + 2;
+      })
+      .map(marker => marker.dataset.noteId);
+    if (markerOutsideDeviceIds.length) issues.push("MARKERS_OUTSIDE_DEVICE");
+    return {
+      status: issues.length ? "fail" : "pass",
+      issues,
+      stageMountedToBody: stage.parentElement === document.body,
+      docsWidthMaximum: getDesktopDocsMaxWidth(),
+      markerOutsideDeviceIds,
+      rects: {
+        stage: serializeRect(stageRect),
+        docs: serializeRect(docsRect),
+        device: serializeRect(deviceRect),
+        notes: serializeRect(notesRect)
+      }
+    };
+  }
+
+  function auditLayout(logFailure = false) {
+    const report = inspectLayout();
+    stage.dataset.protoMobileLayoutStatus = report.status;
+    const signature = report.issues.join("|");
+    if (logFailure && report.status === "fail" && signature !== lastLayoutIssueSignature) {
+      console.error("移动端标注审阅框架布局检查未通过", report);
+    }
+    lastLayoutIssueSignature = signature;
+    return report;
+  }
+
+  function isOverlayContainerOpen(node) {
+    if (!node || !node.isConnected) return false;
+    const overlay = node.closest ? node.closest(
+      ".sheet-panel, .bottom-sheet, .drawer, .drawer-panel, .modal, .modal-card, .dialog-modal, .grading-sheet-panel, [role='dialog'], [data-modal], [data-sheet]"
+    ) : null;
+    if (!overlay) return true;
+    const cl = overlay.classList;
+    if (cl.contains("show") || cl.contains("active") || cl.contains("is-open") || cl.contains("open") || cl.contains("visible")) {
+      const style = window.getComputedStyle(overlay);
+      if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  function isTargetRenderable(target, scopeNode) {
+    if (!target || !target.isConnected) return false;
+    if (!isOverlayContainerOpen(target)) return false;
+    let current = target;
+    while (current && current.nodeType === 1) {
+      const style = getComputedStyle(current);
+      if (current.hidden || current.getAttribute("aria-hidden") === "true") return false;
+      if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+      if (current === scopeNode || current === appRoot) break;
+      current = current.parentElement;
+    }
+    const rect = target.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }
+
+  function isTargetUndersized(target) {
+    const rect = target.getBoundingClientRect();
+    return rect.width < 4 || rect.height < 4;
+  }
+
+  function isPopoverOpen() {
+    try {
+      return overlayRoot.matches(":popover-open");
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function ensureOverlayLayer(reorder = false) {
+    if (typeof overlayRoot.showPopover === "function" && typeof overlayRoot.hidePopover === "function") {
+      try {
+        if (reorder && isPopoverOpen()) overlayRoot.hidePopover();
+        if (!isPopoverOpen()) overlayRoot.showPopover();
+        overlayRoot.dataset.protoMobileLayerMode = "top-layer";
+        overlayRoot.style.zIndex = String(rootMaxZIndex);
+        return;
+      } catch (error) {
+        console.warn("移动端标注层进入 top layer 失败，已使用 z-index 兜底", error);
+      }
+    }
+    overlayRoot.removeAttribute("popover");
+    overlayRoot.style.zIndex = String(rootMaxZIndex);
+    overlayRoot.dataset.protoMobileLayerMode = "z-index";
+  }
+
+  function scheduleLayerAudit() {
+    window.clearTimeout(layerAuditTimer);
+    layerAuditTimer = window.setTimeout(() => {
+      ensureOverlayLayer(false);
+      if (!isMobileViewport()) return;
+      const rect = mobileLauncher.getBoundingClientRect();
+      const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      const clickable = Boolean(hit && (hit === mobileLauncher || mobileLauncher.contains(hit)));
+      overlayRoot.dataset.protoMobileLauncherClickable = String(clickable);
+      if (!clickable) {
+        ensureOverlayLayer(true);
+        requestAnimationFrame(() => {
+          const nextHit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+          if (!(nextHit && (nextHit === mobileLauncher || mobileLauncher.contains(nextHit)))) {
+            console.error("移动端原型标注入口被业务界面遮挡");
+          }
+        });
+      }
+    }, 40);
+  }
+
+  function getScopeContext() {
+    const candidates = Array.from(appRoot.querySelectorAll("[data-proto-scope]"));
+    if (appRoot.matches("[data-proto-scope]")) candidates.unshift(appRoot);
+    const visible = candidates
+      .map((node, index) => ({ node, index, scope: node.dataset.protoScope, layer: Number(node.dataset.protoLayer) || 0 }))
+      .filter(item => item.scope && isVisible(item.node));
+    if (visible.length) {
+      visible.sort((a, b) => a.layer - b.layer || a.index - b.index);
+      return visible[visible.length - 1];
+    }
+    return { node: appRoot, scope: appRoot.dataset.protoScope || "page:default", layer: 0 };
+  }
+
+  function notesForScope(scope) {
+    const acceptedScopes = new Set([scope, "page:*", "page:default", "page:fenxi"]);
+    if (scope && scope.startsWith("page:")) {
+      const parts = scope.split(":");
+      if (parts.length >= 3) acceptedScopes.add(`${parts.slice(0, 2).join(":")}:*`);
+      acceptedScopes.add("page:*");
+      acceptedScopes.add("page:default");
+      acceptedScopes.add("page:fenxi");
+    }
+    return annotations.filter(note => {
+      if (!note.scope) return true;
+      if (acceptedScopes.has(note.scope)) return true;
+      if (note.scope.startsWith("page:") && (!scope || scope.startsWith("page:"))) return true;
+      return false;
+    });
+  }
+
+  function findTarget(note, scopeNode = getScopeContext().node) {
+    try {
+      if (scopeNode?.matches?.(note.target)) return scopeNode;
+      return scopeNode?.querySelector?.(note.target) || appRoot.querySelector(note.target);
+    } catch (error) {
+      console.warn(`移动端标注 ${note.id || note.title || "未命名"} 的 target 无效`, error);
+      return null;
+    }
+  }
+
+  function resolveNotesForContext(context) {
+    return notesForScope(context.scope);
+  }
+
+    function getClippedTargetRect(target) {
+    if (!isVisible(target)) return null;
+    const original = target.getBoundingClientRect();
+    const deviceRect = device.getBoundingClientRect();
+    let left = Math.max(original.left, deviceRect.left);
+    let top = Math.max(original.top, deviceRect.top);
+    let right = Math.min(original.right, deviceRect.right);
+    let bottom = Math.min(original.bottom, deviceRect.bottom);
+    let parent = target.parentElement;
+    while (parent && parent !== appRoot.parentElement) {
+      const style = getComputedStyle(parent);
+      if (/(auto|scroll|hidden|clip)/.test(`${style.overflow}${style.overflowX}${style.overflowY}`)) {
+        const rect = parent.getBoundingClientRect();
+        left = Math.max(left, rect.left);
+        top = Math.max(top, rect.top);
+        right = Math.min(right, rect.right);
+        bottom = Math.min(bottom, rect.bottom);
+      }
+      if (parent === appRoot) break;
+      parent = parent.parentElement;
+    }
+    if (right <= left || bottom <= top) return null;
+    return { original, visible: { left, top, right, bottom } };
+  }
+
+  function setActive(noteId) {
+    activeNoteId = noteId;
+    document.querySelectorAll(".protoMobile-marker, .protoMobile-note-card").forEach(element => {
+      element.classList.toggle("is-active", element.dataset.noteId === noteId);
+    });
+  }
+
+  function scheduleMarkerLayout() {
+    if (layoutFrame) return;
+    layoutFrame = requestAnimationFrame(() => {
+      layoutFrame = 0;
+      positionMarkers();
+    });
+  }
+
+  function positionMarkers() {
+    const deviceRect = device.getBoundingClientRect();
+    const occupied = [];
+    markerLayer.querySelectorAll(".protoMobile-marker").forEach(marker => {
+      const note = currentNotes.find(item => item.id === marker.dataset.noteId);
+      const target = note ? findTarget(note) : null;
+      const clipped = target ? getClippedTargetRect(target) : null;
+      if (!note || !clipped) {
+        marker.hidden = true;
+        return;
+      }
+      const anchorX = Number.isFinite(Number(note.x)) ? Math.min(1, Math.max(0, Number(note.x))) : 0.5;
+      const anchorY = Number.isFinite(Number(note.y)) ? Math.min(1, Math.max(0, Number(note.y))) : 0.5;
+      let left = clipped.original.left + clipped.original.width * anchorX;
+      let top = clipped.original.top + clipped.original.height * anchorY;
+      left = Math.max(clipped.visible.left, Math.min(clipped.visible.right, left));
+      top = Math.max(clipped.visible.top, Math.min(clipped.visible.bottom, top));
+      left = Math.max(deviceRect.left + 18, Math.min(deviceRect.right - 18, left));
+      top = Math.max(deviceRect.top + 18, Math.min(deviceRect.bottom - 18, top));
+      for (let attempt = 0; attempt < 5; attempt += 1) {
+        if (!occupied.some(point => Math.hypot(point.left - left, point.top - top) < 36)) break;
+        top = Math.min(deviceRect.bottom - 18, top + 36);
+      }
+      occupied.push({ left, top });
+      marker.hidden = false;
+      marker.style.left = `${left}px`;
+      marker.style.top = `${top}px`;
+    });
+  }
+
+  function renderMarkers() {
+    markerLayer.replaceChildren();
+    const shouldHide = isMobileViewport() ? !mobileEnabled : !desktopEnabled;
+    const docsOpen = mobileDocsLayer.classList.contains("is-open") || docsPanel.classList.contains("is-compact-open");
+    markerLayer.classList.toggle("is-hidden", shouldHide || docsOpen);
+    currentNotes.forEach((note, index) => {
+      const marker = document.createElement("button");
+      marker.type = "button";
+      marker.className = "protoMobile-marker";
+      marker.dataset.noteId = note.id;
+      marker.textContent = String(index + 1);
+      marker.title = note.title;
+      marker.setAttribute("aria-label", `标注 ${index + 1}：${note.title}`);
+      marker.addEventListener("click", event => {
+        event.stopPropagation();
+        openNote(note);
+      });
+      markerLayer.appendChild(marker);
+    });
+    setActive(activeNoteId);
+    scheduleMarkerLayout();
+  }
+
+  async function renderMermaidBlocks(root) {
+    if (!window.mermaid) return;
+    const blocks = Array.from(root.querySelectorAll("pre code.language-mermaid"));
+    for (const block of blocks) {
+      const pre = block.closest("pre");
+      const container = document.createElement("div");
+      container.className = "protoMobile-mermaid";
+      try {
+        const result = await window.mermaid.render(`protoMobile-mermaid-${++mermaidCounter}`, block.textContent.trim());
+        container.innerHTML = result.svg;
+        if (result.bindFunctions) result.bindFunctions(container);
+        pre.replaceWith(container);
+      } catch (error) {
+        pre.classList.add("protoMobile-mermaid-error");
+        console.error("移动端标注流程图渲染失败", error);
+      }
+    }
+  }
+
+  async function renderRichContent(root, item) {
+    if (item.format === "html" || !window.marked) root.innerHTML = item.content || "";
+    else root.innerHTML = window.marked.parse(item.content || "", { gfm: true, breaks: true });
+    await renderMermaidBlocks(root);
+  }
+
+  
+  function getNoteType(note) {
+    if (note.type) return note.type;
+    if (note.typeLabel?.includes('新')) return 'add';
+    if (note.typeLabel?.includes('修')) return 'modify';
+    if (note.typeLabel?.includes('删') || note.typeLabel?.includes('下')) return 'delete';
+    if (note.typeLabel?.includes('原')) return 'original';
+    return note.typeLabel ? 'custom' : 'original';
+  }
+
+  function renderFilterBar() {
+    if (!filterBar) return;
+    filterBar.replaceChildren();
+
+    const counts = {
+      all: currentNotes.length,
+      add: 0,
+      modify: 0,
+      original: 0,
+      delete: 0
+    };
+
+    currentNotes.forEach(note => {
+      const type = getNoteType(note);
+      if (counts[type] !== undefined) {
+        counts[type] += 1;
+      } else {
+        counts.original += 1;
+      }
+    });
+
+    const filterDefs = [
+      { key: "all", label: "全部", count: counts.all, chipClass: "chip-all" },
+      { key: "original", label: "⚪ 原有", count: counts.original, chipClass: "chip-original" },
+      { key: "add", label: "🟢 新增", count: counts.add, chipClass: "chip-add" },
+      { key: "modify", label: "🟡 修改", count: counts.modify, chipClass: "chip-modify" }
+    ];
+
+    if (counts.delete > 0) {
+      filterDefs.push({ key: "delete", label: "🔴 下线", count: counts.delete, chipClass: "chip-delete" });
+    }
+
+    filterDefs.forEach(def => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = `protoMobile-filter-chip ${def.chipClass}${activeFilter === def.key ? " is-active" : ""}`;
+      chip.innerHTML = `<span>${def.label}</span><span class="protoMobile-filter-count">${def.count}</span>`;
+      chip.addEventListener("click", () => {
+        if (activeFilter === def.key) {
+          activeFilter = "all";
+        } else {
+          activeFilter = def.key;
+        }
+        renderFilterBar();
+        renderNoteList();
+      });
+      filterBar.appendChild(chip);
+    });
+  }
+
+  function renderNoteList() {
+    renderFilterBar();
+    noteList.replaceChildren();
+    if (!currentNotes.length) {
+      noteList.innerHTML = '<div class="protoMobile-empty">当前页面暂无标注</div>';
+      return;
+    }
+    const visibleNotes = activeFilter === "all"
+      ? currentNotes
+      : currentNotes.filter(note => getNoteType(note) === activeFilter);
+
+    if (!visibleNotes.length) {
+      noteList.innerHTML = '<div class="protoMobile-empty">暂无该分类的标注</div>';
+      return;
+    }
+    visibleNotes.forEach((note, index) => {
+      const globalIndex = currentNotes.indexOf(note);
+      const displayIndex = globalIndex >= 0 ? globalIndex + 1 : index + 1;
+      const card = document.createElement("article");
+      const noteType = note.type || (note.typeLabel?.includes('新') ? 'add' : (note.typeLabel?.includes('修') ? 'modify' : (note.typeLabel?.includes('删') || note.typeLabel?.includes('下') ? 'delete' : (note.typeLabel?.includes('原') ? 'original' : (note.typeLabel ? 'custom' : 'original')))));
+      const typeLabel = note.typeLabel || note.badge || (noteType === 'add' ? '新增' : (noteType === 'modify' ? '修改' : (noteType === 'delete' ? '下线' : (noteType === 'original' ? '原有' : '说明'))));
+      const tagClass = noteType === 'add' ? 'tag-add' : (noteType === 'modify' ? 'tag-modify' : (noteType === 'delete' ? 'tag-delete' : (noteType === 'original' ? 'tag-original' : 'tag-custom')));
+      const cardClass = noteType === 'add' ? 'card-add' : (noteType === 'modify' ? 'card-modify' : (noteType === 'delete' ? 'card-delete' : (noteType === 'original' ? 'card-original' : 'card-custom')));
+
+      card.className = `protoMobile-note-card ${cardClass}`;
+      card.dataset.noteId = note.id;
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", `定位标注 ${displayIndex}：[${typeLabel}] ${note.title}`);
+
+      const number = document.createElement("span");
+      number.className = "protoMobile-note-index";
+      number.textContent = String(displayIndex);
+
+      const copy = document.createElement("div");
+      copy.className = "protoMobile-rich-content";
+
+      const headerRow = document.createElement("div");
+      headerRow.className = "protoMobile-note-header";
+
+      const tagEl = document.createElement("span");
+      tagEl.className = `protoMobile-note-tag ${tagClass}`;
+      tagEl.textContent = typeLabel;
+
+      const heading = document.createElement("h3");
+      heading.textContent = note.title;
+
+      headerRow.append(tagEl, heading);
+
+      const body = document.createElement("div");
+      copy.append(headerRow, body);
+      card.append(number, copy);
+
+      const locate = () => locateTarget(note);
+      card.addEventListener("click", locate);
+      card.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          locate();
+        }
+      });
+      noteList.appendChild(card);
+      renderRichContent(body, note).catch(error => console.error("移动端标注列表渲染失败", error));
+    });
+    setActive(activeNoteId);
+  }
+
+  function highlightTarget(target) {
+    document.querySelectorAll(".protoMobile-target-highlight").forEach(element => element.classList.remove("protoMobile-target-highlight"));
+    target.classList.add("protoMobile-target-highlight");
+    window.setTimeout(() => target.classList.remove("protoMobile-target-highlight"), 1100);
+  }
+
+  function matchesApprovedScrollContainer(element) {
+    return approvedScrollSelectors.some(selector => {
+      try {
+        return element.matches(selector);
+      } catch (error) {
+        console.warn(`移动端标注滚动容器选择器无效：${selector}`, error);
+        return false;
+      }
+    });
+  }
+
+  function findScrollParent(target) {
+    let parent = target.parentElement;
+    while (parent && parent !== document.body && parent !== device && parent !== stage) {
+      const style = getComputedStyle(parent);
+      if (matchesApprovedScrollContainer(parent)
+        && /(auto|scroll)/.test(style.overflowY)
+        && parent.scrollHeight > parent.clientHeight + 1) return parent;
+      if (parent === appRoot) break;
+      parent = parent.parentElement;
+    }
+    return null;
+  }
+
+  function isFullyVisibleInDevice(target, scroller = null) {
+    const targetRect = target.getBoundingClientRect();
+    const deviceRect = device.getBoundingClientRect();
+    const scrollRect = scroller ? scroller.getBoundingClientRect() : deviceRect;
+    const viewport = {
+      left: Math.max(deviceRect.left, scrollRect.left),
+      top: Math.max(deviceRect.top, scrollRect.top),
+      right: Math.min(deviceRect.right, scrollRect.right),
+      bottom: Math.min(deviceRect.bottom, scrollRect.bottom)
+    };
+    return targetRect.left >= viewport.left - 1
+      && targetRect.top >= viewport.top - 1
+      && targetRect.right <= viewport.right + 1
+      && targetRect.bottom <= viewport.bottom + 1;
+  }
+
+  function trackScrollUntilSettled(scroller, target) {
+    let last = scroller.scrollTop;
+    let stableFrames = 0;
+    let frameCount = 0;
+    function track() {
+      scheduleMarkerLayout();
+      const current = scroller.scrollTop;
+      stableFrames = Math.abs(current - last) < 0.5 ? stableFrames + 1 : 0;
+      last = current;
+      frameCount += 1;
+      if (stableFrames >= 3 || frameCount > 90) {
+        highlightTarget(target);
+        scheduleMarkerLayout();
+        return;
+      }
+      requestAnimationFrame(track);
+    }
+    requestAnimationFrame(track);
+  }
+
+    function tryOpenOverlayForNote(note) {
+    if (!note) return false;
+    const targetSelector = String(note.target || "");
+    const title = String(note.title || "");
+    const root = (typeof state !== "undefined" && state?.adapter?.businessRoot) || (typeof appRoot !== "undefined" && appRoot) || document.getElementById("app") || document.body;
+
+    const findTargetFn = typeof findNoteTarget === "function" ? findNoteTarget : (typeof findTarget === "function" ? findTarget : null);
+    const existing = findTargetFn ? findTargetFn(note) : (root ? root.querySelector(targetSelector) : null);
+    const isRenderableFn = typeof isRenderable === "function" ? isRenderable : (typeof isTargetRenderable === "function" ? isTargetRenderable : null);
+    const isOverlayOpenFn = typeof isOverlayContainerOpen === "function" ? isOverlayContainerOpen : () => true;
+
+    if (existing && (!isRenderableFn || isRenderableFn(existing)) && isOverlayOpenFn(existing)) {
+      return false;
+    }
+
+    const evId = (Array.isArray(window.mockEvents) && window.mockEvents.find(e => e.hasExamReport)?.id)
+      || (Array.isArray(window.mockEvents) && window.mockEvents[0]?.id)
+      || "ev8";
+
+    // 0. 拦截抽屉 / 诊断报告拦截弹窗 (MasterGo: sheetReportInterceptPanel)
+    const isIntercept = targetSelector.includes("intercept") || targetSelector.includes("sheetReportIntercept")
+      || title.includes("拦截") || title.includes("已有报告") || title.includes("诊断报告")
+      || (targetSelector.includes("sheet-panel") && (title.includes("报告") || title.includes("拦截")));
+
+    if (isIntercept) {
+      if (typeof window.closeAllSheets === "function") window.closeAllSheets();
+      if (typeof window.closeAllModals === "function") window.closeAllModals();
+
+      if (typeof window.openReportInterceptSheet === "function") {
+        try {
+          window.openReportInterceptSheet();
+          return true;
+        } catch(e) {
+          console.warn("调用 openReportInterceptSheet 失败", e);
+        }
+      }
+      const interceptPanel = document.getElementById("sheetReportInterceptPanel") || root.querySelector(".intercept-sheet-panel");
+      if (interceptPanel) {
+        interceptPanel.classList.add("show");
+        const overlay = document.getElementById("sheetOverlay") || root.querySelector("#sheetOverlay, .sheet-overlay");
+        if (overlay) overlay.classList.add("show");
+        return true;
+      }
+    }
+
+    // 1. 删除提示 / 删除二次确认弹窗
+    const isDelete = targetSelector.includes("delete") || targetSelector.includes("deleteWarning")
+      || title.includes("删除") || title.includes("下线") || title.includes("移除")
+      || (targetSelector.includes("modal-card") && !title.includes("编辑") && !title.includes("添加"));
+
+    if (isDelete) {
+      if (typeof window.closeAllSheets === "function") window.closeAllSheets();
+      if (typeof window.closeAllModals === "function") window.closeAllModals();
+      if (typeof window.closeModal === "function") window.closeModal("editEventModal");
+
+      if (typeof window.handleDeleteClick === "function") {
+        try {
+          window.handleDeleteClick(evId);
+          return true;
+        } catch(e) {}
+      }
+      if (typeof window.showDeleteExamWarningModal === "function") {
+        try {
+          window.showDeleteExamWarningModal(evId);
+          return true;
+        } catch(e) {}
+      }
+      if (typeof window.showDeleteGeneralWarningModal === "function") {
+        try {
+          window.showDeleteGeneralWarningModal(evId);
+          return true;
+        } catch(e) {}
+      }
+
+      const delBtn = document.querySelector("#eventDetailModal .sheet-btn-cancel, .sheet-card .sheet-btn-cancel, button.delete-btn, [onclick*='handleDeleteClick']");
+      if (delBtn) {
+        delBtn.click();
+        return true;
+      }
+      const eventItem = document.querySelector(".day-event-item, [onclick*='showEventDetail']");
+      if (eventItem) {
+        eventItem.click();
+        setTimeout(() => {
+          const detailDelBtn = document.querySelector("#eventDetailModal .sheet-btn-cancel, .sheet-card .sheet-btn-cancel");
+          if (detailDelBtn) detailDelBtn.click();
+        }, 60);
+        return true;
+      }
+    }
+
+    // 2. 编辑日程弹窗
+    const isEdit = targetSelector.includes("editEvent") || title.includes("编辑")
+      || (targetSelector.includes("sheet-card") && !title.includes("添加") && !title.includes("新建") && !isDelete);
+
+    if (isEdit) {
+      if (typeof window.closeAllSheets === "function") window.closeAllSheets();
+      if (typeof window.closeAllModals === "function") window.closeAllModals();
+      if (typeof window.closeModal === "function") window.closeModal("deleteWarningModal");
+
+      if (typeof window.openEditEventModal === "function") {
+        try {
+          window.openEditEventModal(evId);
+          return true;
+        } catch (e) {
+          console.warn("调用 openEditEventModal 失败", e);
+        }
+      }
+      const confirmBtn = document.querySelector("#eventDetailModal .sheet-btn-confirm, .sheet-card .sheet-btn-confirm");
+      if (confirmBtn) {
+        confirmBtn.click();
+        return true;
+      }
+      const eventItem = document.querySelector(".day-event-item, [onclick*='showEventDetail'], [onclick*='openEditEventModal']");
+      if (eventItem) {
+        eventItem.click();
+        setTimeout(() => {
+          const editBtn = document.querySelector("#eventDetailModal .sheet-btn-confirm");
+          if (editBtn) editBtn.click();
+        }, 60);
+        return true;
+      }
+    }
+
+    // 3. 新建 / 添加日程专属抽屉及弹窗
+    const isAdd = targetSelector.includes("addEvent") || targetSelector.includes("AddSchedule")
+      || title.includes("新建") || title.includes("添加") || title.includes("创建");
+
+    if (isAdd) {
+      if (typeof window.closeAllModals === "function") window.closeAllModals();
+      if (typeof window.closeAllSheets === "function") window.closeAllSheets();
+
+      if (typeof window.openAddScheduleSheet === "function") {
+        try {
+          window.openAddScheduleSheet();
+          return true;
+        } catch(e) {}
+      }
+      if (typeof window.openAddEventModal === "function") {
+        try {
+          window.openAddEventModal();
+          return true;
+        } catch(e) {}
+      }
+      const addBtn = root.querySelector("#addEventBtn, .add-event-btn, [onclick*='openAddEventModal'], [onclick*='openAddScheduleSheet'], .esc-add-btn");
+      if (addBtn) {
+        addBtn.click();
+        return true;
+      }
+    }
+
+    // 4. 切换日程专属抽屉
+    const isSelectSchedule = targetSelector.includes("scheduleSelect") || title.includes("选择日程") || title.includes("切换日程");
+    if (isSelectSchedule) {
+      if (typeof window.closeAllSheets === "function") window.closeAllSheets();
+      if (typeof window.openScheduleSelectSheet === "function") {
+        try {
+          window.openScheduleSelectSheet();
+          return true;
+        } catch(e) {}
+      }
+    }
+
+    // 5. 通用弹窗 / 抽屉 / 底部面板触发器寻找
+    const idMatch = targetSelector.match(/#([a-zA-Z0-9_-]+)/);
+    const classMatches = Array.from(targetSelector.matchAll(/\.([a-zA-Z0-9_-]+)/g)).map(m => m[1]);
+    const candidates = [];
+    if (idMatch) candidates.push(idMatch[1]);
+    candidates.push(...classMatches);
+
+    for (const cand of candidates) {
+      const capitalized = cand.charAt(0).toUpperCase() + cand.slice(1);
+      const fnNames = [`open${capitalized}`, `show${capitalized}`, `open${capitalized}Modal`, `show${capitalized}Modal`, `open${capitalized}Sheet`];
+      for (const fn of fnNames) {
+        if (typeof window[fn] === "function") {
+          try {
+            window[fn]();
+            return true;
+          } catch(e) {}
+        }
+      }
+      const trigger = root.querySelector(`[data-target="#${cand}"], [data-target="${cand}"], [data-modal="${cand}"], [data-sheet="${cand}"], [aria-controls="${cand}"], [href="#${cand}"]`);
+      if (trigger) {
+        trigger.click();
+        return true;
+      }
+    }
+
+    // 7. 批改加载中抽屉 (shangchuanfupan.html: gradingSheetPanel)
+    const isGrading = targetSelector.includes("grading") || targetSelector.includes("gsp-")
+      || title.includes("批改") || title.includes("解析中") || title.includes("进度条");
+    if (isGrading) {
+      if (typeof window.openGradingSheetDemo === "function") {
+        try {
+          window.openGradingSheetDemo(true);
+          return true;
+        } catch(e) {}
+      }
+      const panel = document.getElementById("gradingSheetPanel");
+      const overlay = document.getElementById("loadingSheetOverlay");
+      if (panel) {
+        panel.classList.add("show");
+        if (overlay) overlay.classList.add("show");
+        if (typeof window.pauseGrading === "function") window.pauseGrading();
+        return true;
+      }
+    }
+
+    // 6. 关键字按钮匹配 (排除通用词)
+    const stopWords = new Set(["日程", "页面", "说明", "业务", "功能", "模块", "弹窗", "面板"]);
+    const keywords = title.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, " ").trim().split(/\s+/).filter(w => w.length >= 2 && !stopWords.has(w));
+    for (const kw of keywords) {
+      const btn = Array.from(root.querySelectorAll("button, a, .btn, [role='button']")).find(el => el.textContent?.trim().includes(kw) && !el.closest("#prototypeAnnotationRoot, .protoMobile-stage, .proto-editor-overlay"));
+      if (btn) {
+        btn.click();
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function doLocateTarget(note, target) {
+    setActive(note.id);
+    if (note.scroll === false || target.closest('[data-proto-scroll="none"]')) {
+      highlightTarget(target);
+      scheduleMarkerLayout();
+      return;
+    }
+    const scroller = findScrollParent(target);
+    if (!scroller || isFullyVisibleInDevice(target, scroller)) {
+      highlightTarget(target);
+      scheduleMarkerLayout();
+      return;
+    }
+    const scrollRect = scroller.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const targetTop = targetRect.top - scrollRect.top + scroller.scrollTop;
+    const maxScrollTop = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+    const desiredTop = Math.min(maxScrollTop, Math.max(0, targetTop - (scroller.clientHeight - targetRect.height) / 2));
+    if (Math.abs(desiredTop - scroller.scrollTop) < 0.5) {
+      highlightTarget(target);
+      scheduleMarkerLayout();
+      return;
+    }
+    scroller.scrollTo({ top: desiredTop, behavior: "smooth" });
+    trackScrollUntilSettled(scroller, target);
+  }
+
+  function locateTarget(note) {
+    let target = findTarget(note);
+    const isOverlayOpenFn = typeof isOverlayContainerOpen === "function" ? isOverlayContainerOpen : () => true;
+    if (!target || !isTargetRenderable(target) || !isOverlayOpenFn(target)) {
+      if (tryOpenOverlayForNote(note)) {
+        setTimeout(() => {
+          syncContext();
+          renderMarkers();
+          const nextTarget = findTarget(note);
+          if (nextTarget && isTargetRenderable(nextTarget)) {
+            doLocateTarget(note, nextTarget);
+          }
+        }, 150);
+        return;
+      }
+    }
+    if (!target) return;
+    doLocateTarget(note, target);
+  }
+
+  async function openNote(note) {
+    setActive(note.id);
+    if (!isMobileViewport()) {
+      const card = noteList.querySelector(`[data-note-id="${CSS.escape(note.id)}"]`);
+      if (card) {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        card.focus({ preventScroll: true });
+      }
+      return;
+    }
+    mobileSheetTitle.textContent = note.title;
+    await renderRichContent(mobileSheetBody, note);
+    mobileNoteLayer.classList.add("is-open");
+    mobileNoteLayer.setAttribute("aria-hidden", "false");
+    closeMobileMenu();
+    applySheetSnap();
+  }
+
+  function closeMobileNote() {
+    mobileNoteLayer.classList.remove("is-open");
+    mobileNoteLayer.setAttribute("aria-hidden", "true");
+  }
+
+  function applySheetSnap() {
+    mobileSheet.style.setProperty("--protoMobile-sheet-height", `${Math.round(sheetSnaps[sheetSnap] * 100)}dvh`);
+  }
+
+  async function renderGlobalDocs() {
+    docNav.replaceChildren();
+    docContent.replaceChildren();
+    if (!globalSections.length) {
+      stage.classList.add("no-docs");
+      mobileDocsOpen.hidden = true;
+      docsPanel.hidden = true;
+      return;
+    }
+    for (const [index, section] of globalSections.entries()) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = section.title;
+      button.classList.toggle("is-active", index === 0);
+      const sectionNode = document.createElement("section");
+      sectionNode.className = "protoMobile-doc-section";
+      sectionNode.id = `protoMobile-doc-${section.id}`;
+      const heading = document.createElement("h3");
+      heading.textContent = section.title;
+      const body = document.createElement("div");
+      body.className = "protoMobile-rich-content";
+      sectionNode.append(heading, body);
+      docNav.appendChild(button);
+      docContent.appendChild(sectionNode);
+      await renderRichContent(body, section);
+      button.addEventListener("click", () => {
+        docNav.querySelectorAll("button").forEach(item => item.classList.toggle("is-active", item === button));
+        const contentRect = docContent.getBoundingClientRect();
+        const targetRect = sectionNode.getBoundingClientRect();
+        docContent.scrollTo({ top: targetRect.top - contentRect.top + docContent.scrollTop, behavior: "smooth" });
+      });
+    }
+  }
+
+  function openMobileDocs() {
+    if (!globalSections.length) return;
+    closeMobileMenu();
+    closeMobileNote();
+    mobileDocsContent.innerHTML = docContent.innerHTML;
+    mobileDocsContent.querySelectorAll("[id]").forEach(element => element.removeAttribute("id"));
+    mobileDocsLayer.classList.add("is-open");
+    mobileDocsLayer.setAttribute("aria-hidden", "false");
+    markerLayer.classList.add("is-hidden");
+  }
+
+  function closeMobileDocs() {
+    mobileDocsLayer.classList.remove("is-open");
+    mobileDocsLayer.setAttribute("aria-hidden", "true");
+    renderMarkers();
+  }
+
+  function syncContext() {
+    ensureOverlayLayer(true);
+    const context = getScopeContext();
+    const nextNotes = notesForScope(context.scope);
+    const scopeChanged = context.scope !== currentScope;
+    const notesChanged = nextNotes.length !== currentNotes.length
+      || nextNotes.some((note, index) => note.id !== currentNotes[index]?.id);
+    if (scopeChanged || notesChanged) {
+      currentScope = context.scope;
+      currentNotes = nextNotes;
+      if (!currentNotes.some(note => note.id === activeNoteId)) activeNoteId = "";
+      closeMobileNote();
+      renderNoteList();
+      renderMarkers();
+    } else {
+      setActive(activeNoteId);
+      scheduleMarkerLayout();
+    }
+    mobileCount.textContent = String(currentNotes.length);
+    mobileMenuMeta.textContent = `当前页面 ${currentNotes.length} 条`;
+    scheduleLayerAudit();
+  }
+
+  function runContextRefresh() {
+    contextRefreshFrame = 0;
+    syncContext();
+    if (performance.now() < contextRefreshUntil) {
+      contextRefreshFrame = requestAnimationFrame(runContextRefresh);
+    }
+  }
+
+  function scheduleContextRefresh(settle = false) {
+    if (settle === true) {
+      contextRefreshUntil = Math.max(contextRefreshUntil, performance.now() + 900);
+    }
+    if (!contextRefreshFrame) contextRefreshFrame = requestAnimationFrame(runContextRefresh);
+  }
+
+  function positionMobileMenu() {
+    if (!mobileMenu.classList.contains("is-open")) return;
+    const launcherRect = mobileLauncher.getBoundingClientRect();
+    const menuRect = mobileMenu.getBoundingClientRect();
+    const margin = 8;
+    const left = Math.min(Math.max(margin, launcherRect.right - menuRect.width), window.innerWidth - menuRect.width - margin);
+    let top = launcherRect.top - menuRect.height - 10;
+    if (top < margin) top = launcherRect.bottom + 10;
+    mobileMenu.style.left = `${left}px`;
+    mobileMenu.style.top = `${Math.min(top, window.innerHeight - menuRect.height - margin)}px`;
+  }
+
+  function closeMobileMenu() {
+    mobileMenu.classList.remove("is-open");
+    mobileLauncher.setAttribute("aria-expanded", "false");
+  }
+
+  function toggleMobileMenu() {
+    const willOpen = !mobileMenu.classList.contains("is-open");
+    mobileMenu.classList.toggle("is-open", willOpen);
+    mobileLauncher.setAttribute("aria-expanded", String(willOpen));
+    if (willOpen) positionMobileMenu();
+  }
+
+  function inspectCompactDocsLayer() {
+    const open = docsPanel.classList.contains("is-compact-open");
+    if (!open) return { status: "closed", open: false };
+    const rect = docsPanel.getBoundingClientRect();
+    const sampleX = Math.max(rect.left + 1, Math.min(rect.right - 1, rect.left + Math.min(80, rect.width / 2)));
+    const sampleY = Math.max(rect.top + 1, Math.min(rect.bottom - 1, rect.top + Math.min(32, rect.height / 2)));
+    const hit = document.elementFromPoint(sampleX, sampleY);
+    const issues = [];
+    if (docsPanel.parentElement !== overlayRoot) issues.push("DOCS_NOT_IN_OVERLAY_ROOT");
+    if (!compactBackdrop.classList.contains("is-open")) issues.push("COMPACT_BACKDROP_NOT_OPEN");
+    if (!isVisible(docsPanel)) issues.push("COMPACT_DOCS_NOT_VISIBLE");
+    if (!(hit && (hit === docsPanel || docsPanel.contains(hit)))) issues.push("COMPACT_DOCS_NOT_CLICKABLE");
+    if (!markerLayer.classList.contains("is-hidden")) issues.push("MARKERS_VISIBLE_BEHIND_DOCS");
+    return {
+      status: issues.length ? "fail" : "pass",
+      open: true,
+      issues,
+      mountedToOverlayRoot: docsPanel.parentElement === overlayRoot,
+      markersHidden: markerLayer.classList.contains("is-hidden"),
+      hitInsidePanel: Boolean(hit && (hit === docsPanel || docsPanel.contains(hit))),
+      rect: serializeRect(rect)
+    };
+  }
+
+  function auditCompactDocsLayer(logFailure = false) {
+    const report = inspectCompactDocsLayer();
+    docsPanel.dataset.protoMobileLayerStatus = report.status;
+    if (logFailure && report.status === "fail") console.error("移动端中宽原型说明层级检查未通过", report);
+    return report;
+  }
+
+  function restoreCompactDocsToStage() {
+    if (docsPanel.parentElement !== stage) stage.insertBefore(docsPanel, docsSplitter || device);
+  }
+
+  function openCompactDocs() {
+    if (isMobileViewport() || window.innerWidth >= 1180) return;
+    ensureOverlayLayer(false);
+    overlayRoot.appendChild(docsPanel);
+    compactBackdrop.classList.add("is-open");
+    docsPanel.classList.add("is-compact-open");
+    renderMarkers();
+    requestAnimationFrame(() => auditCompactDocsLayer(true));
+  }
+
+  function closeCompactDocs() {
+    const wasOpen = docsPanel.classList.contains("is-compact-open");
+    docsPanel.classList.remove("is-compact-open");
+    compactBackdrop.classList.remove("is-open");
+    restoreCompactDocsToStage();
+    docsPanel.dataset.protoMobileLayerStatus = "closed";
+    if (wasOpen) renderMarkers();
+  }
+
+  desktopToggle.addEventListener("click", () => {
+    desktopEnabled = !desktopEnabled;
+    desktopToggle.setAttribute("aria-checked", String(desktopEnabled));
+    desktopToggle.setAttribute("aria-label", desktopEnabled ? "隐藏页面标注" : "显示页面标注");
+    renderMarkers();
+  });
+
+  compactTrigger.addEventListener("click", openCompactDocs);
+  compactClose.addEventListener("click", closeCompactDocs);
+  compactBackdrop.addEventListener("click", closeCompactDocs);
+
+  let launcherDrag = null;
+  let suppressLauncherClick = false;
+  mobileLauncher.addEventListener("pointerdown", event => {
+    if (event.button !== 0) return;
+    const rect = mobileLauncher.getBoundingClientRect();
+    launcherDrag = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, left: rect.left, top: rect.top, moved: false };
+    mobileLauncher.style.left = `${rect.left}px`;
+    mobileLauncher.style.top = `${rect.top}px`;
+    mobileLauncher.style.right = "auto";
+    mobileLauncher.style.bottom = "auto";
+    mobileLauncher.setPointerCapture(event.pointerId);
+  });
+  mobileLauncher.addEventListener("pointermove", event => {
+    if (!launcherDrag || event.pointerId !== launcherDrag.pointerId) return;
+    const dx = event.clientX - launcherDrag.startX;
+    const dy = event.clientY - launcherDrag.startY;
+    if (Math.hypot(dx, dy) > 5) launcherDrag.moved = true;
+    if (!launcherDrag.moved) return;
+    mobileLauncher.style.left = `${Math.max(8, Math.min(window.innerWidth - 60, launcherDrag.left + dx))}px`;
+    mobileLauncher.style.top = `${Math.max(8, Math.min(window.innerHeight - 60, launcherDrag.top + dy))}px`;
+    closeMobileMenu();
+  });
+  mobileLauncher.addEventListener("pointerup", event => {
+    if (!launcherDrag || event.pointerId !== launcherDrag.pointerId) return;
+    suppressLauncherClick = launcherDrag.moved;
+    launcherDrag = null;
+  });
+  mobileLauncher.addEventListener("click", event => {
+    if (suppressLauncherClick) {
+      suppressLauncherClick = false;
+      event.preventDefault();
+      return;
+    }
+    toggleMobileMenu();
+  });
+
+  mobileToggle.addEventListener("click", event => {
+    event.stopPropagation();
+    mobileEnabled = !mobileEnabled;
+    mobileToggle.setAttribute("aria-checked", String(mobileEnabled));
+    mobileToggle.setAttribute("aria-label", mobileEnabled ? "隐藏页面标注" : "显示页面标注");
+    renderMarkers();
+  });
+  mobileDocsOpen.addEventListener("click", openMobileDocs);
+  document.getElementById("protoMobileMobileDocsClose").addEventListener("click", closeMobileDocs);
+  document.getElementById("protoMobileMobileNoteClose").addEventListener("click", closeMobileNote);
+  document.getElementById("protoMobileMobileNoteMask").addEventListener("click", closeMobileNote);
+  document.getElementById("protoMobileMobileSheetSize").addEventListener("click", () => {
+    sheetSnap = (sheetSnap + 1) % sheetSnaps.length;
+    applySheetSnap();
+  });
+
+  let sheetDrag = null;
+  mobileSheetHandle.addEventListener("pointerdown", event => {
+    sheetDrag = { pointerId: event.pointerId, startY: event.clientY, startHeight: mobileSheet.getBoundingClientRect().height };
+    mobileSheetHandle.setPointerCapture(event.pointerId);
+  });
+  mobileSheetHandle.addEventListener("pointermove", event => {
+    if (!sheetDrag || event.pointerId !== sheetDrag.pointerId) return;
+    const height = Math.max(window.innerHeight * 0.36, Math.min(window.innerHeight * 0.94, sheetDrag.startHeight + sheetDrag.startY - event.clientY));
+    mobileSheet.style.setProperty("--protoMobile-sheet-height", `${height}px`);
+  });
+  mobileSheetHandle.addEventListener("pointerup", event => {
+    if (!sheetDrag || event.pointerId !== sheetDrag.pointerId) return;
+    const ratio = mobileSheet.getBoundingClientRect().height / window.innerHeight;
+    sheetSnap = sheetSnaps.reduce((best, value, index) => Math.abs(value - ratio) < Math.abs(sheetSnaps[best] - ratio) ? index : best, 0);
+    sheetDrag = null;
+    applySheetSnap();
+  });
+
+  document.addEventListener("click", event => {
+    if (!mobileMenu.contains(event.target) && !mobileLauncher.contains(event.target)) closeMobileMenu();
+  });
+  document.addEventListener("scroll", scheduleMarkerLayout, true);
+  document.addEventListener("prototype-annotation:scopechange", () => scheduleContextRefresh(true));
+  document.addEventListener("animationstart", () => scheduleContextRefresh(true), true);
+  document.addEventListener("animationend", () => scheduleContextRefresh(true), true);
+  document.addEventListener("animationcancel", () => scheduleContextRefresh(true), true);
+  document.addEventListener("transitionrun", () => scheduleContextRefresh(true), true);
+  document.addEventListener("transitionend", () => scheduleContextRefresh(true), true);
+  document.addEventListener("transitioncancel", () => scheduleContextRefresh(true), true);
+  window.addEventListener("resize", () => {
+    closeCompactDocs();
+    closeMobileMenu();
+    closeMobileNote();
+    setDesktopDocsWidth(getDesktopDocsWidth(), false);
+    applySheetSnap();
+    scheduleContextRefresh(true);
+    requestAnimationFrame(() => auditLayout(true));
+  });
+
+  const scopeObserver = new MutationObserver(() => scheduleContextRefresh(true));
+  scopeObserver.observe(appRoot, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["class", "hidden", "style", "aria-hidden", "aria-selected", "data-proto-scope", "data-proto-layer"]
+  });
+  if (window.ResizeObserver) {
+    const resizeObserver = new ResizeObserver(() => scheduleContextRefresh(true));
+    resizeObserver.observe(device);
+    resizeObserver.observe(appRoot);
+    resizeObserver.observe(stage);
+  }
+
+  function inspectCurrentScopeAnnotations() {
+    const context = getScopeContext();
+    const configured = notesForScope(context.scope);
+    const invalidTargetIds = [];
+    const hiddenTargetIds = [];
+    const undersizedTargetIds = [];
+    configured.forEach(note => {
+      const target = findTarget(note, context.node);
+      if (!target) invalidTargetIds.push(note.id);
+      else if (!isTargetRenderable(target, context.node)) hiddenTargetIds.push(note.id);
+      else if (isTargetUndersized(target)) undersizedTargetIds.push(note.id);
+    });
+    return {
+      scope: context.scope,
+      configuredCount: configured.length,
+      listCount: currentNotes.length,
+      markerNodeCount: markerLayer.querySelectorAll(".protoMobile-marker").length,
+      invalidTargetIds,
+      hiddenTargetIds,
+      undersizedTargetIds,
+      currentIds: currentNotes.map(note => note.id)
+    };
+  }
+
+  window.__prototypeMobileDiagnostics = {
+    inspect() {
+      const rect = mobileLauncher.getBoundingClientRect();
+      const hit = isMobileViewport() ? document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2) : null;
+      return {
+        viewportMode: isMobileViewport() ? "mobile" : "desktop",
+        layerMode: overlayRoot.dataset.protoMobileLayerMode || "unknown",
+        scope: getScopeContext().scope,
+        annotationCount: currentNotes.length,
+        annotationIds: currentNotes.map(note => note.id),
+        deviceScrollTop: device.scrollTop,
+        stageScrollTop: stage.scrollTop,
+        windowScrollY: window.scrollY,
+        annotationAudit: inspectCurrentScopeAnnotations(),
+        layoutAudit: auditLayout(false),
+        compactDocsAudit: inspectCompactDocsLayer(),
+        launcherClickable: !isMobileViewport() || Boolean(hit && (hit === mobileLauncher || mobileLauncher.contains(hit)))
+      };
+    },
+    repair() {
+      ensureOverlayLayer(true);
+      if (docsPanel.classList.contains("is-compact-open")) overlayRoot.appendChild(docsPanel);
+      syncContext();
+      requestAnimationFrame(() => auditCompactDocsLayer(true));
+    }
+  };
+
+
+  // ══════ 全局原型内链与宿主工作台（ProtoHub / PRD Hub）无缝智能联动路由 ══════
+window.addEventListener('message', function(e) {
+  if (!e.data) return;
+  if (e.data.type === 'PRD_PAGES_UPDATED' && Array.isArray(e.data.pages)) {
+    window.__PRD_PAGES_REGISTRY__ = e.data.pages;
+    try { localStorage.setItem('PRD_PAGES_REGISTRY_UNIFIED', JSON.stringify(e.data.pages)); } catch(err) {}
+  }
+});
+
+function doProtoNavigate(targetUrl, e) {
+  if (!targetUrl || targetUrl.startsWith('#') || targetUrl.startsWith('javascript:') || targetUrl.startsWith('tel:') || targetUrl.startsWith('mailto:')) {
+    return true;
+  }
+  const targetFile = targetUrl.split(/[?#]/)[0].split('/').pop();
+  if (!targetFile || !targetFile.endsWith('.html')) return true;
+
+  const hasParent = window.parent && window.parent !== window;
+
+  // 1. 获取工作台页面注册表（优先级：当前窗口全局注册表 -> window.parent -> 本地缓存）
+  let pagesList = window.__PRD_PAGES_REGISTRY__ || null;
+  if (!pagesList && hasParent) {
+    try {
+      if (window.parent.__PRD_PAGES_REGISTRY__) {
+        pagesList = window.parent.__PRD_PAGES_REGISTRY__;
+      } else if (window.parent.projectInfo && window.parent.projectInfo.pages) {
+        pagesList = window.parent.projectInfo.pages;
+      } else if (window.parent.pageList) {
+        pagesList = window.parent.pageList;
+      }
+    } catch (err) {}
+  }
+
+  if (!pagesList) {
+    try {
+      const raw = localStorage.getItem('PRD_PAGES_REGISTRY_UNIFIED') || localStorage.getItem('PRD_HUB_PAGES_V2');
+      if (raw) pagesList = JSON.parse(raw);
+    } catch (err) {}
+  }
+
+  if (Array.isArray(pagesList) && pagesList.length > 0) {
+    const matched = pagesList.find(p => p.path === targetFile || p.id === targetFile.replace(/\.html$/i, ''));
+    if (matched) {
+      // 1. 如果在【页面管理】中未勾选该页面：彻底阻止跳转（无反应）+ 弹提示
+      if (matched.visible === false) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
+        const msg = `⚠️ 页面「${matched.name || targetFile}」未在「页面管理」中勾选，暂不开放跳转`;
+        if (hasParent) {
+          try {
+            window.parent.postMessage({ type: 'GUARD_BLOCKED', file: targetFile, name: matched.name }, '*');
+          } catch (err) {}
+          try {
+            if (typeof window.parent.showFloatToast === 'function') window.parent.showFloatToast(msg);
+            else if (typeof window.parent.showHubToast === 'function') window.parent.showHubToast(msg);
+          } catch(err) {}
+        }
+        let toastEl = document.getElementById('proto-inner-guard-toast');
+        if (!toastEl) {
+          toastEl = document.createElement('div');
+          toastEl.id = 'proto-inner-guard-toast';
+          toastEl.style.cssText = 'position:fixed;top:30px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,0.92);color:#fff;font-size:13px;padding:8px 18px;border-radius:20px;z-index:999999;box-shadow:0 4px 16px rgba(0,0,0,0.3);';
+          document.body.appendChild(toastEl);
+        }
+        toastEl.textContent = msg;
+        toastEl.style.display = 'block';
+        setTimeout(() => { if (toastEl) toastEl.style.display = 'none'; }, 2400);
+        return false;
+      }
+
+      // 2. 如果在【页面管理】中已勾选：真正通知宿主工作台切换到该页面！
+      if (hasParent) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
+        try {
+          window.parent.postMessage({ type: 'SWITCH_PAGE', pageId: matched.id, path: matched.path }, '*');
+        } catch (err) {}
+        try {
+          if (typeof window.parent.switchPage === 'function') {
+            window.parent.switchPage(matched.id || matched.path);
+          }
+        } catch(err) {}
+        return false;
+      }
+    }
+  }
+
+  if (hasParent) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+    }
+    try {
+      window.parent.postMessage({ type: 'SWITCH_PAGE', path: targetFile }, '*');
+    } catch (err) {}
+    return false;
+  }
+
+  // 独立单文件直接打开时的降级
+  window.location.href = targetUrl;
+  return false;
+}
+
+function safeProtoNavigate(targetUrl) {
+  doProtoNavigate(targetUrl, null);
+}
+
+// 捕获阶段拦截所有链接和点击跳转
+document.addEventListener('click', function(e) {
+  const link = e.target.closest('a');
+  if (link) {
+    const href = link.getAttribute('href');
+    if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('tel:') && !href.startsWith('mailto:')) {
+      const targetFile = href.split(/[?#]/)[0].split('/').pop();
+      if (targetFile && targetFile.endsWith('.html')) {
+        const res = doProtoNavigate(href, e);
+        if (res === false) return;
+      }
+    }
+  }
+
+  const clickEl = e.target.closest('[onclick]');
+  if (clickEl) {
+    const onclickStr = clickEl.getAttribute('onclick') || '';
+    const match = onclickStr.match(/(?:window\.)?location(?:\.href)?\s*=\s*['"`]([^'"`]+)['"`]/) 
+      || onclickStr.match(/safeProtoNavigate\(['"`]([^'"`]+)['"`]\)/)
+      || onclickStr.match(/goToAllSchedule\(\)/);
+    
+    if (match) {
+      let href = match[1];
+      if (onclickStr.includes('goToAllSchedule')) href = 'quanburicheng.html';
+      if (href) {
+        const targetFile = href.split(/[?#]/)[0].split('/').pop();
+        if (targetFile && targetFile.endsWith('.html')) {
+          const res = doProtoNavigate(href, e);
+          if (res === false) return;
+        }
+      }
+    }
+  }
+}, true);
+
+  // --- 原型说明跨页管理与同步模块 ---
+  const PROJECT_PAGE_REGISTRY = [
+    { file: "fenxi.html", id: "fenxi", title: "学情分析" },
+    { file: "cuoti.html", id: "cuoti", title: "错题/试卷" },
+    { file: "shequ.html", id: "shequ", title: "陪读社区" },
+    { file: "xiaoxi.html", id: "xiaoxi", title: "消息" },
+    { file: "wode.html", id: "wode", title: "我的" },
+    { file: "rili.html", id: "rili", title: "备考日程" },
+    { file: "fenxibaogao.html", id: "fenxibaogao", title: "试卷诊断报告" },
+    { file: "gouxuancuoti.html", id: "gouxuancuoti", title: "确认错题信息" },
+    { file: "xuanzhexingzhi.html", id: "xuanzhexingzhi", title: "试卷分析" },
+    { file: "loading.html", id: "loading", title: "深度分析中" },
+    { file: "gerenzhuye.html", id: "gerenzhuye", title: "个人主页" },
+    { file: "sixin.html", id: "sixin", title: "私信聊天" },
+    { file: "shangchuanfupan.html", id: "shangchuanfupan", title: "试卷分析" },
+    { file: "scshijuan.html", id: "scshijuan", title: "上传试卷" },
+    { file: "bianjijiazhang.html", id: "bianjijiazhang", title: "编辑个人资料" },
+    { file: "bianjixs.html", id: "bianjixs", title: "我的孩子" },
+    { file: "changqifenxixq.html", id: "changqifenxixq", title: "成长趋势分析" },
+    { file: "dancifenxixq.html", id: "dancifenxixq", title: "单次大考诊断" },
+    { file: "fabutiezi.html", id: "fabutiezi", title: "发布帖子" },
+    { file: "fensi.html", id: "fensi", title: "我的粉丝" },
+    { file: "guanzhu.html", id: "guanzhu", title: "我的关注" },
+    { file: "heimdan.html", id: "heimdan", title: "黑名单管理" },
+    { file: "huozan.html", id: "huozan", title: "获得的赞" },
+    { file: "jiazhangrenzheng.html", id: "jiazhangrenzheng", title: "家长认证" },
+    { file: "login.html", id: "login", title: "登录 / 注册" },
+    { file: "quanburicheng.html", id: "quanburicheng", title: "全部日程" },
+    { file: "quanxian.html", id: "quanxian", title: "应用权限管理" },
+    { file: "queren_dacuoti.html", id: "queren_dacuoti", title: "确认错题信息" },
+    { file: "shezhi.html", id: "shezhi", title: "设置" },
+    { file: "shouye_guajian.html", id: "shouye_guajian", title: "首页挂件组件" },
+    { file: "tiezidetail.html", id: "tiezidetail", title: "帖子详情" },
+    { file: "weirenzi.html", id: "weirenzi", title: "家长认证" },
+    { file: "wodepinglun.html", id: "wodepinglun", title: "我的评论" },
+    { file: "wodetiezi.html", id: "wodetiezi", title: "我的发帖" },
+    { file: "xiugaishouji.html", id: "xiugaishouji", title: "更换手机号" },
+    { file: "yinsi_info.html", id: "yinsi_info", title: "个人信息收集清单" },
+    { file: "yinsi_third.html", id: "yinsi_third", title: "第三方共享清单" },
+    { file: "yinsi_zhengce.html", id: "yinsi_zhengce", title: "隐私政策" },
+    { file: "yonghu_xieyi.html", id: "yonghu_xieyi", title: "用户协议" },
+    { file: "youyong.html", id: "youyong", title: "有用" },
+    { file: "zhuxiao_xieyi.html", id: "zhuxiao_xieyi", title: "账号注销协议" },
+    { file: "发卡与授权码生成器.html", id: "faka", title: "ProtoHub" }
+  ];
+
+  const syncModal = document.getElementById("protoMobileDocSyncModal");
+  const syncBtn = document.getElementById("protoMobileDocSyncBtn");
+  const syncCloseBtn = document.getElementById("protoMobileSyncClose");
+  const syncCloseFooterBtn = document.getElementById("protoMobileSyncCloseBtn");
+  const syncBackdrop = document.getElementById("protoMobileSyncBackdrop");
+  const globalSyncToggle = document.getElementById("protoMobileGlobalSyncToggle");
+  const tabBtnImport = document.getElementById("protoMobileTabBtnImport");
+  const tabBtnBatch = document.getElementById("protoMobileTabBtnBatch");
+  const tabBtnEdit = document.getElementById("protoMobileTabBtnEdit");
+  const paneImport = document.getElementById("protoMobilePaneImport");
+  const paneBatch = document.getElementById("protoMobilePaneBatch");
+  const paneEdit = document.getElementById("protoMobilePaneEdit");
+  const sourceSelect = document.getElementById("protoMobileSourceSelect");
+  const previewContent = document.getElementById("protoMobilePreviewContent");
+  const doCopyBtn = document.getElementById("protoMobileDoCopyBtn");
+  const batchChecklist = document.getElementById("protoMobileBatchChecklist");
+  const selectAllBtn = document.getElementById("protoMobileSelectAllBtn");
+  const deselectAllBtn = document.getElementById("protoMobileDeselectAllBtn");
+  const batchCountText = document.getElementById("protoMobileBatchCountText");
+  const doBatchSyncBtn = document.getElementById("protoMobileDoBatchSyncBtn");
+  const editTextarea = document.getElementById("protoMobileEditTextarea");
+  const saveEditBtn = document.getElementById("protoMobileSaveEditBtn");
+  const syncToast = document.getElementById("protoMobileSyncToast");
+
+  const STORAGE_KEY_UNIFIED_ACTIVE = "PROTO_GLOBAL_UNIFIED_DOCS_ACTIVE";
+  const STORAGE_KEY_UNIFIED_DATA = "PROTO_GLOBAL_UNIFIED_DOCS_DATA";
+
+  function applyUnifiedDocsIfActive() {
+    const isGlobalActive = localStorage.getItem(STORAGE_KEY_UNIFIED_ACTIVE) === "true";
+    if (isGlobalActive) {
+      const raw = localStorage.getItem(STORAGE_KEY_UNIFIED_DATA);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length) {
+            globalSections.splice(0, globalSections.length, ...parsed);
+          }
+        } catch(e) {}
+      }
+    }
+  }
+
+  function showToast(msg, duration = 2500) {
+    if (!syncToast) return;
+    syncToast.textContent = msg;
+    syncToast.hidden = false;
+    setTimeout(() => {
+      syncToast.hidden = true;
+    }, duration);
+  }
+
+  function initSyncFeature() {
+    if (!syncBtn || !syncModal) return;
+
+    const isGlobalActive = localStorage.getItem(STORAGE_KEY_UNIFIED_ACTIVE) === "true";
+    if (globalSyncToggle) {
+      globalSyncToggle.checked = isGlobalActive;
+      globalSyncToggle.addEventListener("change", () => {
+        const checked = globalSyncToggle.checked;
+        localStorage.setItem(STORAGE_KEY_UNIFIED_ACTIVE, checked ? "true" : "false");
+        if (checked) {
+          localStorage.setItem(STORAGE_KEY_UNIFIED_DATA, JSON.stringify(globalSections));
+          showToast("✅ 已开启全局统一说明，项目内切换页面将自动保持一致！");
+        } else {
+          showToast("ℹ️ 已关闭全局统一，各页面恢复独立说明。");
+        }
+      });
+    }
+
+    const ratioEqualBtn = document.getElementById("protoMobileRatioEqualBtn");
+    const ratioDocBtn = document.getElementById("protoMobileRatioDocBtn");
+    const ratioCompactBtn = document.getElementById("protoMobileRatioCompactBtn");
+
+    if (ratioEqualBtn) {
+      ratioEqualBtn.addEventListener("click", () => {
+        setDesktopDocsWidth("1fr", true);
+        scheduleMarkerLayout();
+        showToast("⚖️ 已将所有页面三栏设为 1:1 左右均衡对称比例！");
+      });
+    }
+    if (ratioDocBtn) {
+      ratioDocBtn.addEventListener("click", () => {
+        setDesktopDocsWidth(560, true);
+        scheduleMarkerLayout();
+        showToast("📖 已将所有页面三栏设为文档加宽比例 (560px)！");
+      });
+    }
+    if (ratioCompactBtn) {
+      ratioCompactBtn.addEventListener("click", () => {
+        setDesktopDocsWidth(480, true);
+        scheduleMarkerLayout();
+        showToast("📌 已将所有页面三栏设为紧凑适中比例 (480px)！");
+      });
+    }
+
+    function openSyncModal() {
+      syncModal.hidden = false;
+      switchSyncTab("import");
+      populateSourceSelect();
+      populateBatchChecklist();
+      loadEditText();
+    }
+    function closeSyncModal() {
+      syncModal.hidden = true;
+    }
+
+    syncBtn.addEventListener("click", openSyncModal);
+    if (syncCloseBtn) syncCloseBtn.addEventListener("click", closeSyncModal);
+    if (syncCloseFooterBtn) syncCloseFooterBtn.addEventListener("click", closeSyncModal);
+    if (syncBackdrop) syncBackdrop.addEventListener("click", closeSyncModal);
+
+    function switchSyncTab(tabName) {
+      [tabBtnImport, tabBtnBatch, tabBtnEdit].forEach(btn => btn && btn.classList.remove("is-active"));
+      [paneImport, paneBatch, paneEdit].forEach(p => p && p.classList.remove("is-active"));
+
+      if (tabName === "import" && tabBtnImport && paneImport) {
+        tabBtnImport.classList.add("is-active");
+        paneImport.classList.add("is-active");
+      } else if (tabName === "batch" && tabBtnBatch && paneBatch) {
+        tabBtnBatch.classList.add("is-active");
+        paneBatch.classList.add("is-active");
+      } else if (tabName === "edit" && tabBtnEdit && paneEdit) {
+        tabBtnEdit.classList.add("is-active");
+        paneEdit.classList.add("is-active");
+        loadEditText();
+      }
+    }
+
+    if (tabBtnImport) tabBtnImport.addEventListener("click", () => switchSyncTab("import"));
+    if (tabBtnBatch) tabBtnBatch.addEventListener("click", () => switchSyncTab("batch"));
+    if (tabBtnEdit) tabBtnEdit.addEventListener("click", () => switchSyncTab("edit"));
+
+    let cachedSourceDocs = {};
+
+    function populateSourceSelect() {
+      if (!sourceSelect) return;
+      sourceSelect.innerHTML = "";
+      const currentPath = window.location.pathname.split("/").pop() || "";
+      
+      PROJECT_PAGE_REGISTRY.forEach(pg => {
+        const opt = document.createElement("option");
+        opt.value = pg.file;
+        opt.textContent = `${pg.title} (${pg.file})${pg.file === currentPath ? " [当前页]" : ""}`;
+        if (pg.file === currentPath) opt.disabled = true;
+        sourceSelect.appendChild(opt);
+      });
+
+      const validOpt = Array.from(sourceSelect.options).find(o => !o.disabled);
+      if (validOpt) {
+        sourceSelect.value = validOpt.value;
+        loadSourcePreview(validOpt.value);
+      }
+
+      sourceSelect.onchange = () => {
+        loadSourcePreview(sourceSelect.value);
+      };
+    }
+
+    async function loadSourcePreview(filename) {
+      if (!previewContent) return;
+      previewContent.textContent = "正在读取 " + filename + " 的原型说明...";
+
+      if (cachedSourceDocs[filename]) {
+        renderPreviewData(cachedSourceDocs[filename]);
+        return;
+      }
+
+      try {
+        const res = await fetch(filename);
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const html = await res.text();
+        const m = html.match(/<script id="prototypeAnnotationData"[^>]*>([\s\S]*?)<\/script>/);
+        if (m) {
+          const parsed = JSON.parse(m[1]);
+          const secs = parsed.globalSections || [];
+          cachedSourceDocs[filename] = secs;
+          renderPreviewData(secs);
+        } else {
+          previewContent.textContent = "⚠️ 该页面未找到原型说明数据。";
+        }
+      } catch (err) {
+        const cached = localStorage.getItem("PROTO_DOCS_" + filename);
+        if (cached) {
+          try {
+            const secs = JSON.parse(cached);
+            cachedSourceDocs[filename] = secs;
+            renderPreviewData(secs);
+            return;
+          } catch(e) {}
+        }
+        previewContent.innerHTML = `<div style="color:#b45309">⚠️ 本地直接打开时受浏览器同源限制无法动态 fetch 其他文件。<br>提示：在各页面内点击“设为全局统一说明”可通过本地缓存实现无缝跨页同步。</div>`;
+      }
+    }
+
+    function renderPreviewData(sections) {
+      if (!previewContent) return;
+      if (!sections || !sections.length) {
+        previewContent.textContent = "（该页面暂无原型说明内容）";
+        return;
+      }
+      let html = `<div style="margin-bottom:8px"><strong>包含 ${sections.length} 个说明章节：</strong></div>`;
+      sections.forEach((s, idx) => {
+        const previewTxt = (s.content || "").replace(/<[^>]+>/g, "").slice(0, 120);
+        html += `<div style="padding:6px 8px;margin-bottom:6px;background:#fff;border-radius:4px;border:1px solid #e2e8f0">
+          <div style="font-weight:600;color:#0f172a">${idx + 1}. ${s.title || "未命名章节"}</div>
+          <div style="color:#64748b;font-size:11.5px;margin-top:2px">${previewTxt}${previewTxt.length >= 120 ? "..." : ""}</div>
+        </div>`;
+      });
+      previewContent.innerHTML = html;
+    }
+
+    function notifySectionsUpdated(newSections, targetFiles = null) {
+      window.dispatchEvent(new CustomEvent("prototype-annotation:update-sections", {
+        detail: { sections: newSections }
+      }));
+      if (window.__protoEditorEditor && typeof window.__protoEditorEditor.updateSections === "function") {
+        window.__protoEditorEditor.updateSections(newSections);
+      }
+
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: 'SYNC_SESSION_DRAFT',
+          session: {
+            workingGlobalSections: newSections.map(s => ({ ...s, _editState: 'modified' }))
+          }
+        }, '*');
+        if (window.parent.__protoEditorEditor && typeof window.parent.__protoEditorEditor.updateSections === "function") {
+          window.parent.__protoEditorEditor.updateSections(newSections);
+        }
+      }
+
+      const currentFile = window.location.pathname.split("/").pop() || "index.html";
+      const filesToUpdate = targetFiles || [currentFile];
+      fetch('/api/page/update-sections', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          files: filesToUpdate,
+          sections: newSections
+        })
+      }).then(r => r.json()).catch(() => {});
+    }
+
+    if (doCopyBtn) {
+      doCopyBtn.addEventListener("click", () => {
+        const selectedFile = sourceSelect ? sourceSelect.value : "";
+        const sections = cachedSourceDocs[selectedFile];
+        if (!sections || !sections.length) {
+          showToast("⚠️ 未获取到有效说明内容，无法复制");
+          return;
+        }
+
+        globalSections.splice(0, globalSections.length, ...JSON.parse(JSON.stringify(sections)));
+        renderGlobalDocs().then(() => {
+          syncContext();
+        });
+
+        if (globalSyncToggle && globalSyncToggle.checked) {
+          localStorage.setItem(STORAGE_KEY_UNIFIED_DATA, JSON.stringify(globalSections));
+        }
+
+        notifySectionsUpdated(globalSections);
+
+        showToast(`✅ 已成功将 ${selectedFile} 的原型说明复制并写入当前文件！`);
+      });
+    }
+
+    function populateBatchChecklist() {
+      if (!batchChecklist) return;
+      batchChecklist.innerHTML = "";
+      const currentPath = window.location.pathname.split("/").pop() || "";
+
+      PROJECT_PAGE_REGISTRY.forEach(pg => {
+        const label = document.createElement("label");
+        label.className = `protoMobile-sync-check-item ${pg.file === currentPath ? "is-self" : ""}`;
+        
+        const chk = document.createElement("input");
+        chk.type = "checkbox";
+        chk.value = pg.file;
+        chk.checked = (pg.file !== currentPath);
+        chk.disabled = (pg.file === currentPath);
+        chk.addEventListener("change", updateBatchCount);
+
+        const span = document.createElement("span");
+        span.textContent = `${pg.title} (${pg.file})${pg.file === currentPath ? " [当前页]" : ""}`;
+
+        label.append(chk, span);
+        batchChecklist.appendChild(label);
+      });
+      updateBatchCount();
+    }
+
+    function updateBatchCount() {
+      if (!batchChecklist || !batchCountText) return;
+      const checkedBoxes = batchChecklist.querySelectorAll('input[type="checkbox"]:checked:not(:disabled)');
+      batchCountText.textContent = `已勾选 ${checkedBoxes.length} 个页面`;
+    }
+
+    if (selectAllBtn) {
+      selectAllBtn.addEventListener("click", () => {
+        if (!batchChecklist) return;
+        batchChecklist.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach(c => c.checked = true);
+        updateBatchCount();
+      });
+    }
+    if (deselectAllBtn) {
+      deselectAllBtn.addEventListener("click", () => {
+        if (!batchChecklist) return;
+        batchChecklist.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach(c => c.checked = false);
+        updateBatchCount();
+      });
+    }
+
+    if (doBatchSyncBtn) {
+      doBatchSyncBtn.addEventListener("click", () => {
+        if (!batchChecklist) return;
+        const checkedBoxes = Array.from(batchChecklist.querySelectorAll('input[type="checkbox"]:checked:not(:disabled)'));
+        if (!checkedBoxes.length) {
+          showToast("⚠️ 请至少勾选一个目标页面");
+          return;
+        }
+
+        const dataStr = JSON.stringify(globalSections);
+        checkedBoxes.forEach(chk => {
+          localStorage.setItem("PROTO_DOCS_" + chk.value, dataStr);
+        });
+
+        localStorage.setItem(STORAGE_KEY_UNIFIED_DATA, dataStr);
+        if (globalSyncToggle) {
+          globalSyncToggle.checked = true;
+          localStorage.setItem(STORAGE_KEY_UNIFIED_ACTIVE, "true");
+        }
+
+        notifySectionsUpdated(globalSections, targetFiles);
+
+        showToast(`✅ 已同步写入 ${checkedBoxes.length} 个页面物理文件！`);
+      });
+    }
+
+    function loadEditText() {
+      if (!editTextarea) return;
+      if (globalSections.length) {
+        editTextarea.value = globalSections.map(s => `### ${s.title}\n\n${s.content || ""}`).join("\n\n---\n\n");
+      } else {
+        editTextarea.value = "";
+      }
+    }
+
+    if (saveEditBtn) {
+      saveEditBtn.addEventListener("click", () => {
+        if (!editTextarea) return;
+        const text = editTextarea.value.trim();
+        if (!text) {
+          showToast("⚠️ 说明内容不能为空");
+          return;
+        }
+
+        const parts = text.split(/\n\s*---\s*\n/);
+        const newSections = [];
+        parts.forEach((part, i) => {
+          const lines = part.trim().split("\n");
+          let title = `章节 ${i + 1}`;
+          let bodyLines = lines;
+          if (lines[0] && lines[0].startsWith("#")) {
+            title = lines[0].replace(/^#+\s*/, "").trim();
+            bodyLines = lines.slice(1);
+          }
+          newSections.push({
+            id: `sec_${Date.now()}_${i}`,
+            title: title || `章节 ${i + 1}`,
+            content: bodyLines.join("\n").trim()
+          });
+        });
+
+        globalSections.splice(0, globalSections.length, ...newSections);
+        renderGlobalDocs().then(() => syncContext());
+
+        if (globalSyncToggle && globalSyncToggle.checked) {
+          localStorage.setItem(STORAGE_KEY_UNIFIED_DATA, JSON.stringify(globalSections));
+        }
+
+        notifySectionsUpdated(globalSections);
+
+        showToast("✅ 已保存说明并持久化写入当前文件！");
+      });
+    }
+  }
+
+  applyUnifiedDocsIfActive();
+  initSyncFeature();
+
+  restoreDesktopDocsWidth();
+  makeDesktopDocsResizable();
+  ensureOverlayLayer(false);
+  renderGlobalDocs()
+    .then(() => {
+      syncContext();
+      requestAnimationFrame(() => requestAnimationFrame(() => auditLayout(true)));
+    })
+    .catch(error => {
+      console.error("移动端原型说明渲染失败", error);
+      syncContext();
+    });
+  applySheetSnap();
+})();
+
+</script>
+</body>
+</html>
