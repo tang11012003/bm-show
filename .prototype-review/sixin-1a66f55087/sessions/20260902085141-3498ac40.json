@@ -1,0 +1,224 @@
+{
+  "format": "protoWeb-review-session@1",
+  "prototypeId": "sixin",
+  "sessionId": "20260902085141-3498ac40",
+  "dataScriptId": "prototypeAnnotationData",
+  "sourceHtml": "sixin.html",
+  "baseRevision": 1,
+  "baseHtmlHash": "3a256093e1cdad9ec56654f7cf270cb737965990f1528d82ab0dcfe0ed7babd5",
+  "status": "draft",
+  "createdAt": "2026-09-02T08:51:41.195Z",
+  "updatedAt": "2026-09-02T08:51:41.195Z",
+  "operations": [],
+  "baseAnnotations": [
+    {
+      "id": "c-header",
+      "scope": "page:chat",
+      "target": "[data-ui='chat-header']",
+      "x": 0.88,
+      "y": 0.06,
+      "title": "状态与主页跳转",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 顶部展示对方昵称与在线状态绿点。\n2. 点击右上角对方头像可无缝跳转回对方个人主页 `gerenzhuye.html`。\n3. 置顶展示平台防诈骗与隐私安全提醒条。"
+    },
+    {
+      "id": "c-antiharass-bar",
+      "scope": "page:chat",
+      "target": "[data-ui='antiharass-bar']",
+      "x": 0.85,
+      "y": 0.14,
+      "title": "小红书式防骚扰限频指示条",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 对方未回关状态下常驻展示限发 1 条提示。\n2. 发送 1 条后变为警告锁定态并禁用输入框。\n3. 对方回复后自动隐藏解锁。"
+    },
+    {
+      "id": "c-chat-body",
+      "scope": "page:chat",
+      "target": "[data-ui='chat-body']",
+      "x": 0.85,
+      "y": 0.35,
+      "title": "私信消息流与诊断报告卡片",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 左侧展示对方头像与接收消息，右侧展示我方头像与已发送消息。\n2. 支持结构化「学情诊断报告卡片」，包含科目标签、得分率与建议，点击可查看诊断详情。"
+    },
+    {
+      "id": "c-input-bar",
+      "scope": "page:chat",
+      "target": "[data-ui='chat-input-bar']",
+      "x": 0.85,
+      "y": 0.92,
+      "title": "智能输入与多模态工具栏",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 支持文字输入（Enter 或点击发送键触发）。\n2. 快捷工具栏提供「📷 发图片」、「📊 分享诊断报告卡片」。\n3. 受限频状态严格控制 `disabled` 属性。"
+    },
+    {
+      "id": "c-more-menu",
+      "scope": "page:chat",
+      "target": "[data-ui='nav-more']",
+      "x": 0.9,
+      "y": 0.06,
+      "title": "私信管理操作菜单",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 点击弹出操作菜单，包含「清空聊天记录」、「拉黑该用户」、「举报该用户」。\n2. 点击清空弹出 Toast 并在界面保留安全占位提示。"
+    },
+    {
+      "id": "c-block-dialog",
+      "scope": "dialog:block-confirm",
+      "target": "[data-ui='block-dialog']",
+      "x": 0.85,
+      "y": 0.5,
+      "title": "私信拉黑确认与状态拦截",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 弹出二次确认弹窗 `将“{用户}”拉黑`。\n2. 确认后对方无法向我方发送私信，且我方主页与私信展示解除拉黑入口。"
+    },
+    {
+      "id": "c-report-drawer",
+      "scope": "sheet:report-drawer",
+      "target": "[data-ui='report-panel']",
+      "x": 0.85,
+      "y": 0.45,
+      "title": "私信举报与多级凭证提交",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 支持在私信消息流中多选勾选违规私信气泡作为凭证。\n2. 选定后进入单选违规原因（14项）、描述填写与凭证上传页，提交后进入24小时审核队列。"
+    }
+  ],
+  "baseGlobalMeta": {
+    "name": "高考志愿与陪读社区 · 私信交流与安全交互 PRD",
+    "version": "V1.2",
+    "updatedAt": "2026-09-02"
+  },
+  "workingGlobalMeta": {
+    "name": "高考志愿与陪读社区 · 私信交流与安全交互 PRD",
+    "version": "V1.2",
+    "updatedAt": "2026-09-02"
+  },
+  "baseGlobalSections": [
+    {
+      "id": "overview",
+      "title": "1. 业务背景与沟通场景",
+      "format": "markdown",
+      "content": "### 1.1 业务背景\n在高三升学交流中，家长间常需要一对一深度探讨错题归因、志愿填报技巧并分享学情诊断报告。私信系统提供安全、高效、受控的沟通工具。\n\n### 1.2 核心设计原则\n- **防骚扰保护**：对方未回关时限发 1 条消息，回复后方可解除。\n- **专业赋能**：支持一键分享「学情诊断报告卡片」，支持卡片点击穿透。\n- **安全治理**：集成清空记录、小红书式拉黑与私信多选证据举报。"
+    },
+    {
+      "id": "antiharass-spec",
+      "title": "2. 小红书式未回关防骚扰机制",
+      "format": "markdown",
+      "content": "### 2.1 状态迁移规范\n- **初始未发送**：顶部提醒条展示 `对方未回关，回复前仅可发送 1 条消息`，输入框正常可用。\n- **已发送 1 条**：发送后输入框锁定禁用，占位符变更为 `对方回复后才可继续发送`，顶部提醒条变为红黄色锁定态 `已发送 1 条消息，需等对方回复后才可继续发送`。\n- **对方回复**：检测到对方发言后，顶部提醒条自动淡出，输入框立即解除锁定，双方进入自由沟通状态。"
+    },
+    {
+      "id": "security-governance",
+      "title": "3. 私信治理与举报凭证规则",
+      "format": "markdown",
+      "content": "### 3.1 私信证据多选\n- 举报私信时支持在列表中多选违规私信气泡作为凭证，右上角实时计数 `已选 X/50`。\n- 下一步直接流转至包含 14 项违规原因（已剔除饭圈乱象与假货）的专属表单，填写 0/400 字描述并上传 0/9 张截图凭证提交。"
+    }
+  ],
+  "workingGlobalSections": [
+    {
+      "id": "overview",
+      "title": "1. 业务背景与沟通场景",
+      "format": "markdown",
+      "content": "### 1.1 业务背景\n在高三升学交流中，家长间常需要一对一深度探讨错题归因、志愿填报技巧并分享学情诊断报告。私信系统提供安全、高效、受控的沟通工具。\n\n### 1.2 核心设计原则\n- **防骚扰保护**：对方未回关时限发 1 条消息，回复后方可解除。\n- **专业赋能**：支持一键分享「学情诊断报告卡片」，支持卡片点击穿透。\n- **安全治理**：集成清空记录、小红书式拉黑与私信多选证据举报。",
+      "_editState": "original"
+    },
+    {
+      "id": "antiharass-spec",
+      "title": "2. 小红书式未回关防骚扰机制",
+      "format": "markdown",
+      "content": "### 2.1 状态迁移规范\n- **初始未发送**：顶部提醒条展示 `对方未回关，回复前仅可发送 1 条消息`，输入框正常可用。\n- **已发送 1 条**：发送后输入框锁定禁用，占位符变更为 `对方回复后才可继续发送`，顶部提醒条变为红黄色锁定态 `已发送 1 条消息，需等对方回复后才可继续发送`。\n- **对方回复**：检测到对方发言后，顶部提醒条自动淡出，输入框立即解除锁定，双方进入自由沟通状态。",
+      "_editState": "original"
+    },
+    {
+      "id": "security-governance",
+      "title": "3. 私信治理与举报凭证规则",
+      "format": "markdown",
+      "content": "### 3.1 私信证据多选\n- 举报私信时支持在列表中多选违规私信气泡作为凭证，右上角实时计数 `已选 X/50`。\n- 下一步直接流转至包含 14 项违规原因（已剔除饭圈乱象与假货）的专属表单，填写 0/400 字描述并上传 0/9 张截图凭证提交。",
+      "_editState": "original"
+    }
+  ],
+  "workingAnnotations": [
+    {
+      "id": "c-header",
+      "scope": "page:chat",
+      "target": "[data-ui='chat-header']",
+      "x": 0.88,
+      "y": 0.06,
+      "title": "状态与主页跳转",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 顶部展示对方昵称与在线状态绿点。\n2. 点击右上角对方头像可无缝跳转回对方个人主页 `gerenzhuye.html`。\n3. 置顶展示平台防诈骗与隐私安全提醒条。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "c-antiharass-bar",
+      "scope": "page:chat",
+      "target": "[data-ui='antiharass-bar']",
+      "x": 0.85,
+      "y": 0.14,
+      "title": "小红书式防骚扰限频指示条",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 对方未回关状态下常驻展示限发 1 条提示。\n2. 发送 1 条后变为警告锁定态并禁用输入框。\n3. 对方回复后自动隐藏解锁。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "c-chat-body",
+      "scope": "page:chat",
+      "target": "[data-ui='chat-body']",
+      "x": 0.85,
+      "y": 0.35,
+      "title": "私信消息流与诊断报告卡片",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 左侧展示对方头像与接收消息，右侧展示我方头像与已发送消息。\n2. 支持结构化「学情诊断报告卡片」，包含科目标签、得分率与建议，点击可查看诊断详情。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "c-input-bar",
+      "scope": "page:chat",
+      "target": "[data-ui='chat-input-bar']",
+      "x": 0.85,
+      "y": 0.92,
+      "title": "智能输入与多模态工具栏",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 支持文字输入（Enter 或点击发送键触发）。\n2. 快捷工具栏提供「📷 发图片」、「📊 分享诊断报告卡片」。\n3. 受限频状态严格控制 `disabled` 属性。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "c-more-menu",
+      "scope": "page:chat",
+      "target": "[data-ui='nav-more']",
+      "x": 0.9,
+      "y": 0.06,
+      "title": "私信管理操作菜单",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 点击弹出操作菜单，包含「清空聊天记录」、「拉黑该用户」、「举报该用户」。\n2. 点击清空弹出 Toast 并在界面保留安全占位提示。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "c-block-dialog",
+      "scope": "dialog:block-confirm",
+      "target": "[data-ui='block-dialog']",
+      "x": 0.85,
+      "y": 0.5,
+      "title": "私信拉黑确认与状态拦截",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 弹出二次确认弹窗 `将“{用户}”拉黑`。\n2. 确认后对方无法向我方发送私信，且我方主页与私信展示解除拉黑入口。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "c-report-drawer",
+      "scope": "sheet:report-drawer",
+      "target": "[data-ui='report-panel']",
+      "x": 0.85,
+      "y": 0.45,
+      "title": "私信举报与多级凭证提交",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 支持在私信消息流中多选勾选违规私信气泡作为凭证。\n2. 选定后进入单选违规原因（14项）、描述填写与凭证上传页，提交后进入24小时审核队列。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    }
+  ]
+}

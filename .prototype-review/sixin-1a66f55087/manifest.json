@@ -1,0 +1,67 @@
+{
+  "format": "protoWeb-review-manifest@1",
+  "prototypeId": "sixin",
+  "prototypeKey": "sixin-1a66f55087",
+  "sourceHtml": "sixin.html",
+  "sessions": [
+    {
+      "sessionId": "20260902061924-6319f949",
+      "status": "draft",
+      "createdAt": "2026-09-02T06:19:24.233Z",
+      "updatedAt": "2026-09-02T06:19:24.233Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260902065606-45ac658f",
+      "status": "draft",
+      "createdAt": "2026-09-02T06:56:06.574Z",
+      "updatedAt": "2026-09-02T06:56:06.574Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260902065746-bc729aea",
+      "status": "draft",
+      "createdAt": "2026-09-02T06:57:46.988Z",
+      "updatedAt": "2026-09-02T06:57:46.988Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260902080258-7c173dea",
+      "status": "draft",
+      "createdAt": "2026-09-02T08:02:58.219Z",
+      "updatedAt": "2026-09-02T08:02:58.219Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260902081258-b3456c73",
+      "status": "draft",
+      "createdAt": "2026-09-02T08:12:58.449Z",
+      "updatedAt": "2026-09-02T08:37:35.873Z",
+      "operationCount": 1
+    },
+    {
+      "sessionId": "20260902085141-3498ac40",
+      "status": "draft",
+      "createdAt": "2026-09-02T08:51:41.195Z",
+      "updatedAt": "2026-09-02T08:51:41.195Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260902093758-7891d8d6",
+      "status": "draft",
+      "createdAt": "2026-09-02T09:37:58.224Z",
+      "updatedAt": "2026-09-02T09:37:58.224Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260903094658-80d490d1",
+      "status": "draft",
+      "createdAt": "2026-09-03T09:46:58.219Z",
+      "updatedAt": "2026-09-03T09:46:58.219Z",
+      "operationCount": 0
+    }
+  ],
+  "activeSessionId": "20260903094658-80d490d1",
+  "updatedAt": "2026-09-03T09:46:58.235Z",
+  "reviewToken": "798f32d743e806dedbd72f3118706384f1591d3dba2e9d08"
+}

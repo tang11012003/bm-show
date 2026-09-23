@@ -1,0 +1,152 @@
+{
+  "format": "protoWeb-review-manifest@1",
+  "prototypeId": "gerenzhuye",
+  "prototypeKey": "gerenzhuye-b30f6dda9f",
+  "sourceHtml": "gerenzhuye.html",
+  "sessions": [
+    {
+      "sessionId": "20260902032118-1e41ef8e",
+      "status": "draft",
+      "createdAt": "2026-09-02T03:21:18.721Z",
+      "updatedAt": "2026-09-02T03:21:18.721Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260902033059-13bd8fd3",
+      "status": "draft",
+      "createdAt": "2026-09-02T03:30:59.722Z",
+      "updatedAt": "2026-09-02T03:30:59.722Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260902033127-605afc9b",
+      "status": "draft",
+      "createdAt": "2026-09-02T03:31:27.446Z",
+      "updatedAt": "2026-09-02T03:31:27.446Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260902085626-f9230724",
+      "status": "draft",
+      "createdAt": "2026-09-02T08:56:26.427Z",
+      "updatedAt": "2026-09-02T08:56:26.427Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260902085712-57d8612f",
+      "status": "draft",
+      "createdAt": "2026-09-02T08:57:12.770Z",
+      "updatedAt": "2026-09-02T08:57:12.770Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260902090356-110a9ae6",
+      "status": "draft",
+      "createdAt": "2026-09-02T09:03:56.777Z",
+      "updatedAt": "2026-09-02T09:03:56.777Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260902093758-4a0d1c93",
+      "status": "applied",
+      "createdAt": "2026-09-02T09:37:58.276Z",
+      "updatedAt": "2026-09-03T09:41:17.362Z",
+      "operationCount": 1
+    },
+    {
+      "sessionId": "20260903094124-ce6932c6",
+      "status": "applied",
+      "createdAt": "2026-09-03T09:41:24.758Z",
+      "updatedAt": "2026-09-03T09:42:14.432Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260903094222-b72ff042",
+      "status": "draft",
+      "createdAt": "2026-09-03T09:42:22.480Z",
+      "updatedAt": "2026-09-03T09:42:22.480Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260903094758-98f10dce",
+      "status": "draft",
+      "createdAt": "2026-09-03T09:47:58.190Z",
+      "updatedAt": "2026-09-03T09:47:58.190Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260903095042-a200ee8f",
+      "status": "draft",
+      "createdAt": "2026-09-03T09:50:42.712Z",
+      "updatedAt": "2026-09-03T09:50:42.712Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260903095128-0c1aedc4",
+      "status": "draft",
+      "createdAt": "2026-09-03T09:51:28.068Z",
+      "updatedAt": "2026-09-03T09:51:28.068Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260903100245-3cb1e386",
+      "status": "draft",
+      "createdAt": "2026-09-03T10:02:45.265Z",
+      "updatedAt": "2026-09-03T10:02:45.265Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260904013150-fb6d3cd1",
+      "status": "applied",
+      "createdAt": "2026-09-04T01:31:50.856Z",
+      "updatedAt": "2026-09-04T01:44:42.645Z",
+      "operationCount": 4
+    },
+    {
+      "sessionId": "20260904014450-8c1377a7",
+      "status": "draft",
+      "createdAt": "2026-09-04T01:44:50.348Z",
+      "updatedAt": "2026-09-04T01:44:50.348Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260904020018-c51a64ae",
+      "status": "draft",
+      "createdAt": "2026-09-04T02:00:18.103Z",
+      "updatedAt": "2026-09-04T02:00:18.103Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260904020056-7d5c5974",
+      "status": "applied",
+      "createdAt": "2026-09-04T02:00:56.355Z",
+      "updatedAt": "2026-09-04T02:04:22.440Z",
+      "operationCount": 1
+    },
+    {
+      "sessionId": "20260904020429-d1c01af3",
+      "status": "draft",
+      "createdAt": "2026-09-04T02:04:29.112Z",
+      "updatedAt": "2026-09-04T02:04:29.112Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260904030035-a80c5372",
+      "status": "draft",
+      "createdAt": "2026-09-04T03:00:35.715Z",
+      "updatedAt": "2026-09-04T03:00:35.715Z",
+      "operationCount": 0
+    },
+    {
+      "sessionId": "20260904053758-0027e3fc",
+      "status": "draft",
+      "createdAt": "2026-09-04T05:37:58.207Z",
+      "updatedAt": "2026-09-04T05:37:58.207Z",
+      "operationCount": 0
+    }
+  ],
+  "activeSessionId": "20260904053758-0027e3fc",
+  "updatedAt": "2026-09-04T05:37:58.213Z",
+  "reviewToken": "f4c62ae6054bc316d57055640dcb4126eb7b63b02a046fce",
+  "lastAppliedAt": "2026-09-04T02:04:22.440Z"
+}

@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>多场考试待核对 - 聚合强弹引导</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    /* ── 全局重置与基础设定 ── */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    ::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    html,
+    body,
+    #app {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    :root {
+      --primary-green: #20DCAD;
+      --primary-dark: #00B383;
+      --primary-blue: #3388FF;
+      --text-main: #111112;
+      --text-sub: #4C5061;
+      --text-muted: #8C8D9B;
+      --bg-page: #F5F7FB;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: #E8EBF2;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ── 手机视口容器 (390 x 844) ── */
+    #app {
+      width: 100%;
+      max-width: 390px;
+      height: 100%;
+      max-height: 844px;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-page);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 48px rgba(28, 37, 65, 0.18);
+      border-radius: 28px;
+    }
+
+    @media (max-width: 600px) {
+      #app {
+        max-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+
+    /* ── 底层页面模拟 (模拟家长在学情看板时被弹窗覆盖) ── */
+    .underlying-page-bg {
+      position: absolute;
+      inset: 0;
+      background: #F9F9FC;
+      z-index: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      filter: blur(4px) brightness(0.92);
+      transition: filter 0.3s ease;
+      pointer-events: none;
+    }
+
+    .mock-header {
+      height: 160px;
+      background: linear-gradient(180deg, #20DCAD 0%, #DDFDF8 100%);
+      padding: 16px;
+    }
+    .mock-card {
+      margin: -30px 16px 12px;
+      height: 100px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .mock-card-2 {
+      margin: 0 16px 12px;
+      height: 140px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    /* 半透明黑底遮罩层 */
+    .sheet-backdrop-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.48);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      z-index: 20;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    /* ── 核心抽屉主体 (Bottom Sheet Panel) ── */
+    .bottom-floating-modal {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: #FFFFFF;
+      border-radius: 26px 26px 0 0;
+      padding: 12px 18px calc(20px + env(safe-area-inset-bottom, 12px));
+      z-index: 50;
+      box-shadow: 0 -8px 36px rgba(17, 24, 39, 0.22);
+      display: flex;
+      flex-direction: column;
+      max-height: 88%;
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .sheet-handle-bar {
+      width: 38px;
+      height: 4px;
+      border-radius: 2px;
+      background: #DCE0E8;
+      margin: 0 auto 10px;
+    }
+
+    /* 头部状态与标题 */
+    .sheet-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .sh-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sh-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #20DCAD 0%, #00B383 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-size: 22px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 179, 131, 0.25);
+    }
+
+    .sh-title-box {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sh-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sh-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #00B383;
+      background: #EAFBF5;
+      padding: 1px 7px;
+      border-radius: 8px;
+    }
+
+    .sh-badge.count {
+      color: #2563EB;
+      background: #EFF6FF;
+    }
+
+    .sh-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.25;
+    }
+
+    .sh-close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #F4F5F7;
+      color: #8C8D9B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .sh-close-btn:active { background: #E2E4E8; }
+
+    /* 步骤进度可视化 (4步流程) */
+    .sheet-step-tracker {
+      background: #F8FAFC;
+      border: 1px solid #EAEFF6;
+      border-radius: 12px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .step-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .step-item.done .step-dot {
+      background: #111112;
+      color: #FFFFFF;
+    }
+
+    .step-item.active .step-dot {
+      background: #00B383;
+      color: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(0, 179, 131, 0.2);
+    }
+
+    .step-item.pending .step-dot {
+      background: #E1E3EA;
+      color: #9295A3;
+    }
+
+    .step-name {
+      font-size: 10.5px;
+      color: #6D7080;
+      font-weight: 500;
+    }
+
+    .step-item.active .step-name {
+      color: #00B383;
+      font-weight: 700;
+    }
+
+    .step-connector {
+      flex: 1;
+      height: 2px;
+      background: #E1E3EA;
+      margin: -12px 4px 0;
+    }
+    .step-connector.done { background: #111112; }
+
+    /* ── 核心：多任务卡片清单 ── */
+    .multi-task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 14px;
+      max-height: 310px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .task-card-item {
+      background: #FAFAFD;
+      border: 1px solid #E8EBF2;
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+
+    .task-card-item:hover {
+      border-color: #20DCAD;
+      background: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(32, 220, 173, 0.1);
+    }
+
+    .tci-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tci-student-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+    .tci-student-badge.blue {
+      background: #EBF3FF;
+      color: #2563EB;
+      border: 1px solid #BFDBFE;
+    }
+    .tci-student-badge.green {
+      background: #ECFDF5;
+      color: #059669;
+      border: 1px solid #A7F3D0;
+    }
+
+    .tci-type-tag {
+      font-size: 11px;
+      color: #8C8D9B;
+      font-weight: 500;
+    }
+
+    .tci-exam-name {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    .tci-data-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFFFF;
+      border-radius: 10px;
+      padding: 8px 10px;
+      border: 1px dashed #E2E6EF;
+    }
+
+    .tci-stats {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .tci-num {
+      font-size: 20px;
+      font-weight: 800;
+      color: #FF5A5A;
+      line-height: 1;
+    }
+    .tci-unit {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #4C5061;
+    }
+
+    .tci-breakdown {
+      font-size: 11px;
+      color: #8C8D9B;
+    }
+
+    .btn-single-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 10px;
+      border-radius: 14px;
+      background: #111112;
+      color: #20DCAD;
+      font-size: 11.5px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.12s;
+    }
+    .btn-single-check:active { transform: scale(0.96); }
+
+    /* ── 底部操作按钮组 ── */
+    .sheet-actions-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-batch-check {
+      width: 100%;
+      height: 46px;
+      border-radius: 23px;
+      border: none;
+      background: #111112;
+      color: #FFFFFF;
+      font-size: 14.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(17, 17, 18, 0.25);
+      transition: transform 0.12s, opacity 0.2s;
+    }
+    .btn-batch-check:active { transform: scale(0.98); opacity: 0.9; }
+
+    .btn-batch-check .sparkle {
+      color: #20DCAD;
+      font-size: 16px;
+    }
+
+    .btn-dismiss-text {
+      background: none;
+      border: none;
+      color: #8C8D9B;
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+    .btn-dismiss-text:hover { color: #4C5061; }
+
+    /* 弹窗收起后的重开浮标 (原型演示专用) */
+    .demo-reopen-pill {
+      position: absolute;
+      top: 58px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111112;
+      color: #20DCAD;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      display: none;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      border: 1px solid rgba(32, 220, 173, 0.4);
+    }
+
+    /* 轻提示 Toast */
+    .proto-float-toast {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      color: #FFFFFF;
+      font-size: 12.5px;
+      padding: 8px 16px;
+      border-radius: 18px;
+      z-index: 999;
+      pointer-events: none;
+      display: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      white-space: nowrap;
+    }
+  </style>
+
+  <style id="protoMobileAnnotationCss">
+    :root {
+      --protoMobile-accent: #3388ff;
+      --protoMobile-accent-dark: #2167d9;
+      --protoMobile-accent-soft: #f0f9ff;
+      --protoMobile-ink: #223355;
+      --protoMobile-muted: #6b7a99;
+      --protoMobile-line: #dde1eb;
+      --protoMobile-bg: #edf0f6;
+      --protoMobile-device-width: 414px;
+      --protoMobile-docs-width: 520px;
+    }
+
+    html.protoMobile-ready,
+    html.protoMobile-ready body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .protoMobile-stage,
+    .protoMobile-stage *,
+    .protoMobile-overlay-root,
+    .protoMobile-overlay-root * {
+      box-sizing: border-box;
+      letter-spacing: 0;
+    }
+
+    .protoMobile-stage {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483000;
+      width: 100vw;
+      max-width: none;
+      height: 100dvh;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: var(--protoMobile-docs-width) 8px var(--protoMobile-device-width) minmax(320px, 1fr);
+      gap: 16px;
+      align-items: center;
+      overflow: hidden;
+      background: var(--protoMobile-bg);
+      color: var(--protoMobile-ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    .protoMobile-stage.no-docs {
+      grid-template-columns: var(--protoMobile-device-width) minmax(320px, 1fr);
+      justify-content: center;
+    }
+    .protoMobile-stage.no-docs .protoMobile-desktop-splitter { display: none; }
+    .protoMobile-stage.no-docs .protoMobile-device { grid-column: 1; }
+    .protoMobile-stage.no-docs .protoMobile-notes-panel { grid-column: 2; }
+
+    .protoMobile-docs-panel { grid-column: 1; grid-row: 1; }
+    .protoMobile-desktop-splitter { grid-column: 2; grid-row: 1; }
+    .protoMobile-device { grid-column: 3; grid-row: 1; }
+    .protoMobile-notes-panel { grid-column: 4; grid-row: 1; }
+
+    .protoMobile-desktop-splitter {
+      position: relative;
+      width: 8px;
+      min-width: 8px;
+      height: min(896px, calc(100dvh - 32px));
+      align-self: center;
+      cursor: col-resize;
+      touch-action: none;
+      outline: none;
+    }
+
+    .protoMobile-desktop-splitter::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 3px;
+      height: 56px;
+      border-radius: 2px;
+      background: #b8c2d3;
+      transform: translate(-50%, -50%);
+      transition: height 0.15s ease, background 0.15s ease;
+    }
+
+    .protoMobile-desktop-splitter:hover::after,
+    .protoMobile-desktop-splitter:focus-visible::after,
+    .protoMobile-desktop-splitter.is-dragging::after { height: 84px; background: var(--protoMobile-accent); }
+    .protoMobile-stage.is-resizing { cursor: col-resize; user-select: none; }
+
+    .protoMobile-device,
+    .protoMobile-review-panel {
+      height: min(896px, calc(100dvh - 32px));
+      min-height: 0;
+    }
+
+    .protoMobile-device {
+      position: relative;
+      width: var(--protoMobile-device-width);
+      min-width: 0;
+      justify-self: center;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 12px 32px rgba(34, 51, 85, 0.12);
+    }
+
+    .protoMobile-device>[data-proto-app] {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: none !important;
+      max-height: none !important;
+      margin: 0 !important;
+    }
+
+    .protoMobile-review-panel {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid rgba(51, 136, 255, 0.22);
+      border-top: 3px solid rgba(51, 136, 255, 0.82);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 18px 44px rgba(34, 51, 85, 0.1);
+    }
+
+    .protoMobile-panel-header {
+      height: 56px;
+      padding: 0 16px;
+      border-bottom: 1px solid #e9edf5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #fff;
+      font-size: 16px;
+    }
+
+    .protoMobile-doc-layout {
+      height: calc(100% - 56px);
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .protoMobile-doc-nav {
+      padding: 12px 8px;
+      border-right: 1px solid #e9edf5;
+      overflow-y: auto;
+      background: #fbfcff;
+    }
+
+    .protoMobile-doc-nav button {
+      width: 100%;
+      min-height: 36px;
+      padding: 8px 10px;
+      border: 0;
+      border-left: 3px solid transparent;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--protoMobile-muted);
+      font: inherit;
+      font-size: 13px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .protoMobile-doc-nav button:hover,
+    .protoMobile-doc-nav button.is-active {
+      border-left-color: var(--protoMobile-accent);
+      color: #235cb3;
+      background: #e8f1ff;
+    }
+
+    .protoMobile-doc-content {
+      min-width: 0;
+      padding: 0 16px 24px;
+      overflow: auto;
+      scroll-behavior: smooth;
+    }
+
+    .protoMobile-doc-section {
+      padding: 20px 0;
+      border-bottom: 1px solid #e9edf5;
+      scroll-margin-top: 12px;
+    }
+    .protoMobile-doc-section:last-child { border-bottom: 0; }
+    .protoMobile-doc-section>h3 { margin: 0 0 12px; color: var(--protoMobile-ink); font-size: 16px; line-height: 24px; }
+
+    .protoMobile-desktop-toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--protoMobile-muted);
+      font-size: 12px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .protoMobile-switch {
+      position: relative;
+      width: 40px;
+      height: 24px;
+      min-height: 0;
+      flex: 0 0 auto;
+      padding: 0;
+      border: 0;
+      border-radius: 12px;
+      background: #ced4e0;
+      cursor: pointer;
+    }
+    .protoMobile-switch::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(34, 51, 85, 0.18);
+      transition: transform 0.16s ease;
+    }
+    .protoMobile-switch[aria-checked="true"] { background: var(--protoMobile-accent); }
+    .protoMobile-switch[aria-checked="true"]::after { transform: translateX(16px); }
+
+    .protoMobile-filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e9edf5;
+      background: #fbfcff;
+    }
+
+    .protoMobile-filter-chip {
+      padding: 4px 10px;
+      border: 1px solid #d8e0ee;
+      border-radius: 14px;
+      background: #fff;
+      color: var(--protoMobile-muted);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .protoMobile-filter-chip.is-active {
+      border-color: var(--protoMobile-accent);
+      background: #e8f1ff;
+      color: #235cb3;
+      font-weight: 600;
+    }
+
+    .protoMobile-note-list {
+      height: calc(100% - 105px);
+      padding: 12px 16px 20px;
+      overflow: auto;
+    }
+
+    .protoMobile-note-card {
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      border: 1px solid #e4e9f2;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.14s ease, box-shadow 0.14s ease;
+    }
+    .protoMobile-note-card:hover { border-color: #b7cefb; }
+    .protoMobile-note-card.is-active {
+      border-color: var(--protoMobile-accent);
+      box-shadow: 0 0 0 2px rgba(51, 136, 255, 0.18);
+    }
+
+    .protoMobile-note-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .protoMobile-note-badge {
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .protoMobile-note-badge.type-modify { background: #e67e22; }
+    .protoMobile-note-badge.type-new { background: #27ae60; }
+    .protoMobile-note-badge.type-delete { background: #e74c3c; }
+    .protoMobile-note-badge.type-original { background: #2980b9; }
+
+    .protoMobile-note-card h4 {
+      margin: 0;
+      color: var(--protoMobile-ink);
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .protoMobile-note-body {
+      color: #4b5874;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .protoMobile-overlay-root {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483100;
+      pointer-events: none;
+    }
+
+    .protoMobile-marker {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      pointer-events: auto;
+      transform: translate(-50%, -50%);
+    }
+    .protoMobile-marker.type-original { background: #2980b9; }
+    .protoMobile-marker.type-modify { background: #e67e22; }
+    .protoMobile-marker.type-new { background: #27ae60; }
+    .protoMobile-marker.type-delete { background: #e74c3c; }
+
+    .protoMobile-compact-docs-trigger,
+    .protoMobile-compact-close,
+    .protoMobile-compact-backdrop,
+    .protoMobile-mobile-controls,
+    .protoMobile-mobile-note-layer,
+    .protoMobile-mobile-docs-layer {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app" data-proto-app data-proto-platform="mobile">
+    <!-- 模拟底层学情看板页面 (高斯模糊背景) -->
+    <div class="underlying-page-bg">
+      <div class="mock-header"></div>
+      <div class="mock-card"></div>
+      <div class="mock-card-2"></div>
+    </div>
+
+    <!-- 半透明黑底遮罩 -->
+    <div class="sheet-backdrop-overlay" id="sheetBackdrop" onclick="handleDismiss()"></div>
+
+    <!-- 演示用浮标：弹窗收起后点击重新升起 -->
+    <div class="demo-reopen-pill" id="demoReopenPill" onclick="handleReopen()">
+      <span class="material-icons" style="font-size:16px">refresh</span>
+      <span>重新升起聚合强弹演示</span>
+    </div>
+
+    <!-- 底部悬浮多任务抽屉 (Bottom Sheet) -->
+    <div class="bottom-floating-modal" id="bottomFloatingModal">
+      <!-- 拖动抓手 -->
+      <div class="sheet-handle-bar"></div>
+
+      <!-- 抽屉头部 -->
+      <div class="sheet-header-row">
+        <div class="sh-left">
+          <div class="sh-avatar">
+            <span class="material-icons">fact_check</span>
+          </div>
+          <div class="sh-title-box">
+            <div class="sh-badge-row">
+              <span class="sh-badge">🌱 批改完成</span>
+              <span class="sh-badge count">2场试卷已就绪</span>
+            </div>
+            <div class="sh-title">多场考试已切题完成！</div>
+          </div>
+        </div>
+        <button class="sh-close-btn" type="button" aria-label="关闭" title="稍后在首页核对" onclick="handleDismiss()">
+          <span class="material-icons" style="font-size:18px">close</span>
+        </button>
+      </div>
+
+      <!-- 4步流程指示器 -->
+      <div class="sheet-step-tracker">
+        <div class="step-item done">
+          <div class="step-dot">✓</div>
+          <div class="step-name">上传试卷</div>
+        </div>
+        <div class="step-connector done"></div>
+        <div class="step-item done">
+          <div class="step-dot">✓</div>
+          <div class="step-name">AI切题</div>
+        </div>
+        <div class="step-connector done"></div>
+        <div class="step-item active">
+          <div class="step-dot">3</div>
+          <div class="step-name">极速核对(2场)</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item pending">
+          <div class="step-dot">4</div>
+          <div class="step-name">学情报告</div>
+        </div>
+      </div>
+
+      <!-- 多任务卡片列表 -->
+      <div class="multi-task-list" id="multiTaskList">
+        <!-- 任务卡片 1：张小晓 · 期中大考 -->
+        <div class="task-card-item">
+          <div class="tci-top-row">
+            <span class="tci-student-badge blue">
+              <span class="material-icons" style="font-size:12px">face</span>
+              <span>张小晓 · 高二</span>
+            </span>
+            <span class="tci-type-tag">多科大考 (4科)</span>
+          </div>
+          <div class="tci-exam-name">期中全科综合考试</div>
+          <div class="tci-data-row">
+            <div class="tci-stats">
+              <span class="tci-num">10</span>
+              <span class="tci-unit">道错题待复核</span>
+            </div>
+            <div class="tci-breakdown">语 2 · 数 5 · 英 3</div>
+            <button class="btn-single-check" type="button" onclick="goToSingleCheck('midterm', '张小晓')">
+              <span>单场核对</span>
+              <span class="material-icons" style="font-size:13px">chevron_right</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 任务卡片 2：张小苗 · 数学单科周测 -->
+        <div class="task-card-item">
+          <div class="tci-top-row">
+            <span class="tci-student-badge green">
+              <span class="material-icons" style="font-size:12px">face</span>
+              <span>张小苗 · 初三</span>
+            </span>
+            <span class="tci-type-tag">单科小测 (1科)</span>
+          </div>
+          <div class="tci-exam-name">数学三角函数专项周测</div>
+          <div class="tci-data-row">
+            <div class="tci-stats">
+              <span class="tci-num">2</span>
+              <span class="tci-unit">道错题待复核</span>
+            </div>
+            <div class="tci-breakdown">数学 2题</div>
+            <button class="btn-single-check" type="button" onclick="goToSingleCheck('quiz', '张小苗')">
+              <span>单场核对</span>
+              <span class="material-icons" style="font-size:13px">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部操作按钮 -->
+      <div class="sheet-actions-col">
+        <button class="btn-batch-check" type="button" onclick="goToBatchCheck()">
+          <span class="sparkle">✦</span>
+          <span>一键连续核对全部 (共12题·约1分钟)</span>
+          <span class="material-icons" style="font-size:18px">arrow_forward</span>
+        </button>
+        <button class="btn-dismiss-text" type="button" onclick="handleDismiss()">
+          稍后在首页核对 (已自动收纳至待办)
+        </button>
+      </div>
+    </div>
+
+    <!-- 轻量浮动提示 -->
+    <div class="proto-float-toast" id="protoFloatToast">已收录至首页待办卡片，可随时在首页核对</div>
+  </div>
+
+  <script>
+    function showToast(msg) {
+      const toast = document.getElementById('protoFloatToast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2400);
+    }
+
+    function handleDismiss() {
+      const modal = document.getElementById('bottomFloatingModal');
+      const backdrop = document.getElementById('sheetBackdrop');
+      const reopen = document.getElementById('demoReopenPill');
+      if (modal) modal.style.transform = 'translateY(105%)';
+      if (backdrop) backdrop.style.opacity = '0';
+      setTimeout(() => {
+        if (backdrop) backdrop.style.display = 'none';
+        if (reopen) reopen.style.display = 'inline-flex';
+      }, 300);
+      showToast('已收录至首页【待核对试卷】卡片，3天内可随时核对');
+    }
+
+    function handleReopen() {
+      const modal = document.getElementById('bottomFloatingModal');
+      const backdrop = document.getElementById('sheetBackdrop');
+      const reopen = document.getElementById('demoReopenPill');
+      if (reopen) reopen.style.display = 'none';
+      if (backdrop) {
+        backdrop.style.display = 'block';
+        setTimeout(() => { backdrop.style.opacity = '1'; }, 10);
+      }
+      if (modal) modal.style.transform = 'translateY(0)';
+    }
+
+    function goToBatchCheck() {
+      showToast('正在启动连续核对流转... 第1场：张小晓期中考');
+      setTimeout(() => {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'SWITCH_PAGE', pageId: 'gouxuancuoti', path: 'gouxuancuoti.html?mode=batch&total=2' }, '*');
+        }
+        window.location.href = 'gouxuancuoti.html?mode=batch&total=2';
+      }, 800);
+    }
+
+    function goToSingleCheck(examKey, studentName) {
+      showToast(`正在进入【${studentName}】单独核对工作台...`);
+      setTimeout(() => {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'SWITCH_PAGE', pageId: 'gouxuancuoti', path: `gouxuancuoti.html?exam=${examKey}` }, '*');
+        }
+        window.location.href = `gouxuancuoti.html?exam=${examKey}`;
+      }, 800);
+    }
+  </script>
+
+  <!-- 原型标注数据 -->
+  <script id="prototypeAnnotationData" type="application/json">
+  {
+    "prototypeId": "jinru_querencuoti_multi",
+    "version": 1,
+    "mobile": {
+      "appRoot": "[data-proto-app]",
+      "deviceWidth": 390
+    },
+    "globalMeta": {
+      "name": "小苗伴学 9月版本 · 多场考试聚合强弹引导规范",
+      "version": "V2.0",
+      "updatedAt": "2026-09-23"
+    },
+    "globalSections": [
+      {
+        "id": "sec_overview",
+        "title": "一. 多份并发核对背景与设计原则",
+        "content": "<p><b>1. 痛点：</b>多孩家庭或单考生周末集中补录多门试卷时，多份试卷可能在短时间内先后切题完成。若采用单份强弹模式，会导致连续弹出多次（“弹窗连环轰炸”），严重破坏用户体验并引发高频误关。</p><p><b>2. 核心原则：</b>严禁连环弹窗，同一时刻只允许升起一个聚合抽屉，提供【一键连续核对全部】流水线式入口与【单科核对】双通道。</p>",
+        "format": "html"
+      }
+    ],
+    "annotations": [
+      {
+        "id": "anno-multi-trigger",
+        "scope": "page:default",
+        "target": "#app div.multi-task-list",
+        "x": 0.5,
+        "y": 0.42,
+        "title": "多份并发聚合与触发限流规则",
+        "content": "<p><b>1. 聚合触发时机：</b></p><ul><li>当后台待核对试卷队列中数量 ≥ 2 时，系统自动合并为多任务抽屉展示；</li><li>若用户已在浏览 App 过程中，新就绪的考试自动追加到卡片列表中，绝不在原弹窗上叠加第二层弹窗。</li></ul><p><b>2. 频次限流（Rate Limiting）：</b></p><ul><li>单日/单会话中，聚合强弹最多主动升起 1 次；</li><li>避让输入法键盘与系统相机拍照状态，待恢复常态后再行弹出。</li></ul>",
+        "format": "html",
+        "type": "new",
+        "typeLabel": "新增",
+        "badge": "新增"
+      },
+      {
+        "id": "anno-batch-stream",
+        "scope": "page:default",
+        "target": "#app button.btn-batch-check",
+        "x": 0.5,
+        "y": 0.88,
+        "title": "一键连续核对 (Next Stream) 链路规则",
+        "content": "<p><b>1. 流水线流转逻辑：</b></p><ul><li>用户点击【一键连续核对全部】后，按就绪时间升序依次流转；</li><li>进入第 1 场（张小晓·期中考）核对完毕后，在过渡计算页自动提示：<i>“🎉 第 1 场已完成！即将进入第 2 场【张小苗·数学周测】”</i>；</li><li>全部核对完成后统一出具报告清单，极大提升操作连贯性。</li></ul>",
+        "format": "html",
+        "type": "new",
+        "typeLabel": "新增",
+        "badge": "新增"
+      },
+      {
+        "id": "anno-multi-timeout",
+        "scope": "page:default",
+        "target": "#app div.task-card-item:nth-of-type(1)",
+        "x": 0.5,
+        "y": 0.52,
+        "title": "多考生隔离与72小时独立超时规则",
+        "content": "<p><b>1. 多考生数据严格隔离：</b></p><ul><li>卡片头部必须明确展示考生名字与年级（如“张小晓·高二”、“张小苗·初三”），防止家长混淆孩子。</li></ul><p><b>2. 独立计时与兜底：</b></p><ul><li>每场考试独立计算 72 小时超时；</li><li>若张小晓的试卷超时 3 天，系统仅对该场考试自动生成报告，张小苗未超时的试卷依然保持待核对状态，互不干扰。</li></ul>",
+        "format": "html",
+        "type": "new",
+        "typeLabel": "新增",
+        "badge": "新增"
+      }
+    ]
+  }
+  </script>
+
+  <!-- 原型三栏审查工作台 DOM -->
+  <div class="protoMobile-stage" id="protoMobileStage" hidden>
+    <aside class="protoMobile-review-panel protoMobile-docs-panel" id="protoMobileDocsPanel" aria-label="原型说明">
+      <header class="protoMobile-panel-header">
+        <strong>原型说明</strong>
+        <button class="protoMobile-compact-close" id="protoMobileCompactDocsClose" type="button" aria-label="关闭原型说明">×</button>
+      </header>
+      <div class="protoMobile-doc-layout">
+        <nav class="protoMobile-doc-nav" id="protoMobileDocNav" aria-label="原型说明目录"></nav>
+        <div class="protoMobile-doc-content" id="protoMobileDocContent"></div>
+      </div>
+    </aside>
+
+    <div class="protoMobile-desktop-splitter" id="protoMobileDocsSplitter" role="separator" aria-label="调整原型说明宽度"
+      aria-orientation="vertical" tabindex="0"></div>
+
+    <main class="protoMobile-device" id="protoMobileDevice" aria-label="移动端原型画板"></main>
+
+    <aside class="protoMobile-review-panel protoMobile-notes-panel" aria-label="当前页面标注">
+      <header class="protoMobile-panel-header">
+        <strong>当前标注</strong>
+        <label class="protoMobile-desktop-toggle-label">
+          <span>显示标注</span>
+          <button class="protoMobile-switch" id="protoMobileDesktopToggle" type="button" role="switch"
+            aria-checked="true" aria-label="隐藏页面标注"></button>
+        </label>
+      </header>
+      <div class="protoMobile-filter-bar" id="protoMobileFilterBar"></div>
+      <div class="protoMobile-note-list" id="protoMobileNoteList"></div>
+    </aside>
+  </div>
+
+  <div class="protoMobile-overlay-root" id="prototypeAnnotationRoot" popover="manual" aria-label="移动端原型标注层">
+    <div class="protoMobile-marker-layer" id="protoMobileMarkerLayer"></div>
+  </div>
+
+  <!-- 标注运行时脚本 -->
+  <script id="protoMobileMobileAnnotationRuntime">
+    (() => {
+      const dataNode = document.getElementById("prototypeAnnotationData");
+      const stage = document.getElementById("protoMobileStage");
+      const device = document.getElementById("protoMobileDevice");
+      const docsPanel = document.getElementById("protoMobileDocsPanel");
+      const docsSplitter = document.getElementById("protoMobileDocsSplitter");
+      const docNav = document.getElementById("protoMobileDocNav");
+      const docContent = document.getElementById("protoMobileDocContent");
+      const noteList = document.getElementById("protoMobileNoteList");
+      const filterBar = document.getElementById("protoMobileFilterBar");
+      let activeFilter = "all";
+      const desktopToggle = document.getElementById("protoMobileDesktopToggle");
+      const overlayRoot = document.getElementById("prototypeAnnotationRoot");
+      const markerLayer = document.getElementById("protoMobileMarkerLayer");
+
+      if (!dataNode || !stage || !overlayRoot) return;
+
+      let annotationData;
+      try {
+        annotationData = JSON.parse(dataNode.textContent);
+      } catch (error) {
+        console.error("解析标注数据失败", error);
+        return;
+      }
+
+      const annotations = Array.isArray(annotationData.annotations) ? annotationData.annotations : [];
+      const globalSections = Array.isArray(annotationData.globalSections) ? annotationData.globalSections : [];
+      const appRoot = document.querySelector("[data-proto-app]");
+      if (!appRoot) return;
+
+      const deviceWidth = 390;
+      const deviceHeight = 844;
+      document.documentElement.style.setProperty("--protoMobile-device-width", `${deviceWidth}px`);
+      document.documentElement.style.setProperty("--protoMobile-device-height", `${deviceHeight}px`);
+      document.documentElement.classList.add("protoMobile-ready");
+      document.body.appendChild(stage);
+      document.body.appendChild(overlayRoot);
+      device.appendChild(appRoot);
+      stage.hidden = false;
+
+      function renderGlobalDocs() {
+        if (!docNav || !docContent) return;
+        docNav.innerHTML = "";
+        docContent.innerHTML = "";
+        globalSections.forEach((sec, idx) => {
+          const btn = document.createElement("button");
+          btn.textContent = sec.title;
+          btn.className = idx === 0 ? "is-active" : "";
+          btn.onclick = () => {
+            document.querySelectorAll(".protoMobile-doc-nav button").forEach(b => b.classList.remove("is-active"));
+            btn.classList.add("is-active");
+            const targetEl = document.getElementById(`doc-sec-${sec.id}`);
+            if (targetEl) targetEl.scrollIntoView({ behavior: "smooth" });
+          };
+          docNav.appendChild(btn);
+
+          const secEl = document.createElement("section");
+          secEl.className = "protoMobile-doc-section";
+          secEl.id = `doc-sec-${sec.id}`;
+          secEl.innerHTML = `<h3>${sec.title}</h3><div>${sec.content}</div>`;
+          docContent.appendChild(secEl);
+        });
+      }
+
+      function renderNotes() {
+        if (!noteList) return;
+        noteList.innerHTML = "";
+        markerLayer.innerHTML = "";
+
+        const filtered = annotations.filter(n => activeFilter === "all" || n.type === activeFilter);
+        filtered.forEach((note, idx) => {
+          const card = document.createElement("div");
+          card.className = "protoMobile-note-card";
+          card.id = `card-${note.id}`;
+          card.innerHTML = `
+            <div class="protoMobile-note-head">
+              <span class="protoMobile-note-badge type-${note.type}">${note.typeLabel || '标注'}</span>
+              <h4>#${idx + 1} ${note.title}</h4>
+            </div>
+            <div class="protoMobile-note-body">${note.content}</div>
+          `;
+          card.onclick = () => highlightNote(note.id);
+          noteList.appendChild(card);
+
+          // 标注锚点
+          const marker = document.createElement("button");
+          marker.className = `protoMobile-marker type-${note.type}`;
+          marker.textContent = String(idx + 1);
+          marker.style.left = `${(note.x * 100).toFixed(1)}%`;
+          marker.style.top = `${(note.y * 100).toFixed(1)}%`;
+          marker.onclick = () => highlightNote(note.id);
+          markerLayer.appendChild(marker);
+        });
+      }
+
+      function highlightNote(id) {
+        document.querySelectorAll(".protoMobile-note-card").forEach(c => c.classList.remove("is-active"));
+        const card = document.getElementById(`card-${id}`);
+        if (card) {
+          card.classList.add("is-active");
+          card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      }
+
+      function renderFilters() {
+        if (!filterBar) return;
+        filterBar.innerHTML = "";
+        const types = [
+          { key: "all", label: "全部" },
+          { key: "new", label: "新增" },
+          { key: "modify", label: "修改" }
+        ];
+        types.forEach(t => {
+          const chip = document.createElement("button");
+          chip.className = `protoMobile-filter-chip ${activeFilter === t.key ? "is-active" : ""}`;
+          chip.textContent = t.label;
+          chip.onclick = () => {
+            activeFilter = t.key;
+            renderFilters();
+            renderNotes();
+          };
+          filterBar.appendChild(chip);
+        });
+      }
+
+      if (desktopToggle) {
+        desktopToggle.onclick = () => {
+          const isChecked = desktopToggle.getAttribute("aria-checked") === "true";
+          desktopToggle.setAttribute("aria-checked", String(!isChecked));
+          markerLayer.style.display = isChecked ? "none" : "block";
+        };
+      }
+
+      renderGlobalDocs();
+      renderFilters();
+      renderNotes();
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,259 @@
+{
+  "format": "protoWeb-review-session@1",
+  "prototypeId": "gerenzhuye",
+  "sessionId": "20260903094758-98f10dce",
+  "dataScriptId": "prototypeAnnotationData",
+  "sourceHtml": "gerenzhuye.html",
+  "baseRevision": 2,
+  "baseHtmlHash": "5fcbafe148884a1b4be04592fde77d28540276c5e29368ea0e946a41ab13e843",
+  "status": "draft",
+  "createdAt": "2026-09-03T09:47:58.190Z",
+  "updatedAt": "2026-09-03T09:47:58.190Z",
+  "operations": [],
+  "baseAnnotations": [
+    {
+      "id": "p-hero-info",
+      "scope": "page:profile:*",
+      "target": "[data-ui='user-hero']",
+      "x": 0.88,
+      "y": 0.18,
+      "title": "用户身份画像与认证体系",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 展示用户头像、认证家长标识（绿色盾牌）及选科/年级标签。\n2. 展示 IP 属地（如「北京」），增强真实性与信任感。\n3. 个人简介支持最多 100 字展示，折行自适应。"
+    },
+    {
+      "id": "p-follow-chat",
+      "scope": "page:profile:*",
+      "target": "[data-ui='action-buttons']",
+      "x": 0.82,
+      "y": 0.38,
+      "title": "关注与私信破冰交互",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. **关注状态**：未关注时为绿色主按钮「+ 关注」，点击后切换为次级按钮「已关注」（粉丝数 +1）。\n2. **发私信**：点击携带对方 `name` 参数跳转至 `sixin.html` 私信沟通页面；若双方互相关注则解除单条消息防骚扰限制。"
+    },
+    {
+      "id": "p-stats-bar",
+      "scope": "page:profile:*",
+      "target": "[data-ui='stats-bar']",
+      "x": 0.88,
+      "y": 0.48,
+      "title": "社交资产与互动数据",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 展示「获赞」（赞藏合并统计）、「关注」、「粉丝」三项核心指标。\n2. 数据破万自动格式化（如 `1.4万`）。\n3. 点击各项指标可流转至对应获赞、关注、粉丝列表页。"
+    },
+    {
+      "id": "p-tabs-content",
+      "scope": "page:profile:*",
+      "target": "[data-ui='tabs-header']",
+      "x": 0.85,
+      "y": 0.58,
+      "title": "帖子与有用双页签内容流",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. **帖子 Tab**：展示该用户公开发布的高考备考经验贴、错题闪卡与复习总结。\n2. **有用 Tab**：展示该用户点赞/收藏的精品升学干货。\n3. 支持点击帖子卡片进入详情，点赞/收藏实时双向反馈。"
+    },
+    {
+      "id": "p-more-menu",
+      "scope": "page:profile:*",
+      "target": "[data-ui='nav-more']",
+      "x": 0.88,
+      "y": 0.08,
+      "title": "右上角更多操作（治理入口）",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 点击弹出底部 ActionSheet 菜单。\n2. 包含「举报该用户」与「拉黑该用户」两个核心治理功能，底部为「取消」按钮。"
+    },
+    {
+      "id": "p-block-dialog",
+      "scope": "dialog:block-confirm",
+      "target": "[data-ui='block-dialog']",
+      "x": 0.85,
+      "y": 0.5,
+      "title": "小红书式拉黑二次确认弹窗",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 标题明确提示 `将“{用户}”拉黑`。\n2. 规则说明：`对方将无法查看你的帖子，也无法与你互动。对方不会收到被拉黑的通知。`\n3. 确认后拉黑生效，私信与主页互动全量阻断，按钮变为「解除拉黑」。"
+    },
+    {
+      "id": "p-report-drawer",
+      "scope": "sheet:report-drawer",
+      "target": "[data-ui='report-panel']",
+      "x": 0.85,
+      "y": 0.45,
+      "title": "全链路小红书多级举报体系",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. **四大入口**：`发布的帖子`、`给我发送的私信`、`头像昵称和简介`、`这个账号`。\n2. **帖子/私信多选**：支持勾选具体违规内容作为证据链，下一步进入原因与凭证页。\n3. **防滥用机制**：必须选择原因并可填写 0/400 字描述与上传 0/9 张截图凭证，提交后展示平台审核 Toast 并关闭。"
+    },
+    {
+      "id": "note-mtlc42en-1-cce42e2b1a",
+      "scope": "page:profile",
+      "target": "#app div.nav-actions > button.nav-btn",
+      "x": 0.4675920274522569,
+      "y": 0.5277777777777778,
+      "title": "拉黑、举报入口",
+      "content": "点击弹出拉黑/举报",
+      "format": "html"
+    }
+  ],
+  "baseGlobalMeta": {
+    "name": "高考志愿与陪读社区 · 个人主页产品需求文档 (PRD)",
+    "version": "V1.2",
+    "updatedAt": "2026-09-02"
+  },
+  "workingGlobalMeta": {
+    "name": "高考志愿与陪读社区 · 个人主页产品需求文档 (PRD)",
+    "version": "V1.2",
+    "updatedAt": "2026-09-02"
+  },
+  "baseGlobalSections": [
+    {
+      "id": "overview",
+      "title": "1. 业务背景与产品定位",
+      "format": "markdown",
+      "content": "### 1.1 业务背景\n在高三升学与备考过程中，家长和考生存在强烈的**经验获取、学情对比与资源互助**诉求。个人主页作为陪读社区的核心用户画像承载地，连接内容创作者与普通家长。\n\n### 1.2 核心目标\n- **立体画像**：展示创作者身份认证、辅导科目、地域及核心分享成果。\n- **破冰沟通**：提供关注与安全受控的私信发起通路。\n- **社区治理**：集成小红书标准的多级举报与二次确认拉黑机制，营造健康高信任度的备考交流环境。"
+    },
+    {
+      "id": "scope-and-flow",
+      "title": "2. 交互流转与核心场景",
+      "format": "markdown",
+      "content": "### 2.1 核心操作链路\n- **浏览主页**：查看家长身份标签、关注/粉丝/获赞等社交资产，切换帖子/有用页签。\n- **关注/取消关注**：单向/互相关注状态迁移，关注成功后联动私信权限。\n- **发起私信**：跳转至私信交流页（对方未回关限发1条，已回关无限制）。\n- **安全操作**：右上角 ActionSheet 呼出「举报该用户」与「拉黑该用户」。"
+    },
+    {
+      "id": "security-governance",
+      "title": "3. 社区治理：小红书级拉黑与举报规则",
+      "format": "markdown",
+      "content": "### 3.1 拉黑机制规则\n- **二次确认**：点击拉黑弹出暗色卡片弹窗，文案为 `将“{用户}”拉黑：对方将无法查看你的帖子，也无法与你互动。对方不会收到被拉黑的通知。`\n- **双向生效**：拉黑后对方无法查看我方主页内容与私信交流；支持一键解除拉黑。\n\n### 3.2 四级举报体系规范\n1. **发布的帖子**：进入具体帖子多选列表，勾选后流转至包含帖子证据卡片与13项违规原因选择、描述（0/400）与图片凭证（0/9）表单。\n2. **给我发送的私信**：进入私信列表多选（支持已选 X/50 计数），下一步流转至私信专属原因与凭证表单。\n3. **头像昵称和简介**：进入包含13项单选原因、详细描述与图片凭证的综合表单。\n4. **这个账号**：选择账号违规原因并填写描述与凭证提交。"
+    },
+    {
+      "id": "changelog",
+      "title": "4. 版本变更记录",
+      "format": "markdown",
+      "content": "| 版本 | 日期 | 变更内容 | 状态 |\n| :--- | :--- | :--- | :--- |\n| V1.0 | 2026-09-01 | 个人主页与私信基础原型设计 | 已完成 |\n| V1.1 | 2026-09-02 | 引入小红书式未回关单条限频与拉黑弹窗 | 已完成 |\n| V1.2 | 2026-09-02 | 落地图一至图四全链路举报体系，剔除饭圈乱象与假货，接入 prototype-annotation | 已完成 |"
+    }
+  ],
+  "workingGlobalSections": [
+    {
+      "id": "overview",
+      "title": "1. 业务背景与产品定位",
+      "format": "markdown",
+      "content": "### 1.1 业务背景\n在高三升学与备考过程中，家长和考生存在强烈的**经验获取、学情对比与资源互助**诉求。个人主页作为陪读社区的核心用户画像承载地，连接内容创作者与普通家长。\n\n### 1.2 核心目标\n- **立体画像**：展示创作者身份认证、辅导科目、地域及核心分享成果。\n- **破冰沟通**：提供关注与安全受控的私信发起通路。\n- **社区治理**：集成小红书标准的多级举报与二次确认拉黑机制，营造健康高信任度的备考交流环境。",
+      "_editState": "original"
+    },
+    {
+      "id": "scope-and-flow",
+      "title": "2. 交互流转与核心场景",
+      "format": "markdown",
+      "content": "### 2.1 核心操作链路\n- **浏览主页**：查看家长身份标签、关注/粉丝/获赞等社交资产，切换帖子/有用页签。\n- **关注/取消关注**：单向/互相关注状态迁移，关注成功后联动私信权限。\n- **发起私信**：跳转至私信交流页（对方未回关限发1条，已回关无限制）。\n- **安全操作**：右上角 ActionSheet 呼出「举报该用户」与「拉黑该用户」。",
+      "_editState": "original"
+    },
+    {
+      "id": "security-governance",
+      "title": "3. 社区治理：小红书级拉黑与举报规则",
+      "format": "markdown",
+      "content": "### 3.1 拉黑机制规则\n- **二次确认**：点击拉黑弹出暗色卡片弹窗，文案为 `将“{用户}”拉黑：对方将无法查看你的帖子，也无法与你互动。对方不会收到被拉黑的通知。`\n- **双向生效**：拉黑后对方无法查看我方主页内容与私信交流；支持一键解除拉黑。\n\n### 3.2 四级举报体系规范\n1. **发布的帖子**：进入具体帖子多选列表，勾选后流转至包含帖子证据卡片与13项违规原因选择、描述（0/400）与图片凭证（0/9）表单。\n2. **给我发送的私信**：进入私信列表多选（支持已选 X/50 计数），下一步流转至私信专属原因与凭证表单。\n3. **头像昵称和简介**：进入包含13项单选原因、详细描述与图片凭证的综合表单。\n4. **这个账号**：选择账号违规原因并填写描述与凭证提交。",
+      "_editState": "original"
+    },
+    {
+      "id": "changelog",
+      "title": "4. 版本变更记录",
+      "format": "markdown",
+      "content": "| 版本 | 日期 | 变更内容 | 状态 |\n| :--- | :--- | :--- | :--- |\n| V1.0 | 2026-09-01 | 个人主页与私信基础原型设计 | 已完成 |\n| V1.1 | 2026-09-02 | 引入小红书式未回关单条限频与拉黑弹窗 | 已完成 |\n| V1.2 | 2026-09-02 | 落地图一至图四全链路举报体系，剔除饭圈乱象与假货，接入 prototype-annotation | 已完成 |",
+      "_editState": "original"
+    }
+  ],
+  "workingAnnotations": [
+    {
+      "id": "p-hero-info",
+      "scope": "page:profile:*",
+      "target": "[data-ui='user-hero']",
+      "x": 0.88,
+      "y": 0.18,
+      "title": "用户身份画像与认证体系",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 展示用户头像、认证家长标识（绿色盾牌）及选科/年级标签。\n2. 展示 IP 属地（如「北京」），增强真实性与信任感。\n3. 个人简介支持最多 100 字展示，折行自适应。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "p-follow-chat",
+      "scope": "page:profile:*",
+      "target": "[data-ui='action-buttons']",
+      "x": 0.82,
+      "y": 0.38,
+      "title": "关注与私信破冰交互",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. **关注状态**：未关注时为绿色主按钮「+ 关注」，点击后切换为次级按钮「已关注」（粉丝数 +1）。\n2. **发私信**：点击携带对方 `name` 参数跳转至 `sixin.html` 私信沟通页面；若双方互相关注则解除单条消息防骚扰限制。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "p-stats-bar",
+      "scope": "page:profile:*",
+      "target": "[data-ui='stats-bar']",
+      "x": 0.88,
+      "y": 0.48,
+      "title": "社交资产与互动数据",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 展示「获赞」（赞藏合并统计）、「关注」、「粉丝」三项核心指标。\n2. 数据破万自动格式化（如 `1.4万`）。\n3. 点击各项指标可流转至对应获赞、关注、粉丝列表页。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "p-tabs-content",
+      "scope": "page:profile:*",
+      "target": "[data-ui='tabs-header']",
+      "x": 0.85,
+      "y": 0.58,
+      "title": "帖子与有用双页签内容流",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. **帖子 Tab**：展示该用户公开发布的高考备考经验贴、错题闪卡与复习总结。\n2. **有用 Tab**：展示该用户点赞/收藏的精品升学干货。\n3. 支持点击帖子卡片进入详情，点赞/收藏实时双向反馈。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "p-more-menu",
+      "scope": "page:profile:*",
+      "target": "[data-ui='nav-more']",
+      "x": 0.88,
+      "y": 0.08,
+      "title": "右上角更多操作（治理入口）",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 点击弹出底部 ActionSheet 菜单。\n2. 包含「举报该用户」与「拉黑该用户」两个核心治理功能，底部为「取消」按钮。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "p-block-dialog",
+      "scope": "dialog:block-confirm",
+      "target": "[data-ui='block-dialog']",
+      "x": 0.85,
+      "y": 0.5,
+      "title": "小红书式拉黑二次确认弹窗",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. 标题明确提示 `将“{用户}”拉黑`。\n2. 规则说明：`对方将无法查看你的帖子，也无法与你互动。对方不会收到被拉黑的通知。`\n3. 确认后拉黑生效，私信与主页互动全量阻断，按钮变为「解除拉黑」。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "p-report-drawer",
+      "scope": "sheet:report-drawer",
+      "target": "[data-ui='report-panel']",
+      "x": 0.85,
+      "y": 0.45,
+      "title": "全链路小红书多级举报体系",
+      "format": "markdown",
+      "content": "**业务规则**：\n1. **四大入口**：`发布的帖子`、`给我发送的私信`、`头像昵称和简介`、`这个账号`。\n2. **帖子/私信多选**：支持勾选具体违规内容作为证据链，下一步进入原因与凭证页。\n3. **防滥用机制**：必须选择原因并可填写 0/400 字描述与上传 0/9 张截图凭证，提交后展示平台审核 Toast 并关闭。",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    },
+    {
+      "id": "note-mtlc42en-1-cce42e2b1a",
+      "scope": "page:profile",
+      "target": "#app div.nav-actions > button.nav-btn",
+      "x": 0.4675920274522569,
+      "y": 0.5277777777777778,
+      "title": "拉黑、举报入口",
+      "content": "点击弹出拉黑/举报",
+      "format": "html",
+      "_editState": "original",
+      "_contentPolicy": "direct"
+    }
+  ]
+}
