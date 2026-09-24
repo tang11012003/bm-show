@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>批改完成 - 顶部悬浮通知与核对中枢</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    /* ── 全局重置与基础设定 ── */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    ::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    html,
+    body,
+    #app {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    :root {
+      --primary-green: #20DCAD;
+      --primary-dark: #00B383;
+      --primary-blue: #3388FF;
+      --accent-orange: #FF7D00;
+      --text-main: #111112;
+      --text-sub: #4C5061;
+      --text-muted: #8C8D9B;
+      --bg-page: #F5F7FB;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: #E8EBF2;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ── 手机视口容器 (390 x 844) ── */
+    #app {
+      width: 100%;
+      max-width: 390px;
+      height: 100%;
+      max-height: 844px;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-page);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 48px rgba(28, 37, 65, 0.18);
+      border-radius: 28px;
+    }
+
+    @media (max-width: 600px) {
+      #app {
+        max-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+
+    /* ── 视图 A：模拟 App 常态底层（如学情首页/社区浏览） ── */
+    .app-screen-view {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      background: #F8FAFD;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 10;
+    }
+
+    /* 顶部模拟导航 */
+    .mock-app-header {
+      height: 48px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFFFF;
+      border-bottom: 1px solid #EAEFF6;
+      flex-shrink: 0;
+    }
+    .mock-brand {
+      font-size: 16px;
+      font-weight: 800;
+      color: #111112;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mock-tabs {
+      display: flex;
+      gap: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #8C8D9B;
+    }
+    .mock-tabs span.active {
+      color: #111112;
+      position: relative;
+    }
+    .mock-tabs span.active::after {
+      content: '';
+      position: absolute;
+      bottom: -14px;
+      left: 0;
+      right: 0;
+      height: 2.5px;
+      background: #00B383;
+      border-radius: 2px;
+    }
+
+    /* 页面主体模拟内容 */
+    .mock-content-scroll {
+      flex: 1;
+      padding: 14px 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* 首页学情常驻卡片 (胶囊通知收起后的承接地) */
+    .home-pending-card {
+      background: linear-gradient(135deg, #F0FFF9 0%, #E8FAF4 100%);
+      border: 1px solid #C9F3E4;
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(0, 179, 131, 0.08);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .home-pending-card:active { transform: scale(0.98); }
+    .hpc-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hpc-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: #00B383;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .hpc-texts {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hpc-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #111112;
+    }
+    .hpc-sub {
+      font-size: 11.5px;
+      color: #4C5061;
+    }
+
+    .mock-feed-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid #EBF0F8;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mfc-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #223355;
+    }
+    .mfc-desc {
+      font-size: 12.5px;
+      color: #8C8D9B;
+      line-height: 1.5;
+    }
+
+    /* ═══════════ 方案核心：顶部灵动悬浮胶囊通知条 (Non-modal Island Banner) ═══════════ */
+    .top-floating-capsule {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      right: 12px;
+      z-index: 999;
+      background: #111112;
+      color: #FFFFFF;
+      border-radius: 20px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      cursor: pointer;
+      transform: translateY(-130%);
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    }
+
+    .top-floating-capsule.is-shown {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .capsule-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .capsule-avatar-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #20DCAD 0%, #00B383 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .capsule-dot-pulse {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 8px;
+      height: 8px;
+      background: #FF5A5A;
+      border: 1.5px solid #111112;
+      border-radius: 50%;
+    }
+
+    .capsule-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+    .capsule-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .capsule-student {
+      font-size: 11px;
+      font-weight: 700;
+      color: #20DCAD;
+      background: rgba(32, 220, 173, 0.15);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .capsule-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #FFFFFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .capsule-sub {
+      font-size: 11px;
+      color: #A0A5B5;
+    }
+
+    .capsule-right {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .capsule-btn-go {
+      background: #20DCAD;
+      color: #111112;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .capsule-btn-close {
+      background: transparent;
+      border: none;
+      color: #8C8D9B;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* ═══════════ 视图 B：全屏核对中枢页 (Checklist Hub) ═══════════ */
+    .checklist-hub-view {
+      position: absolute;
+      inset: 0;
+      background: #F5F7FB;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      opacity: 0;
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+    }
+    .checklist-hub-view.is-active {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    /* 中枢页导航 */
+    .hub-navbar {
+      height: 48px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFFFF;
+      border-bottom: 1px solid #EAEFF6;
+      flex-shrink: 0;
+    }
+    .hub-back-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: #F5F7FB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #111112;
+    }
+    .hub-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111112;
+    }
+
+    /* 中枢页内容滚动区 */
+    .hub-body-scroll {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* 顶部进度与考试信息面板 */
+    .hub-summary-card {
+      background: #FFFFFF;
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+      border: 1px solid #E9EDF5;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .hsc-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .hsc-student-tag {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #2563EB;
+      background: #EFF6FF;
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid #BFDBFE;
+    }
+    .hsc-exam-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: #111112;
+      margin-top: 2px;
+    }
+    .hsc-progress-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hsc-progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #6B7280;
+    }
+    .hsc-track {
+      height: 7px;
+      background: #E5E7EB;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hsc-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #20DCAD 0%, #00B383 100%);
+      width: 0%;
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    /* 科目清单卡片 */
+    .subject-task-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 14px;
+      border: 1.5px solid #EBF0F8;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .subject-task-card.is-focused {
+      border-color: #00B383;
+      box-shadow: 0 6px 20px rgba(0, 179, 131, 0.14);
+      background: #FDFFFE;
+    }
+    .subject-task-card.is-done {
+      border-color: #D1FAE5;
+      background: #F9FDFB;
+    }
+
+    .stc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .stc-subject-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #111112;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .stc-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+    .stc-badge.pending {
+      background: #FFF7ED;
+      color: #EA580C;
+      border: 1px solid #FFEDD5;
+    }
+    .stc-badge.done {
+      background: #ECFDF5;
+      color: #059669;
+      border: 1px solid #A7F3D0;
+    }
+
+    .stc-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F9FAFB;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .stc-stat-text {
+      font-size: 12.5px;
+      color: #4C5061;
+    }
+    .stc-stat-text strong {
+      color: #FF5A5A;
+      font-size: 15px;
+    }
+    .stc-btn-action {
+      background: #111112;
+      color: #20DCAD;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      transition: transform 0.12s;
+    }
+    .stc-btn-action:active { transform: scale(0.96); }
+
+    .stc-btn-action.done {
+      background: #E5E7EB;
+      color: #6B7280;
+      cursor: default;
+    }
+
+    /* 底部悬浮操作底栏 */
+    .hub-bottom-bar {
+      padding: 12px 16px calc(20px + env(safe-area-inset-bottom, 12px));
+      background: #FFFFFF;
+      border-top: 1px solid #EAEFF6;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btn-hub-primary {
+      width: 100%;
+      height: 48px;
+      border-radius: 24px;
+      border: none;
+      background: #111112;
+      color: #FFFFFF;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(17, 17, 18, 0.2);
+      transition: all 0.2s ease;
+    }
+    .btn-hub-primary.all-done {
+      background: linear-gradient(135deg, #20DCAD 0%, #00B383 100%);
+      color: #FFFFFF;
+      box-shadow: 0 6px 20px rgba(0, 179, 131, 0.35);
+    }
+    .btn-hub-primary:active { transform: scale(0.98); }
+
+    /* 模拟核对完成微型浮层 (演示用) */
+    .mock-check-sheet-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+    }
+    .mock-check-sheet-card {
+      width: 100%;
+      background: #FFFFFF;
+      border-radius: 22px 22px 0 0;
+      padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 12px));
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 轻提示 Toast */
+    .xuanfu-toast {
+      position: absolute;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.94);
+      color: #FFFFFF;
+      font-size: 12.5px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      z-index: 9999;
+      pointer-events: none;
+      display: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      white-space: nowrap;
+    }
+
+    /* 演示重置触发小胶囊 */
+    .demo-capsule-trigger {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111112;
+      color: #20DCAD;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      z-index: 20;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+  </style>
+
+  <style id="protoMobileAnnotationCss">
+    :root {
+      --protoMobile-accent: #3388ff;
+      --protoMobile-accent-dark: #2167d9;
+      --protoMobile-accent-soft: #f0f9ff;
+      --protoMobile-ink: #223355;
+      --protoMobile-muted: #6b7a99;
+      --protoMobile-line: #dde1eb;
+      --protoMobile-bg: #edf0f6;
+      --protoMobile-device-width: 414px;
+      --protoMobile-docs-width: 520px;
+    }
+
+    html.protoMobile-ready,
+    html.protoMobile-ready body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .protoMobile-stage,
+    .protoMobile-stage *,
+    .protoMobile-overlay-root,
+    .protoMobile-overlay-root * {
+      box-sizing: border-box;
+      letter-spacing: 0;
+    }
+
+    .protoMobile-stage {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483000;
+      width: 100vw;
+      max-width: none;
+      height: 100dvh;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: var(--protoMobile-docs-width) 8px var(--protoMobile-device-width) minmax(320px, 1fr);
+      gap: 16px;
+      align-items: center;
+      overflow: hidden;
+      background: var(--protoMobile-bg);
+      color: var(--protoMobile-ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    .protoMobile-stage.no-docs {
+      grid-template-columns: var(--protoMobile-device-width) minmax(320px, 1fr);
+      justify-content: center;
+    }
+    .protoMobile-stage.no-docs .protoMobile-desktop-splitter { display: none; }
+    .protoMobile-stage.no-docs .protoMobile-device { grid-column: 1; }
+    .protoMobile-stage.no-docs .protoMobile-notes-panel { grid-column: 2; }
+
+    .protoMobile-docs-panel { grid-column: 1; grid-row: 1; }
+    .protoMobile-desktop-splitter { grid-column: 2; grid-row: 1; }
+    .protoMobile-device { grid-column: 3; grid-row: 1; }
+    .protoMobile-notes-panel { grid-column: 4; grid-row: 1; }
+
+    .protoMobile-desktop-splitter {
+      position: relative;
+      width: 8px;
+      min-width: 8px;
+      height: min(896px, calc(100dvh - 32px));
+      align-self: center;
+      cursor: col-resize;
+      touch-action: none;
+      outline: none;
+    }
+
+    .protoMobile-desktop-splitter::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 3px;
+      height: 56px;
+      border-radius: 2px;
+      background: #b8c2d3;
+      transform: translate(-50%, -50%);
+      transition: height 0.15s ease, background 0.15s ease;
+    }
+
+    .protoMobile-desktop-splitter:hover::after,
+    .protoMobile-desktop-splitter:focus-visible::after,
+    .protoMobile-desktop-splitter.is-dragging::after { height: 84px; background: var(--protoMobile-accent); }
+    .protoMobile-stage.is-resizing { cursor: col-resize; user-select: none; }
+
+    .protoMobile-device,
+    .protoMobile-review-panel {
+      height: min(896px, calc(100dvh - 32px));
+      min-height: 0;
+    }
+
+    .protoMobile-device {
+      position: relative;
+      width: var(--protoMobile-device-width);
+      min-width: 0;
+      justify-self: center;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 12px 32px rgba(34, 51, 85, 0.12);
+    }
+
+    .protoMobile-device>[data-proto-app] {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: none !important;
+      max-height: none !important;
+      margin: 0 !important;
+    }
+
+    .protoMobile-review-panel {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid rgba(51, 136, 255, 0.22);
+      border-top: 3px solid rgba(51, 136, 255, 0.82);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 18px 44px rgba(34, 51, 85, 0.1);
+    }
+
+    .protoMobile-panel-header {
+      height: 56px;
+      padding: 0 16px;
+      border-bottom: 1px solid #e9edf5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #fff;
+      font-size: 16px;
+    }
+
+    .protoMobile-doc-layout {
+      height: calc(100% - 56px);
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .protoMobile-doc-nav {
+      padding: 12px 8px;
+      border-right: 1px solid #e9edf5;
+      overflow-y: auto;
+      background: #fbfcff;
+    }
+
+    .protoMobile-doc-nav button {
+      width: 100%;
+      min-height: 36px;
+      padding: 8px 10px;
+      border: 0;
+      border-left: 3px solid transparent;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--protoMobile-muted);
+      font: inherit;
+      font-size: 13px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .protoMobile-doc-nav button:hover,
+    .protoMobile-doc-nav button.is-active {
+      border-left-color: var(--protoMobile-accent);
+      color: #235cb3;
+      background: #e8f1ff;
+    }
+
+    .protoMobile-doc-content {
+      min-width: 0;
+      padding: 0 16px 24px;
+      overflow: auto;
+      scroll-behavior: smooth;
+    }
+
+    .protoMobile-doc-section {
+      padding: 20px 0;
+      border-bottom: 1px solid #e9edf5;
+      scroll-margin-top: 12px;
+    }
+    .protoMobile-doc-section:last-child { border-bottom: 0; }
+    .protoMobile-doc-section>h3 { margin: 0 0 12px; color: var(--protoMobile-ink); font-size: 16px; line-height: 24px; }
+
+    .protoMobile-desktop-toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--protoMobile-muted);
+      font-size: 12px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .protoMobile-switch {
+      position: relative;
+      width: 40px;
+      height: 24px;
+      min-height: 0;
+      flex: 0 0 auto;
+      padding: 0;
+      border: 0;
+      border-radius: 12px;
+      background: #ced4e0;
+      cursor: pointer;
+    }
+    .protoMobile-switch::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(34, 51, 85, 0.18);
+      transition: transform 0.16s ease;
+    }
+    .protoMobile-switch[aria-checked="true"] { background: var(--protoMobile-accent); }
+    .protoMobile-switch[aria-checked="true"]::after { transform: translateX(16px); }
+
+    .protoMobile-filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e9edf5;
+      background: #fbfcff;
+    }
+
+    .protoMobile-filter-chip {
+      padding: 4px 10px;
+      border: 1px solid #d8e0ee;
+      border-radius: 14px;
+      background: #fff;
+      color: var(--protoMobile-muted);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .protoMobile-filter-chip.is-active {
+      border-color: var(--protoMobile-accent);
+      background: #e8f1ff;
+      color: #235cb3;
+      font-weight: 600;
+    }
+
+    .protoMobile-note-list {
+      height: calc(100% - 105px);
+      padding: 12px 16px 20px;
+      overflow: auto;
+    }
+
+    .protoMobile-note-card {
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      border: 1px solid #e4e9f2;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.14s ease, box-shadow 0.14s ease;
+    }
+    .protoMobile-note-card:hover { border-color: #b7cefb; }
+    .protoMobile-note-card.is-active {
+      border-color: var(--protoMobile-accent);
+      box-shadow: 0 0 0 2px rgba(51, 136, 255, 0.18);
+    }
+
+    .protoMobile-note-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .protoMobile-note-badge {
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .protoMobile-note-badge.type-modify { background: #e67e22; }
+    .protoMobile-note-badge.type-new { background: #27ae60; }
+    .protoMobile-note-badge.type-delete { background: #e74c3c; }
+    .protoMobile-note-badge.type-original { background: #2980b9; }
+
+    .protoMobile-note-card h4 {
+      margin: 0;
+      color: var(--protoMobile-ink);
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .protoMobile-note-body {
+      color: #4b5874;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .protoMobile-overlay-root {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483100;
+      pointer-events: none;
+    }
+
+    .protoMobile-marker {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      pointer-events: auto;
+      transform: translate(-50%, -50%);
+    }
+    .protoMobile-marker.type-original { background: #2980b9; }
+    .protoMobile-marker.type-modify { background: #e67e22; }
+    .protoMobile-marker.type-new { background: #27ae60; }
+    .protoMobile-marker.type-delete { background: #e74c3c; }
+
+    .protoMobile-compact-docs-trigger,
+    .protoMobile-compact-close,
+    .protoMobile-compact-backdrop,
+    .protoMobile-mobile-controls,
+    .protoMobile-mobile-note-layer,
+    .protoMobile-mobile-docs-layer {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app" data-proto-app data-proto-platform="mobile">
+
+    <!-- ════════ 视图 1：模拟常规 App 页面 (展示非阻断胶囊与首页常驻阵地) ════════ -->
+    <div class="app-screen-view" id="appScreenView">
+      <header class="mock-app-header">
+        <div class="mock-brand">
+          <span class="material-icons" style="color:#00B383">school</span>
+          <span>小苗伴学</span>
+        </div>
+        <div class="mock-tabs">
+          <span class="active">学情分析</span>
+          <span>陪读社区</span>
+        </div>
+        <span class="material-icons" style="color:#8C8D9B;font-size:20px">notifications_none</span>
+      </header>
+
+      <div class="mock-content-scroll">
+        <!-- 首页常驻待办卡片 (胶囊自动收起后的兜底入口) -->
+        <div class="home-pending-card" id="homePendingCard" onclick="openChecklistHub()">
+          <div class="hpc-left">
+            <div class="hpc-icon">
+              <span class="material-icons">assignment_turned_in</span>
+            </div>
+            <div class="hpc-texts">
+              <div class="hpc-title">【期中全科考试】切题完成</div>
+              <div class="hpc-sub" id="hpcSubText">共 2 门科目待核对错题 · 点击开始</div>
+            </div>
+          </div>
+          <span class="material-icons" style="color:#00B383;font-size:20px">chevron_right</span>
+        </div>
+
+        <!-- 模拟日常社区资讯卡片 -->
+        <div class="mock-feed-card">
+          <div class="mfc-title">🎯 2026 高考数学：二次函数极值压轴题提分建议</div>
+          <div class="mfc-desc">分析近三年一模二模卷，发现该题型在选择第8题与大题第21题高频出现，建议重点复盘...</div>
+        </div>
+
+        <div class="mock-feed-card">
+          <div class="mfc-title">🌱 家长经验谈：高二期中考后如何平稳过渡心态？</div>
+          <div class="mfc-desc">每次大考不仅是检验成绩，更是帮孩子摸清薄弱考点的关键契机，建议配合学情雷达查漏补缺...</div>
+        </div>
+      </div>
+
+      <!-- 演示用小胶囊触发器 -->
+      <div class="demo-capsule-trigger" onclick="triggerCapsuleNotification()">
+        <span class="material-icons" style="font-size:15px">replay</span>
+        <span>演示：重新弹出顶部悬浮胶囊</span>
+      </div>
+    </div>
+
+    <!-- ════════ 核心：顶部悬浮灵动通知胶囊 (Non-modal Banner) ════════ -->
+    <div class="top-floating-capsule" id="topFloatingCapsule" onclick="openChecklistHub()">
+      <div class="capsule-left">
+        <div class="capsule-avatar-badge">
+          <span class="material-icons" style="font-size:18px">fact_check</span>
+          <div class="capsule-dot-pulse"></div>
+        </div>
+        <div class="capsule-info">
+          <div class="capsule-title-row">
+            <span class="capsule-student">张小晓</span>
+            <span class="capsule-title">期中大考 批改完成</span>
+          </div>
+          <div class="capsule-sub">2科待核对错题 · 预计仅需40秒</div>
+        </div>
+      </div>
+      <div class="capsule-right">
+        <div class="capsule-btn-go">
+          <span>去核对</span>
+          <span class="material-icons" style="font-size:13px">chevron_right</span>
+        </div>
+        <button class="capsule-btn-close" type="button" aria-label="关闭通知" onclick="event.stopPropagation(); dismissCapsule(true)">
+          <span class="material-icons" style="font-size:16px">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ════════ 视图 2：全屏核对中枢清单页 (Checklist Hub) ════════ -->
+    <div class="checklist-hub-view" id="checklistHubView">
+      <header class="hub-navbar">
+        <button class="hub-back-btn" type="button" aria-label="返回首页" onclick="closeChecklistHub()">
+          <span class="material-icons" style="font-size:20px">arrow_back</span>
+        </button>
+        <span class="hub-title">试卷错题核对清单</span>
+        <div style="width:34px"></div>
+      </header>
+
+      <div class="hub-body-scroll">
+        <!-- 考试基本信息与总进度卡片 -->
+        <div class="hub-summary-card">
+          <div class="hsc-top">
+            <div>
+              <span class="hsc-student-tag">张小晓 · 高二</span>
+              <div class="hsc-exam-name">期中全科综合考试</div>
+            </div>
+            <span class="material-icons" style="color:#00B383;font-size:24px">verified</span>
+          </div>
+          <div class="hsc-progress-bar-wrap">
+            <div class="hsc-progress-labels">
+              <span>核对进度</span>
+              <strong id="hubProgressRatio">0 / 2 科已完成</strong>
+            </div>
+            <div class="hsc-track">
+              <div class="hsc-fill" id="hubProgressFill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 科目 1：数学 (待核对) -->
+        <div class="subject-task-card is-focused" id="cardMath">
+          <div class="stc-header">
+            <div class="stc-subject-name">
+              <span class="material-icons" style="font-size:18px;color:#00B383">calculate</span>
+              <span>数学科目</span>
+            </div>
+            <span class="stc-badge pending" id="badgeMath">待核对错题</span>
+          </div>
+          <div class="stc-body">
+            <div class="stc-stat-text" id="statMath">
+              AI初筛：<strong>5</strong> 道疑难错题
+            </div>
+            <button class="stc-btn-action" id="btnMath" type="button" onclick="startSubjectCheck('math')">
+              <span>立即核对</span>
+              <span class="material-icons" style="font-size:13px">chevron_right</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 科目 2：语文 (待核对) -->
+        <div class="subject-task-card" id="cardYuwen">
+          <div class="stc-header">
+            <div class="stc-subject-name">
+              <span class="material-icons" style="font-size:18px;color:#3388FF">menu_book</span>
+              <span>语文科目</span>
+            </div>
+            <span class="stc-badge pending" id="badgeYuwen">待核对错题</span>
+          </div>
+          <div class="stc-body">
+            <div class="stc-stat-text" id="statYuwen">
+              AI初筛：<strong>2</strong> 道古诗文错题
+            </div>
+            <button class="stc-btn-action" id="btnYuwen" type="button" onclick="startSubjectCheck('yuwen')">
+              <span>立即核对</span>
+              <span class="material-icons" style="font-size:13px">chevron_right</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 科目 3：英语 (模拟已完成状态) -->
+        <div class="subject-task-card is-done">
+          <div class="stc-header">
+            <div class="stc-subject-name">
+              <span class="material-icons" style="font-size:18px;color:#059669">check_circle</span>
+              <span>英语科目</span>
+            </div>
+            <span class="stc-badge done">✓ 已核对完成</span>
+          </div>
+          <div class="stc-body">
+            <div class="stc-stat-text" style="color:#059669">
+              得分 112 分 · 错题 3 道已归档
+            </div>
+            <button class="stc-btn-action done" type="button" disabled>
+              <span>已归档</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部顺延连续核对按钮 -->
+      <div class="hub-bottom-bar">
+        <button class="btn-hub-primary" id="btnHubPrimary" type="button" onclick="handlePrimaryHubAction()">
+          <span>一键连续核对全部 (约40秒)</span>
+          <span class="material-icons" style="font-size:18px">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 模拟单科核对完成后退出的弹层 (用于交互演示) -->
+    <div class="mock-check-sheet-overlay" id="mockCheckOverlay">
+      <div class="mock-check-sheet-card">
+        <div style="font-size:15px;font-weight:700;color:#111112" id="mockModalTitle">正在核对数学错题...</div>
+        <div style="font-size:12.5px;color:#4C5061">模拟在错题勾选工作台中完成确认（已核对 5 道题目，剔除 1 道误判）</div>
+        <button class="btn-hub-primary all-done" type="button" onclick="finishCurrentSubjectCheck()">
+          <span>✓ 完成此科核对并返回中枢</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 全局轻提示 Toast -->
+    <div class="xuanfu-toast" id="xuanfuToast">提示信息</div>
+  </div>
+
+  <script>
+    let mathDone = false;
+    let yuwenDone = false;
+    let currentCheckingSubj = '';
+    let autoDismissTimer = null;
+
+    function showToast(msg) {
+      const toast = document.getElementById('xuanfuToast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2200);
+    }
+
+    // 1. 顶部悬浮胶囊通知控制
+    function triggerCapsuleNotification() {
+      const capsule = document.getElementById('topFloatingCapsule');
+      if (!capsule) return;
+      capsule.classList.add('is-shown');
+      clearTimeout(autoDismissTimer);
+      // 4.5 秒后若用户未点击，自动向上平滑收起（不阻断操作）
+      autoDismissTimer = setTimeout(() => {
+        dismissCapsule(false);
+      }, 4500);
+    }
+
+    function dismissCapsule(manual) {
+      const capsule = document.getElementById('topFloatingCapsule');
+      if (capsule) capsule.classList.remove('is-shown');
+      if (manual) {
+        showToast('通知已收起，可在首页随时点击待办卡片核对');
+      }
+    }
+
+    // 2. 打开核对中枢页 (Checklist Hub)
+    function openChecklistHub() {
+      dismissCapsule(false);
+      const hub = document.getElementById('checklistHubView');
+      if (hub) hub.classList.add('is-active');
+      refreshHubState();
+    }
+
+    function closeChecklistHub() {
+      const hub = document.getElementById('checklistHubView');
+      if (hub) hub.classList.remove('is-active');
+    }
+
+    // 3. 模拟单科核对流程
+    function startSubjectCheck(subj) {
+      currentCheckingSubj = subj;
+      const overlay = document.getElementById('mockCheckOverlay');
+      const title = document.getElementById('mockModalTitle');
+      if (subj === 'math') {
+        title.textContent = '📐 数学科目错题快速核对 (5道)';
+      } else {
+        title.textContent = '📖 语文科目错题快速核对 (2道)';
+      }
+      if (overlay) overlay.style.display = 'flex';
+    }
+
+    // 4. 解决核心提问：“核对完一科出来怎么办？”
+    function finishCurrentSubjectCheck() {
+      const overlay = document.getElementById('mockCheckOverlay');
+      if (overlay) overlay.style.display = 'none';
+
+      if (currentCheckingSubj === 'math') {
+        mathDone = true;
+        showToast('🎉 数学错题已核对完成！请继续核对下一科');
+      } else if (currentCheckingSubj === 'yuwen') {
+        yuwenDone = true;
+        showToast('🎉 语文错题已核对完成！全科已就绪');
+      }
+
+      refreshHubState();
+    }
+
+    // 5. 刷新中枢页状态机 (打勾、顺延焦点、按钮变身)
+    function refreshHubState() {
+      const ratioEl = document.getElementById('hubProgressRatio');
+      const fillEl = document.getElementById('hubProgressFill');
+      const btnPrimary = document.getElementById('btnHubPrimary');
+      const hpcSub = document.getElementById('hpcSubText');
+
+      let doneCount = 0;
+      if (mathDone) doneCount++;
+      if (yuwenDone) doneCount++;
+
+      ratioEl.textContent = `${doneCount} / 2 科已完成`;
+      fillEl.style.width = `${(doneCount / 2) * 100}%`;
+
+      // 数学卡片状态更新
+      const cardMath = document.getElementById('cardMath');
+      const badgeMath = document.getElementById('badgeMath');
+      const btnMath = document.getElementById('btnMath');
+      const statMath = document.getElementById('statMath');
+      if (mathDone) {
+        cardMath.className = 'subject-task-card is-done';
+        badgeMath.className = 'stc-badge done';
+        badgeMath.textContent = '✓ 已核对完成';
+        statMath.innerHTML = '已确认 <strong>4</strong> 题 · 剔除 1 题误判';
+        btnMath.className = 'stc-btn-action done';
+        btnMath.textContent = '已完成';
+        btnMath.disabled = true;
+      }
+
+      // 语文卡片状态更新
+      const cardYuwen = document.getElementById('cardYuwen');
+      const badgeYuwen = document.getElementById('badgeYuwen');
+      const btnYuwen = document.getElementById('btnYuwen');
+      const statYuwen = document.getElementById('statYuwen');
+      if (yuwenDone) {
+        cardYuwen.className = 'subject-task-card is-done';
+        badgeYuwen.className = 'stc-badge done';
+        badgeYuwen.textContent = '✓ 已核对完成';
+        statYuwen.innerHTML = '已确认 <strong>2</strong> 题';
+        btnYuwen.className = 'stc-btn-action done';
+        btnYuwen.textContent = '已完成';
+        btnYuwen.disabled = true;
+      }
+
+      // 焦点顺延：数学做完后，自动高亮语文
+      if (mathDone && !yuwenDone) {
+        cardYuwen.classList.add('is-focused');
+        cardMath.classList.remove('is-focused');
+      }
+
+      // 底部主按钮状态机
+      if (!mathDone && !yuwenDone) {
+        btnPrimary.className = 'btn-hub-primary';
+        btnPrimary.innerHTML = '<span>一键连续核对全部 (约40秒)</span><span class="material-icons" style="font-size:18px">arrow_forward</span>';
+      } else if (mathDone && !yuwenDone) {
+        btnPrimary.className = 'btn-hub-primary';
+        btnPrimary.innerHTML = '<span>继续核对下一科：语文 (剩余1科)</span><span class="material-icons" style="font-size:18px">arrow_forward</span>';
+      } else if (mathDone && yuwenDone) {
+        btnPrimary.className = 'btn-hub-primary all-done';
+        btnPrimary.innerHTML = '<span>🎉 生成并查看全科诊断总报告</span><span class="material-icons" style="font-size:18px">arrow_forward</span>';
+        if (hpcSub) hpcSub.textContent = '全科已核对完成 · 点击查看诊断报告';
+      }
+    }
+
+    function handlePrimaryHubAction() {
+      if (!mathDone) {
+        startSubjectCheck('math');
+      } else if (!yuwenDone) {
+        startSubjectCheck('yuwen');
+      } else {
+        showToast('正在生成全科综合诊断报告... ➔');
+        setTimeout(() => {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'SWITCH_PAGE', pageId: 'fenxibaogao', path: 'fenxibaogao.html' }, '*');
+          }
+          window.location.href = 'fenxibaogao.html';
+        }, 800);
+      }
+    }
+
+    // 页面加载 1 秒后自动弹出悬浮胶囊，模拟批改完成时滑出的自然体验
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(triggerCapsuleNotification, 800);
+    });
+  </script>
+
+  <!-- 原型标注数据 -->
+  <script id="prototypeAnnotationData" type="application/json">
+  {
+    "prototypeId": "jinrucuoti_xuanfu",
+    "version": 1,
+    "mobile": {
+      "appRoot": "[data-proto-app]",
+      "deviceWidth": 390
+    },
+    "globalMeta": {
+      "name": "小苗伴学 9月版本 · 顶部悬浮胶囊通知与核对中枢规范",
+      "version": "V2.0",
+      "updatedAt": "2026-09-24"
+    },
+    "globalSections": [
+      {
+        "id": "sec_overview",
+        "title": "一. 为什么淘汰强弹，改用顶部悬浮胶囊？",
+        "content": "<p><b>1. 竞品标杆调研（作业帮 / 小猿 / 微信）：</b>成熟产品对异步批改结果已全面淘汰阻断式强弹，因为强弹误关率高达 80% 且阻断正常浏览。改用【非阻断顶部悬浮通知条（Non-modal Island Banner）】。</p><p><b>2. 解决‘核对完一科出来去哪’的问题：</b>采用全屏【试卷核对清单中枢页（Checklist Hub）】作为稳定阵地。单科核对完毕自动打勾，进度动态递增，焦点自动平滑顺延至下一科，全科核对完成后一键解锁诊断报告。</p>",
+        "format": "html"
+      }
+    ],
+    "annotations": [
+      {
+        "id": "anno-capsule-rule",
+        "scope": "page:default",
+        "target": "#topFloatingCapsule",
+        "x": 0.5,
+        "y": 0.05,
+        "title": "顶部灵动通知胶囊触发与自动收起规则",
+        "content": "<p><b>1. 触发时机：</b>后台批改完成后，从顶部平滑滑出通知条（带考生标签、科目数与耗时预估）。</p><p><b>2. 自动收起（不阻断操作）：</b>若用户未点击，4.5 秒后自动平滑向上收起，当前页面操作不受任何干扰。</p><p><b>3. 阵地承接：</b>收起后自动落入首页常驻卡片，用户返回首页随时可见。</p>",
+        "format": "html",
+        "type": "new",
+        "typeLabel": "新增",
+        "badge": "新增"
+      },
+      {
+        "id": "anno-hub-flow",
+        "scope": "page:default",
+        "target": "#cardMath",
+        "x": 0.5,
+        "y": 0.38,
+        "title": "单科核对出来后的状态机与焦点顺延",
+        "content": "<p><b>1. 原地打勾反馈：</b>用户核对完数学点完成出来，数学卡片立刻变灰绿打勾【✓ 已核对完成】，进度变为 1/2 科。</p><p><b>2. 焦点自动顺延：</b>高亮与视觉焦点自动平滑流转到下一个待办科目（语文），底部主按钮动态变身为【继续核对下一科：语文 ➔】。</p><p><b>3. 全科闭环：</b>最后一科完成后，主按钮升级为【生成全科诊断总报告 ➔】。</p>",
+        "format": "html",
+        "type": "new",
+        "typeLabel": "新增",
+        "badge": "新增"
+      },
+      {
+        "id": "anno-home-dock",
+        "scope": "page:default",
+        "target": "#homePendingCard",
+        "x": 0.5,
+        "y": 0.16,
+        "title": "首页学情看板待办卡片承接规则",
+        "content": "<p><b>1. 常驻阵地：</b>顶部胶囊收起或用户退出核对流程后，首页学情看板常驻高亮【待办卡片】。</p><p><b>2. 断点续做：</b>任何时刻点击该卡片，重新进入核对中枢页，已核对的科目保持完成态，未核对的继续办理，绝不丢失数据。</p>",
+        "format": "html",
+        "type": "new",
+        "typeLabel": "新增",
+        "badge": "新增"
+      }
+    ]
+  }
+  </script>
+
+  <!-- 原型三栏审查工作台 DOM -->
+  <div class="protoMobile-stage" id="protoMobileStage" hidden>
+    <aside class="protoMobile-review-panel protoMobile-docs-panel" id="protoMobileDocsPanel" aria-label="原型说明">
+      <header class="protoMobile-panel-header">
+        <strong>原型说明</strong>
+        <button class="protoMobile-compact-close" id="protoMobileCompactDocsClose" type="button" aria-label="关闭原型说明">×</button>
+      </header>
+      <div class="protoMobile-doc-layout">
+        <nav class="protoMobile-doc-nav" id="protoMobileDocNav" aria-label="原型说明目录"></nav>
+        <div class="protoMobile-doc-content" id="protoMobileDocContent"></div>
+      </div>
+    </aside>
+
+    <div class="protoMobile-desktop-splitter" id="protoMobileDocsSplitter" role="separator" aria-label="调整原型说明宽度"
+      aria-orientation="vertical" tabindex="0"></div>
+
+    <main class="protoMobile-device" id="protoMobileDevice" aria-label="移动端原型画板"></main>
+
+    <aside class="protoMobile-review-panel protoMobile-notes-panel" aria-label="当前页面标注">
+      <header class="protoMobile-panel-header">
+        <strong>当前标注</strong>
+        <label class="protoMobile-desktop-toggle-label">
+          <span>显示标注</span>
+          <button class="protoMobile-switch" id="protoMobileDesktopToggle" type="button" role="switch"
+            aria-checked="true" aria-label="隐藏页面标注"></button>
+        </label>
+      </header>
+      <div class="protoMobile-filter-bar" id="protoMobileFilterBar"></div>
+      <div class="protoMobile-note-list" id="protoMobileNoteList"></div>
+    </aside>
+  </div>
+
+  <div class="protoMobile-overlay-root" id="prototypeAnnotationRoot" popover="manual" aria-label="移动端原型标注层">
+    <div class="protoMobile-marker-layer" id="protoMobileMarkerLayer"></div>
+  </div>
+
+  <!-- 标注运行时脚本 -->
+  <script id="protoMobileMobileAnnotationRuntime">
+    (() => {
+      const dataNode = document.getElementById("prototypeAnnotationData");
+      const stage = document.getElementById("protoMobileStage");
+      const device = document.getElementById("protoMobileDevice");
+      const docsPanel = document.getElementById("protoMobileDocsPanel");
+      const docsSplitter = document.getElementById("protoMobileDocsSplitter");
+      const docNav = document.getElementById("protoMobileDocNav");
+      const docContent = document.getElementById("protoMobileDocContent");
+      const noteList = document.getElementById("protoMobileNoteList");
+      const filterBar = document.getElementById("protoMobileFilterBar");
+      let activeFilter = "all";
+      const desktopToggle = document.getElementById("protoMobileDesktopToggle");
+      const overlayRoot = document.getElementById("prototypeAnnotationRoot");
+      const markerLayer = document.getElementById("protoMobileMarkerLayer");
+
+      if (!dataNode || !stage || !overlayRoot) return;
+
+      let annotationData;
+      try {
+        annotationData = JSON.parse(dataNode.textContent);
+      } catch (error) {
+        console.error("解析标注数据失败", error);
+        return;
+      }
+
+      const annotations = Array.isArray(annotationData.annotations) ? annotationData.annotations : [];
+      const globalSections = Array.isArray(annotationData.globalSections) ? annotationData.globalSections : [];
+      const appRoot = document.querySelector("[data-proto-app]");
+      if (!appRoot) return;
+
+      const deviceWidth = 390;
+      const deviceHeight = 844;
+      document.documentElement.style.setProperty("--protoMobile-device-width", `${deviceWidth}px`);
+      document.documentElement.style.setProperty("--protoMobile-device-height", `${deviceHeight}px`);
+      document.documentElement.classList.add("protoMobile-ready");
+      document.body.appendChild(stage);
+      document.body.appendChild(overlayRoot);
+      device.appendChild(appRoot);
+      stage.hidden = false;
+
+      function renderGlobalDocs() {
+        if (!docNav || !docContent) return;
+        docNav.innerHTML = "";
+        docContent.innerHTML = "";
+        globalSections.forEach((sec, idx) => {
+          const btn = document.createElement("button");
+          btn.textContent = sec.title;
+          btn.className = idx === 0 ? "is-active" : "";
+          btn.onclick = () => {
+            document.querySelectorAll(".protoMobile-doc-nav button").forEach(b => b.classList.remove("is-active"));
+            btn.classList.add("is-active");
+            const targetEl = document.getElementById(`doc-sec-${sec.id}`);
+            if (targetEl) targetEl.scrollIntoView({ behavior: "smooth" });
+          };
+          docNav.appendChild(btn);
+
+          const secEl = document.createElement("section");
+          secEl.className = "protoMobile-doc-section";
+          secEl.id = `doc-sec-${sec.id}`;
+          secEl.innerHTML = `<h3>${sec.title}</h3><div>${sec.content}</div>`;
+          docContent.appendChild(secEl);
+        });
+      }
+
+      function renderNotes() {
+        if (!noteList) return;
+        noteList.innerHTML = "";
+        markerLayer.innerHTML = "";
+
+        const filtered = annotations.filter(n => activeFilter === "all" || n.type === activeFilter);
+        filtered.forEach((note, idx) => {
+          const card = document.createElement("div");
+          card.className = "protoMobile-note-card";
+          card.id = `card-${note.id}`;
+          card.innerHTML = `
+            <div class="protoMobile-note-head">
+              <span class="protoMobile-note-badge type-${note.type}">${note.typeLabel || '标注'}</span>
+              <h4>#${idx + 1} ${note.title}</h4>
+            </div>
+            <div class="protoMobile-note-body">${note.content}</div>
+          `;
+          card.onclick = () => highlightNote(note.id);
+          noteList.appendChild(card);
+
+          const marker = document.createElement("button");
+          marker.className = `protoMobile-marker type-${note.type}`;
+          marker.textContent = String(idx + 1);
+          marker.style.left = `${(note.x * 100).toFixed(1)}%`;
+          marker.style.top = `${(note.y * 100).toFixed(1)}%`;
+          marker.onclick = () => highlightNote(note.id);
+          markerLayer.appendChild(marker);
+        });
+      }
+
+      function highlightNote(id) {
+        document.querySelectorAll(".protoMobile-note-card").forEach(c => c.classList.remove("is-active"));
+        const card = document.getElementById(`card-${id}`);
+        if (card) {
+          card.classList.add("is-active");
+          card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      }
+
+      function renderFilters() {
+        if (!filterBar) return;
+        filterBar.innerHTML = "";
+        const types = [
+          { key: "all", label: "全部" },
+          { key: "new", label: "新增" },
+          { key: "modify", label: "修改" }
+        ];
+        types.forEach(t => {
+          const chip = document.createElement("button");
+          chip.className = `protoMobile-filter-chip ${activeFilter === t.key ? "is-active" : ""}`;
+          chip.textContent = t.label;
+          chip.onclick = () => {
+            activeFilter = t.key;
+            renderFilters();
+            renderNotes();
+          };
+          filterBar.appendChild(chip);
+        });
+      }
+
+      if (desktopToggle) {
+        desktopToggle.onclick = () => {
+          const isChecked = desktopToggle.getAttribute("aria-checked") === "true";
+          desktopToggle.setAttribute("aria-checked", String(!isChecked));
+          markerLayer.style.display = isChecked ? "none" : "block";
+        };
+      }
+
+      renderGlobalDocs();
+      renderFilters();
+      renderNotes();
+    })();
+  </script>
+</body>
+
+</html>
