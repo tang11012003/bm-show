@@ -1,0 +1,127 @@
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--orange:#FF6D00;--r-card:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+
+/* Header 布局 */
+.app-bar {
+  background: var(--surface);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 0.5px 2px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+  z-index: 10;
+}
+.app-bar .header-left { display: flex; align-items: center; gap: 8px; }
+.app-bar .page-title { font-size: 17px; font-weight: 700; color: var(--text1); }
+.app-bar .student-picker-btn { display: inline-flex; align-items: center; gap: 2px; background: rgba(230,67,26,0.08); color: var(--primary); padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.app-bar .upload-action-btn { display: inline-flex; align-items: center; gap: 4px; background: none; border: 1px solid rgba(230,67,26,0.3); color: var(--primary); padding: 4px 10px; border-radius: 14px; font-size: 12px; font-weight: 600; cursor: pointer; }
+
+.page-body{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+.card{background:var(--surface);border-radius:var(--r-card);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+
+/* 备考日程挂件 */
+.analysis-schedule-widget {
+  background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 6px 16px rgba(255, 87, 34, 0.22);
+  cursor: pointer;
+}
+.asw-top-row { display: flex; align-items: center; gap: 12px; }
+.asw-countdown-box { background: #ffffff; color: #E6431A; border-radius: 12px; padding: 6px 10px; text-align: center; flex-shrink: 0; min-width: 58px; }
+.asw-countdown-box .num { font-size: 20px; font-weight: 800; line-height: 1; }
+.asw-countdown-box .unit { font-size: 10px; color: var(--text3); font-weight: 600; margin-top: 2px; }
+.asw-content { flex: 1; min-width: 0; }
+.asw-tag-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+.asw-tag { background: rgba(255, 255, 255, 0.25); font-size: 10px; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
+.asw-date-str { font-size: 11px; opacity: 0.88; }
+.asw-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.asw-action-btn { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.35); color: #fff; font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 20px; display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+
+.asw-ai-tip {
+  margin-top: 10px;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.asw-ai-tip .material-icons { font-size: 14px; color: #FFD54F; margin-top: 1px; flex-shrink: 0; }
+.asw-ai-tip strong { color: #FFD54F; font-weight: 600; }
+
+/* 最新考试快照 */
+.latest-exam-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.leh-title { font-size: 15px; font-weight: 700; color: var(--text1); display: flex; align-items: center; gap: 6px; }
+.leh-tag { font-size: 11px; background: rgba(230,67,26,0.1); color: var(--primary); padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.cross-brief { background: #FFF9F6; border-left: 3px solid var(--primary); padding: 8px 12px; border-radius: 0 8px 8px 0; font-size: 12px; color: var(--text2); margin-bottom: 12px; line-height: 1.5; }
+
+.full-subject-tip { background: linear-gradient(135deg, #FFF9F5 0%, #FFF0EB 100%); border: 1px dashed rgba(230, 67, 26, 0.4); border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.fst-left { display: flex; align-items: flex-start; gap: 8px; flex: 1; }
+.fst-icon { color: var(--orange); font-size: 20px; margin-top: 1px; }
+.fst-text-title { font-size: 12px; font-weight: 700; color: var(--text1); }
+.fst-text-desc { font-size: 11px; color: var(--text3); margin-top: 2px; line-height: 1.3; }
+.fst-btn { background: var(--primary); color: #fff; border: none; padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+
+/* 💡 升级后的长期学情总览样式 */
+.trend-summary-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.tsh-title { font-size: 15px; font-weight: 700; color: var(--text1); }
+.tsh-count { font-size: 12px; color: var(--text3); }
+
+.trend-summary-row { display: flex; justify-content: space-around; padding: 4px 0 8px; }
+.ts-item { text-align: center; }
+.ts-val { font-size: 20px; font-weight: 800; color: var(--primary); }
+.ts-label { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* 💡 长期学情卡片内的引导补充历史数据微条 */
+.history-upload-tip {
+  margin-top: 12px;
+  background: #F9F9FB;
+  border: 1px solid var(--divider);
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.hut-text { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 4px; }
+.hut-text .material-icons { font-size: 14px; color: var(--primary); }
+.hut-btn { font-size: 11px; font-weight: 700; color: var(--primary); background: none; border: none; cursor: pointer; display: flex; align-items: center; flex-shrink: 0; }
+
+.card-detail-link { display: flex; align-items: center; justify-content: flex-end; gap: 2px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--divider); font-size: 12px; font-weight: 600; color: var(--primary); cursor: pointer; }
+.card-detail-link:active { opacity: .7; }
+
+/* Report status banner */
+.report-banner{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;transition:background .12s}
+.report-banner:active{background:rgba(0,0,0,.02)}
+.report-banner.generating{background:linear-gradient(90deg,#FFF8E1,#FFF3E0)}
+.report-banner.completed{background:linear-gradient(90deg,#E8F5E9,#F1F8E9)}
+.rb-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.report-banner.generating .rb-icon{background:rgba(251,192,45,.15)}
+.report-banner.completed .rb-icon{background:rgba(67,160,71,.15)}
+.report-banner.generating .rb-icon .material-icons{color:var(--attention);font-size:18px;animation:spin 1.5s linear infinite}
+.report-banner.completed .rb-icon .material-icons{color:var(--keep);font-size:18px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rb-text{flex:1;min-width:0}
+.rb-title{font-size:13px;font-weight:600;color:var(--text1)}
+.rb-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.rb-action{font-size:12px;font-weight:600;color:var(--primary);white-space:nowrap;display:flex;align-items:center}
+
+.bottom-nav{background:var(--surface);height:56px;display:flex;align-items:center;justify-content:space-around;border-top:1px solid var(--divider);flex-shrink:0}
+.nav-item{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:4px 0;border:none;background:none;min-width:50px;text-decoration:none}
+.nav-item .material-icons{font-size:24px;color:var(--hint)}
+.nav-item .nav-label{font-size:10px;color:var(--hint);margin-top:2px}
+.nav-item.active .material-icons,.nav-item.active .nav-label{color:var(--primary);font-weight:500}
