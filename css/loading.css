@@ -1,0 +1,41 @@
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--urgent:#E53935;--attention:#FBC02D;--keep:#43A047;--orange:#FF6D00;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text2)}
+.app-bar .back-btn:active{background:#f0f0f0}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1;margin-left:4px}
+
+.page-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+
+/* Loading animation */
+.loader-ring{width:80px;height:80px;position:relative;margin-bottom:24px}
+.loader-ring::after{content:'';display:block;width:64px;height:64px;margin:8px;border-radius:50%;border:4px solid transparent;border-top-color:var(--primary);border-right-color:rgba(230,67,26,.3);animation:spin 1.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.loader-icon .material-icons{font-size:28px;color:var(--primary);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+.loading-title{font-size:18px;font-weight:700;color:var(--text1);margin-bottom:8px}
+.loading-step{font-size:14px;color:var(--primary);font-weight:600;margin-bottom:6px;min-height:20px;transition:opacity .3s}
+.loading-sub{font-size:12px;color:var(--text3);margin-bottom:24px}
+
+/* Progress bar */
+.progress-wrap{width:100%;max-width:260px;margin-bottom:32px}
+.progress-track{height:6px;background:#eee;border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--orange));border-radius:3px;transition:width .4s ease}
+.progress-label{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--hint)}
+
+/* Action buttons */
+.action-group{width:100%;max-width:280px;display:flex;flex-direction:column;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 20px;border-radius:var(--r-btn);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .15s;width:100%}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-outline{background:#fff;color:var(--primary);border:1.5px solid rgba(230,67,26,.3)}
+.btn-ghost{background:none;color:var(--text3);border:none;font-weight:500}
+
+/* Completion state */
+.done-icon{width:64px;height:64px;border-radius:50%;background:rgba(67,160,71,.1);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.done-icon .material-icons{font-size:32px;color:var(--keep)}
