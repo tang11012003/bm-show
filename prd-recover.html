@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>PRD 数据恢复</title>
+
+
+
+<style id="cleanScrollbarFix">
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+html, body, #app, .page-body {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+</style>
+
+</head>
+<body>
+<h2>PRD 数据恢复工具</h2>
+<div id="localDump"><pre id="pre">正在读取 localStorage...</pre></div>
+<div id="statusMsg"></div>
+<button id="recoverBtn" onclick="doRecover()" disabled>恢复到 prd-data.json</button>
+
+<script>
+const local = JSON.parse(localStorage.getItem('prd_all') || '{}');
+const pre = document.getElementById('pre');
+const btn = document.getElementById('recoverBtn');
+const statusEl = document.getElementById('statusMsg');
+
+const keys = Object.keys(local);
+if (keys.length === 0) {
+  pre.textContent = '⚠️ localStorage 里没有 prd_all 数据。\n\n可能原因：\n1. 你是在不同源（如 Live Server）保存的，那边的 localStorage 和这里不共享。\n2. 数据确实丢失了，需要手动重新编辑。';
+  statusEl.innerHTML = '<div class="warn status">localStorage 为空，无法自动恢复。</div>';
+} else {
+  pre.textContent = JSON.stringify(local, null, 2);
+  btn.disabled = false;
+  statusEl.innerHTML = '<div class="ok status">找到 ' + keys.length + ' 个页面的数据，点击按钮恢复。</div>';
+}
+
+async function doRecover() {
+  btn.disabled = true;
+  btn.textContent = '恢复中…';
+  let ok = 0, fail = 0, log = '';
+
+  for (const page of Object.keys(local)) {
+    for (const id of Object.keys(local[page])) {
+      const val = local[page][id];
+      const entry = typeof val === 'string' ? { text: val } : val;
+      try {
+        const r = await fetch('/prd-save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ page, id, data: entry })
+        });
+        if (r.ok) { ok++; log += '✅ ' + page + ' #' + id + '\n'; }
+        else       { fail++; log += '❌ ' + page + ' #' + id + '（HTTP ' + r.status + '）\n'; }
+      } catch(e) {
+        fail++; log += '❌ ' + page + ' #' + id + '（' + e.message + '）\n';
+      }
+    }
+  }
+
+  pre.textContent = log;
+  if (fail === 0) {
+    statusEl.innerHTML = '<div class="ok status">✅ 全部恢复成功（' + ok + ' 条），刷新其他页面即可看到最新数据。</div>';
+    btn.textContent = '恢复完成';
+  } else {
+    statusEl.innerHTML = '<div class="err status">恢复完成：成功 ' + ok + ' 条，失败 ' + fail + ' 条。</div>';
+    btn.textContent = '重试';
+    btn.disabled = false;
+  }
+}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

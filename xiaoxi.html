@@ -1,0 +1,3078 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>消息 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="css/xiaoxi.css">
+
+<style id="mastergoFidelityFix">
+/* ── 严格对齐 MasterGo 162:04097 设计稿 ── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+html, body, #app { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+
+:root {
+  --primary-green: #20DCAD;
+  --theme-gradient: linear-gradient(90deg, #19DEAC 0%, #A6FFBE 100%);
+  --page-gradient: linear-gradient(180deg, #D5FCDF 1%, #FFFFFF 15%);
+  --text-main: #111112;
+  --text-sub: #4B4C53;
+  --text-muted: #8C8D9B;
+  --divider-color: rgba(246, 246, 252, 0.99);
+  --badge-red: #F93939;
+  --active-tab-bg: #A5FEBD;
+  --active-tab-text: #202536;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #E8EBF2;
+  font-family: "Alibaba PuHuiTi 3.0", -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── 手机视口容器 (375 x 812) ── */
+#app {
+  width: 100%;
+  max-width: 375px;
+  height: 100%;
+  max-height: 812px;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  background: var(--page-gradient);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 16px 48px rgba(28, 37, 65, 0.16);
+  border-radius: 28px;
+}
+
+@media (max-width: 600px) {
+  #app {
+    max-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* ── 顶部状态栏 ── */
+.status-bar-row {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 21px 0 21px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+.status-time {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -0.28px;
+}
+.status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.battery-icon {
+  width: 24px;
+  height: 11px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 2.67px;
+  padding: 1px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.battery-level {
+  width: 18px;
+  height: 7.3px;
+  background: #000000;
+  border-radius: 1.33px;
+}
+.battery-cap {
+  position: absolute;
+  right: -3px;
+  top: 3px;
+  width: 1.5px;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 0 1px 1px 0;
+}
+
+/* ── 顶部标题导航栏 (组 6712) ── */
+.top-header-section {
+  padding: 4px 20px 14px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+.header-title-wrap {
+  position: relative;
+  display: inline-block;
+}
+.header-main-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111112;
+  line-height: 18px;
+  letter-spacing: 0;
+  position: relative;
+  z-index: 2;
+}
+.header-title-underline {
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 36px;
+  height: 4px;
+  z-index: 1;
+}
+
+/* ── 主内容滚动区 ── */
+.message-main-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 15px 90px;
+  position: relative;
+  z-index: 1;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── 顶部三大金刚社交卡片行 (有用 / 新增关注 / 评论回复) ── */
+.social-cards-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.social-card-item {
+  flex: 1;
+  position: relative;
+  height: 58px;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.social-card-item:active {
+  transform: scale(0.97);
+}
+
+.card-bg-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+
+/* 有用卡片配置 (MasterGo 组 57617) */
+.card-youyong .card-bg-layer {
+  background: #FFF1DD;
+}
+/* 新增关注卡片配置 (MasterGo 组 57615) */
+.card-fensi .card-bg-layer {
+  background: #E4F2F9;
+}
+/* 评论回复卡片配置 (MasterGo 组 57616) */
+.card-pinglun .card-bg-layer {
+  background: #FFE3EB;
+}
+
+.card-label-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111112;
+  line-height: 14px;
+  position: relative;
+  z-index: 2;
+}
+
+.card-illus-box {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 52px;
+  height: 58px;
+  pointer-events: none;
+}
+.card-illus-img {
+  position: absolute;
+  right: 2px;
+  top: 0px;
+  width: 48px;
+  height: 50px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
+}
+.card-youyong .card-illus-img {
+  transform: rotate(7.66deg);
+  width: 50px;
+  height: 52px;
+  right: -2px;
+  top: 1px;
+}
+.card-fensi .card-illus-img {
+  transform: rotate(3.91deg);
+  width: 38px;
+  height: 48px;
+  right: 4px;
+  top: 2px;
+}
+.card-pinglun .card-illus-img {
+  transform: rotate(6.74deg);
+  width: 45px;
+  height: 53px;
+  right: 1px;
+  top: 2px;
+}
+
+/* 未读角标 */
+.card-unread-badge {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  z-index: 10;
+  background: var(--badge-red);
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 10px;
+  padding: 3px 5px;
+  border-radius: 8px;
+  border: 1px solid #FFFFFF;
+  box-shadow: 0 2px 6px rgba(249, 57, 57, 0.3);
+}
+
+/* ── 消息列表区 (组 6696) ── */
+.message-list-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-item-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  cursor: pointer;
+  padding: 0 4px;
+  position: relative;
+  transition: background 0.15s ease;
+}
+.message-item-row:active {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* 左侧图标外圆 (44x44) */
+.msg-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+.msg-icon-sys {
+  background: #E2F9F4;
+}
+.msg-icon-diag {
+  background: rgba(255, 34, 66, 0.1);
+}
+
+/* 消息内容区 */
+.msg-content-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+.msg-top-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.msg-title-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-sub);
+  line-height: 14px;
+}
+.msg-time-text {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 14px;
+}
+
+.msg-bottom-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.msg-desc-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}
+
+/* 右侧未读小红点 / 数字徽标 */
+.msg-red-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--badge-red);
+  flex-shrink: 0;
+}
+.msg-red-badge {
+  background: var(--badge-red);
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 10px;
+  padding: 3px 5px;
+  border-radius: 8px;
+  border: 1px solid #FFFFFF;
+  flex-shrink: 0;
+}
+
+/* 分割线 */
+.msg-divider-line {
+  height: 1px;
+  background: var(--divider-color);
+  margin: 12px 0 12px 56px;
+}
+
+/* ── 底部导航栏 (组 58592, 严格对齐设计稿 4 Tab 架构) ── */
+.bottom-nav-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 83px;
+  background: #FFFFFF;
+  box-shadow: 0px -5px 5px 0px rgba(32, 37, 54, 0.03);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+.nav-tabs-row {
+  height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-top: 4px;
+}
+.nav-tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-decoration: none;
+  cursor: pointer;
+}
+.nav-tab-icon-box {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.nav-tab-label {
+  font-size: 11px;
+  line-height: 11px;
+  color: #B6B8C5;
+  margin-top: 3px;
+  font-weight: 400;
+}
+
+/* 消息 Tab 选中高亮态 (MasterGo 300:15038 组 6839 规范) */
+.nav-tab-item.active .nav-tab-label {
+  color: var(--active-tab-text);
+  font-weight: 600;
+}
+.nav-active-pill {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 46px;
+  height: 29px;
+  border-radius: 14.5px;
+  background: var(--active-tab-bg);
+  z-index: 0;
+}
+.nav-tab-item.active .nav-tab-icon-box {
+  z-index: 1;
+}
+.nav-tab-badge {
+  position: absolute;
+  top: -4px;
+  right: -10px;
+  background: var(--badge-red);
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 10px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  border: 1px solid #FFFFFF;
+  z-index: 2;
+}
+
+/* 底部安全横条 Home Indicator */
+.bottom-home-indicator {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.home-pill {
+  width: 134px;
+  height: 5px;
+  background: #000000;
+  border-radius: 2.5px;
+}
+
+/* ── 二级抽屉展开视图 (系统通知等) ── */
+.sub-view-overlay {
+  position: absolute;
+  inset: 0;
+  background: #FFFFFF;
+  z-index: 150;
+  display: none;
+  flex-direction: column;
+}
+.sub-view-overlay.active {
+  display: flex;
+}
+.sub-header-bar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid #F0F1F5;
+}
+.sub-back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+.sub-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111112;
+  margin-left: 6px;
+}
+.sub-list-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+.sub-item-card {
+  background: #F8F9FC;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.sub-user-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.sub-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111112;
+}
+.sub-time {
+  font-size: 11px;
+  color: #8C8D9B;
+}
+.sub-content-text {
+  font-size: 13px;
+  color: #4B4C53;
+  line-height: 1.5;
+}
+</style>
+
+<style id="protoMobileAnnotationCss">
+:root {
+  --protoMobile-accent: #3388ff;
+  --protoMobile-accent-dark: #2167d9;
+  --protoMobile-accent-soft: #f0f9ff;
+  --protoMobile-ink: #223355;
+  --protoMobile-muted: #6b7a99;
+  --protoMobile-line: #dde1eb;
+  --protoMobile-bg: #edf0f6;
+  --protoMobile-device-width: 414px;
+  --protoMobile-docs-width: 520px;
+}
+
+html.protoMobile-ready,
+html.protoMobile-ready body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.protoMobile-stage,
+.protoMobile-stage *,
+.protoMobile-overlay-root,
+.protoMobile-overlay-root * {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+
+.protoMobile-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: var(--protoMobile-docs-width) 8px var(--protoMobile-device-width) minmax(320px, 1fr);
+  gap: 16px;
+  align-items: center;
+  overflow: hidden;
+  background: var(--protoMobile-bg);
+  color: var(--protoMobile-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+}
+
+.protoMobile-stage.no-docs {
+  grid-template-columns: var(--protoMobile-device-width) minmax(320px, 1fr);
+  justify-content: center;
+}
+.protoMobile-stage.no-docs .protoMobile-desktop-splitter { display: none; }
+.protoMobile-stage.no-docs .protoMobile-device { grid-column: 1; }
+.protoMobile-stage.no-docs .protoMobile-notes-panel { grid-column: 2; }
+
+.protoMobile-docs-panel { grid-column: 1; grid-row: 1; }
+.protoMobile-desktop-splitter { grid-column: 2; grid-row: 1; }
+.protoMobile-device { grid-column: 3; grid-row: 1; }
+.protoMobile-notes-panel { grid-column: 4; grid-row: 1; }
+
+.protoMobile-desktop-splitter {
+  position: relative;
+  width: 8px;
+  min-width: 8px;
+  height: min(896px, calc(100dvh - 32px));
+  align-self: center;
+  cursor: col-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.protoMobile-desktop-splitter::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 56px;
+  border-radius: 2px;
+  background: #b8c2d3;
+  transform: translate(-50%, -50%);
+  transition: height 0.15s ease, background 0.15s ease;
+}
+
+.protoMobile-desktop-splitter:hover::after,
+.protoMobile-desktop-splitter:focus-visible::after,
+.protoMobile-desktop-splitter.is-dragging::after { height: 84px; background: var(--protoMobile-accent); }
+.protoMobile-stage.is-resizing { cursor: col-resize; user-select: none; }
+
+.protoMobile-device,
+.protoMobile-review-panel {
+  height: min(896px, calc(100dvh - 32px));
+  min-height: 0;
+}
+
+.protoMobile-device {
+  position: relative;
+  width: var(--protoMobile-device-width);
+  min-width: 0;
+  justify-self: center;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(34, 51, 85, 0.12);
+}
+
+.protoMobile-device > [data-proto-app] {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  max-height: 100% !important;
+  margin: 0 !important;
+}
+
+.protoMobile-review-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(51, 136, 255, 0.22);
+  border-top: 3px solid rgba(51, 136, 255, 0.82);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 44px rgba(34, 51, 85, 0.1);
+}
+
+.protoMobile-panel-header {
+  height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid #e9edf5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  font-size: 16px;
+}
+
+.protoMobile-doc-layout {
+  height: calc(100% - 56px);
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  min-height: 0;
+}
+
+.protoMobile-doc-nav {
+  padding: 12px 8px;
+  border-right: 1px solid #e9edf5;
+  overflow-y: auto;
+  background: #fbfcff;
+}
+
+.protoMobile-doc-nav button {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--protoMobile-muted);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.protoMobile-doc-nav button:hover,
+.protoMobile-doc-nav button.is-active {
+  border-left-color: var(--protoMobile-accent);
+  color: #235cb3;
+  background: #e8f1ff;
+}
+
+.protoMobile-doc-content {
+  min-width: 0;
+  padding: 0 16px 24px;
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+.protoMobile-doc-section {
+  padding: 20px 0;
+  border-bottom: 1px solid #e9edf5;
+  scroll-margin-top: 12px;
+}
+
+.protoMobile-doc-section:last-child { border-bottom: 0; }
+.protoMobile-doc-section > h3 { margin: 0 0 12px; color: var(--protoMobile-ink); font-size: 16px; line-height: 24px; }
+
+.protoMobile-desktop-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--protoMobile-muted);
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.protoMobile-switch {
+  position: relative;
+  width: 40px;
+  height: 24px;
+  min-height: 0;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: #ced4e0;
+  cursor: pointer;
+}
+
+.protoMobile-switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(34, 51, 85, 0.2);
+  transition: transform 180ms ease;
+}
+.protoMobile-switch[aria-checked="true"] {
+  background: #2563eb !important;
+}
+
+.protoMobile-switch[aria-checked="true"]::after {
+  transform: translateX(16px) !important;
+}
+
+
+.protoMobile-notes-panel {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.protoMobile-note-list {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  padding: 12px;
+  padding-bottom: 60px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.protoMobile-note-card {
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 12px 14px 12px 62px;
+  position: relative;
+  border: 1px solid #e1e6ef;
+  border-left: 4px solid #79a8ff;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(34, 51, 85, 0.06);
+  color: var(--protoMobile-ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.protoMobile-note-card:hover,
+.protoMobile-note-card.is-active {
+  border-color: #9bbcff;
+  border-left-color: var(--protoMobile-accent-dark);
+  box-shadow: 0 8px 20px rgba(33, 103, 217, 0.13);
+}
+
+.protoMobile-note-index {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  width: 32px;
+  height: 32px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--protoMobile-accent);
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(33, 103, 217, 0.42), 0 5px 12px rgba(33, 103, 217, 0.2);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.protoMobile-note-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+
+.protoMobile-note-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+.protoMobile-note-tag.tag-add {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.protoMobile-note-tag.tag-modify {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.protoMobile-note-tag.tag-original {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.protoMobile-note-tag.tag-delete {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.protoMobile-note-tag.tag-custom {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.protoMobile-note-card.card-add { border-left-color: #10b981; }
+.protoMobile-note-card.card-modify { border-left-color: #f59e0b; }
+.protoMobile-note-card.card-original { border-left-color: #94a3b8; }
+.protoMobile-note-card.card-delete { border-left-color: #ef4444; }
+.protoMobile-note-card.card-custom { border-left-color: #3b82f6; }
+
+.protoMobile-note-card h3 { margin: 0; font-size: 14px; line-height: 21px; color: var(--protoMobile-ink); font-weight: 700; }
+.protoMobile-note-card .protoMobile-rich-content { font-size: 12px; line-height: 19px; }
+.protoMobile-empty { padding: 40px 16px; color: #8b96ab; font-size: 13px; text-align: center; }
+
+.protoMobile-overlay-root {
+  --protoMobile-layer-root: 2147483000;
+  position: fixed;
+  inset: 0;
+  z-index: var(--protoMobile-layer-root);
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  background: transparent;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  letter-spacing: 0;
+}
+
+.protoMobile-overlay-root::backdrop { background: transparent; pointer-events: none; }
+.protoMobile-marker-layer { position: fixed; inset: 0; pointer-events: none; }
+.protoMobile-marker-layer.is-hidden { visibility: hidden; }
+.protoMobile-marker[hidden] { display: none; }
+
+.protoMobile-marker {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--protoMobile-accent);
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(51, 136, 255, 0.28), 0 8px 18px rgba(33, 103, 217, 0.28);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.protoMobile-marker:hover,
+.protoMobile-marker.is-active {
+  background: var(--protoMobile-accent-dark);
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(51, 136, 255, 0.28), 0 10px 22px rgba(33, 103, 217, 0.34);
+}
+
+.protoMobile-target-highlight {
+  outline: 3px solid rgba(51, 136, 255, 0.45) !important;
+  outline-offset: 3px !important;
+}
+
+.protoMobile-compact-docs-trigger,
+.protoMobile-compact-backdrop,
+.protoMobile-compact-close,
+.protoMobile-mobile-controls,
+.protoMobile-mobile-note-layer,
+.protoMobile-mobile-docs-layer { display: none; }
+
+.protoMobile-rich-content { color: var(--protoMobile-muted); font-size: 14px; line-height: 1.65; overflow-wrap: anywhere; }
+.protoMobile-rich-content > :first-child { margin-top: 0; }
+.protoMobile-rich-content > :last-child { margin-bottom: 0; }
+.protoMobile-rich-content h1,
+.protoMobile-rich-content h2,
+.protoMobile-rich-content h3,
+.protoMobile-rich-content h4 { color: var(--protoMobile-ink); }
+.protoMobile-rich-content p,
+.protoMobile-rich-content ul,
+.protoMobile-rich-content ol,
+.protoMobile-rich-content blockquote,
+.protoMobile-rich-content pre,
+.protoMobile-rich-content table { margin: 8px 0; }
+.protoMobile-rich-content ul,
+.protoMobile-rich-content ol { padding-left: 20px; }
+.protoMobile-rich-content blockquote { padding: 8px 12px; border-left: 3px solid var(--protoMobile-accent); background: #f6f9ff; }
+.protoMobile-rich-content table { width: 100%; border-collapse: collapse; color: var(--protoMobile-ink); font-size: 12px; }
+.protoMobile-rich-content th,
+.protoMobile-rich-content td { padding: 7px 8px; border: 1px solid var(--protoMobile-line); text-align: left; vertical-align: top; }
+.protoMobile-rich-content th { background: #f5f7fa; }
+.protoMobile-rich-content pre { padding: 12px; border-radius: 4px; overflow: auto; background: #172033; color: #eaf1ff; }
+.protoMobile-rich-content code { font-family: Consolas, "SFMono-Regular", monospace; }
+.protoMobile-rich-content :not(pre) > code { padding: 2px 5px; border-radius: 3px; background: #edf3ff; color: #235cb3; }
+.protoMobile-rich-content img { display: block; max-width: 100%; height: auto; margin: 10px auto; border-radius: 4px; }
+.protoMobile-rich-content .protoMobile-mermaid { max-width: 100%; overflow: auto; }
+.protoMobile-rich-content .protoMobile-mermaid svg { max-width: 100%; height: auto; }
+
+@media (min-width: 768px) and (max-width: 1179px) {
+  .protoMobile-stage { grid-template-columns: var(--protoMobile-device-width) minmax(320px, 1fr); justify-content: center; }
+  .protoMobile-docs-panel { display: none; }
+  .protoMobile-desktop-splitter { display: none; }
+  .protoMobile-device { grid-column: 1; }
+  .protoMobile-notes-panel { grid-column: 2; }
+  .protoMobile-docs-panel.is-compact-open {
+    position: fixed;
+    inset: 16px auto 16px 16px;
+    z-index: 2147483500;
+    width: min(520px, calc(100vw - 32px));
+    height: auto;
+    display: block;
+    pointer-events: auto;
+  }
+  .protoMobile-compact-close { display: grid; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; place-items: center; background: #f5f7fa; color: var(--protoMobile-ink); font-size: 20px; cursor: pointer; }
+  .protoMobile-compact-docs-trigger { position: fixed; top: 18px; left: 18px; z-index: 2147483400; display: block; min-width: 54px; height: 34px; border: 1px solid #9bbcff; border-radius: 17px; background: #fff; color: #235cb3; pointer-events: auto; cursor: pointer; }
+  .protoMobile-compact-backdrop.is-open { position: fixed; inset: 0; z-index: 2147483450; display: block; background: rgba(20, 32, 55, 0.38); pointer-events: auto; }
+}
+
+@media (max-width: 767px) {
+  .protoMobile-stage { display: block; padding: 0; background: #fff; }
+  .protoMobile-review-panel { display: none; }
+  .protoMobile-desktop-splitter { display: none; }
+  .protoMobile-device { width: 100%; height: 100dvh; max-height: none; box-shadow: none; }
+  .protoMobile-mobile-controls { display: block; }
+  .protoMobile-mobile-launcher {
+    position: fixed;
+    right: 16px;
+    bottom: calc(112px + env(safe-area-inset-bottom));
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--protoMobile-accent), var(--protoMobile-accent-dark));
+    color: #fff;
+    box-shadow: 0 0 0 2px rgba(33, 103, 217, 0.48), 0 10px 24px rgba(33, 103, 217, 0.36);
+    pointer-events: auto;
+    touch-action: none;
+    cursor: grab;
+  }
+  .protoMobile-mobile-launcher > span { font-size: 18px; font-weight: 700; }
+  .protoMobile-mobile-launcher > small { position: absolute; top: -6px; right: -5px; min-width: 20px; height: 20px; padding: 0 4px; border: 2px solid #fff; border-radius: 10px; display: grid; place-items: center; background: #4d79d8; color: #fff; font-size: 10px; }
+  .protoMobile-mobile-menu {
+    position: fixed;
+    width: min(276px, calc(100vw - 16px));
+    padding: 6px;
+    border: 1px solid rgba(51, 136, 255, 0.28);
+    border-radius: 8px;
+    display: none;
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(33, 103, 217, 0.22), 0 4px 12px rgba(8, 17, 38, 0.12);
+    pointer-events: auto;
+  }
+  .protoMobile-mobile-menu.is-open { display: block; }
+  .protoMobile-mobile-menu-row,
+  .protoMobile-mobile-menu-link { width: 100%; min-height: 58px; padding: 10px 12px; border: 0; border-radius: 5px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; color: var(--protoMobile-ink); font: inherit; text-align: left; }
+  .protoMobile-mobile-menu-link { cursor: pointer; }
+  .protoMobile-mobile-menu-link:hover { background: #f5f8ff; }
+  .protoMobile-mobile-menu-copy { display: grid; gap: 3px; }
+  .protoMobile-mobile-menu-copy strong { font-size: 14px; }
+  .protoMobile-mobile-menu-copy small { color: var(--protoMobile-muted); font-size: 11px; }
+  .protoMobile-mobile-note-layer.is-open { position: fixed; inset: 0; display: block; pointer-events: auto; }
+  .protoMobile-mobile-mask { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: rgba(24, 37, 62, 0.46); }
+  .protoMobile-mobile-sheet {
+    --protoMobile-sheet-height: 68dvh;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--protoMobile-sheet-height);
+    min-height: 36dvh;
+    max-height: 94dvh;
+    border-radius: 16px 16px 0 0;
+    display: grid;
+    grid-template-rows: 28px auto minmax(0, 1fr);
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 -12px 36px rgba(34, 51, 85, 0.18);
+  }
+  .protoMobile-sheet-handle { display: grid; place-items: center; touch-action: none; cursor: ns-resize; }
+  .protoMobile-sheet-handle span { width: 40px; height: 4px; border-radius: 2px; background: #c7cedb; }
+  .protoMobile-mobile-sheet-header { min-height: 56px; padding: 0 16px; border-bottom: 1px solid #e9edf5; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .protoMobile-mobile-sheet-header > strong { min-width: 0; color: var(--protoMobile-ink); font-size: 15px; line-height: 22px; }
+  .protoMobile-mobile-sheet-tools { display: flex; gap: 8px; }
+  .protoMobile-mobile-sheet-tools button,
+  .protoMobile-mobile-docs-header button { width: 38px; height: 38px; min-height: 0; padding: 0; border: 0; border-radius: 50%; display: grid; place-items: center; background: #f5f7fa; color: var(--protoMobile-muted); font-size: 20px; cursor: pointer; }
+  .protoMobile-mobile-sheet-body { padding: 16px; overflow: auto; }
+  .protoMobile-mobile-docs-layer.is-open { position: fixed; inset: 0; display: grid; grid-template-rows: 58px minmax(0, 1fr); background: #fff; pointer-events: auto; }
+  .protoMobile-mobile-docs-header { padding: 0 16px; border-bottom: 1px solid #e9edf5; display: flex; align-items: center; justify-content: space-between; color: var(--protoMobile-ink); }
+  .protoMobile-mobile-docs-content { padding: 0 16px 24px; overflow: auto; }
+  .protoMobile-mobile-docs-content .protoMobile-doc-section { padding: 18px 0; }
+}
+
+/* 页面切换导航栏与管理 (极简白底风格) */
+.protoMobile-page-nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e9edf5;
+  flex-shrink: 0;
+}
+.protoMobile-page-tabs-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.protoMobile-page-tabs-wrap::-webkit-scrollbar { display: none; }
+.protoMobile-page-tab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  background: #fff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.protoMobile-page-tab-chip:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+.protoMobile-page-tab-chip.is-active {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #3b82f6;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.15);
+}
+.protoMobile-page-manage-btn {
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #64748b;
+  flex-shrink: 0;
+}
+.protoMobile-page-manage-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+
+.protoMobile-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px 6px;
+  border-bottom: 1px solid #eef2f6;
+  background: #fafbfc;
+  flex-shrink: 0;
+}
+
+.protoMobile-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  transition: all 0.15s ease;
+  user-select: none;
+  line-height: 1.4;
+}
+
+.protoMobile-filter-chip:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.protoMobile-filter-count {
+  display: inline-block;
+  font-size: 10px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.06);
+  font-weight: 700;
+  min-width: 14px;
+  text-align: center;
+  line-height: 14px;
+}
+
+.protoMobile-filter-chip.is-active {
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.protoMobile-filter-chip.chip-all.is-active {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #1e293b;
+}
+
+.protoMobile-filter-chip.chip-add.is-active {
+  background: #059669;
+  color: #ffffff;
+  border-color: #059669;
+}
+
+.protoMobile-filter-chip.chip-modify.is-active {
+  background: #d97706;
+  color: #ffffff;
+  border-color: #d97706;
+}
+
+.protoMobile-filter-chip.chip-original.is-active {
+  background: #475569;
+  color: #ffffff;
+  border-color: #475569;
+}
+
+.protoMobile-filter-chip.chip-delete.is-active {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
+.protoMobile-filter-chip.is-active .protoMobile-filter-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+</style>
+</head>
+<body>
+
+<div id="app" data-proto-app data-proto-platform="mobile">
+  <!-- 顶部状态栏 -->
+  <div class="status-bar-row">
+    <div class="status-time">9:41</div>
+    <div class="status-icons">
+      <div style="display:flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="293.67 16.32 37.3 12.01" width="37.3" height="12.01">
+  <path d="M323.3309416375,19.60789370625C325.5468349375,19.60799070625,327.6779949375,20.45942830625,329.2839419375,21.98622700625C329.4048739375,22.10410170625,329.5981699375,22.10261490625,329.7172749375,21.98289350625L330.8732749375,20.81622700625C330.9335829375,20.75550480625,330.9672069375,20.67325330625,330.9667059375,20.58767290625C330.9662069375,20.50209260625,330.9316229375,20.42023970625,330.8706079375,20.36022710625C326.6555109375,16.32067950625,320.0057063375,16.32067950625,315.7906084435,20.36022710625C315.7295498435,20.42019510625,315.69490593753,20.50202320625,315.6943429082817,20.58760360625C315.69377987902,20.67318390625,315.7273441475,20.75546070625,315.7876084375,20.81622700625L316.9439418375,21.98289350625C317.0629701375,22.102795606249998,317.2564162375,22.10428330625,317.3772751375,21.98622700625C318.9834270375,20.45932820625,321.1148314375,19.60788820625,323.3309416375,19.60789370625Z
+M326.6237699375,24.67313190625C325.7213019375,23.85592270625,324.5472593375,23.40339090625,323.3297701375,23.40346530625C322.1130857375,23.403969306249998,320.9399757375,23.85646290625,320.0381035375,24.67313190625C319.9160404375,24.789112106250002,319.7237587375,24.786598206249998,319.6047701375,24.66746520625L318.4504368375,23.50079820625C318.3895020375,23.43969150625,318.3556449375,23.35668370625,318.3564596375,23.27039050625C318.3572743375,23.18409820625,318.3926925375,23.101743706249998,318.4547703375,23.04179860625C321.2029690375,20.48541620625,325.4589042375,20.48541620625,328.2071039375,23.04179860625C328.2691429375,23.10174460625,328.3045629375,23.18405770625,328.3054399375,23.27032230625C328.3063169375,23.35658740625,328.2725769375,23.43960380625,328.2117699375,23.50079820625L327.0571029375,24.66746520625C326.9381149375,24.786598206249998,326.7458329375,24.789112106250002,326.6237699375,24.67313190625Z
+M325.5488357375,26.188037906250003C325.6105880375,26.12743190625,325.6445961375,26.04403020625,325.6428299375,25.95752330625C325.6410627375,25.87101650625,325.6036777375,25.789072006250002,325.5395012375,25.73103810625C324.2639303375,24.65215400625,322.3957400375,24.65215400625,321.1201686375,25.73103810625C321.0559477375,25.78902530625,321.0185017375,25.87094400625,321.0166716375,25.95745090625C321.0148420375,26.043958706250002,321.0487904375,26.12738610625,321.1105017375,26.188037906250003L323.1081686375,28.20370440625C323.1667184375,28.262943406250002,323.2465443375,28.29628140625,323.3298349375,28.29628140625C323.4131260375,28.29628140625,323.4929514375,28.262943406250002,323.5515017375,28.20370440625L325.5488357375,26.188037906250003Z" fill="#000000"/>
+  <path d="M308.6669921875,17.66650390625L309.6669921875,17.66650390625C310.2192761875,17.66650390625,310.6669921875,18.11421915625,310.6669921875,18.66650390625L310.6669921875,27.33317090625C310.6669921875,27.88545490625,310.2192761875,28.33317090625,309.6669921875,28.33317090625L308.6669921875,28.33317090625C308.1147071875,28.33317090625,307.6669921875,27.88545490625,307.6669921875,27.33317090625L307.6669921875,18.66650390625C307.6669921875,18.11421915625,308.1147071875,17.66650390625,308.6669921875,17.66650390625Z
+M304.0000001875,20.00000000625L305.0000001875,20.00000000625C305.5522841875,20.00000000625,306.0000001875,20.44771530625,306.0000001875,21.00000000625L306.0000001875,27.33333400625C306.0000001875,27.885617906249998,305.5522841875,28.33333290625,305.0000001875,28.33333290625L304.0000001875,28.33333290625C303.4477147875,28.33333290625,302.9999999875,27.885617906249998,302.9999999875,27.33333400625L302.9999999875,21.00000000625C302.9999999875,20.44771530625,303.4477147875,20.00000000625,304.0000001875,20.00000000625Z
+M299.3330077875,22.333007806250002L300.3330077875,22.333007806250002C300.8852924875,22.333007806250002,301.3330077875,22.78072310625,301.3330077875,23.333007806250002L301.3330077875,27.333007806250002C301.3330077875,27.88529190625,300.8852924875,28.33300790625,300.3330077875,28.33300790625L299.3330077875,28.33300790625C298.7807230875,28.33300790625,298.3330077875,27.88529190625,298.3330077875,27.333007806250002L298.3330077875,23.333007806250002C298.3330077875,22.78072310625,298.7807230875,22.333007806250002,299.3330077875,22.333007806250002Z
+M294.6669921875,24.333007806250002L295.6669921875,24.333007806250002C296.2192768875,24.333007806250002,296.6669921875,24.78072310625,296.6669921875,25.333007806250002L296.6669921875,27.333007806250002C296.6669921875,27.88529190625,296.2192768875,28.33300790625,295.6669921875,28.33300790625L294.6669921875,28.33300790625C294.1147074375,28.33300790625,293.6669921875,27.88529190625,293.6669921875,27.333007806250002L293.6669921875,25.333007806250002C293.6669921875,24.78072310625,294.1147074375,24.333007806250002,294.6669921875,24.333007806250002Z" fill="#000000"/>
+</svg></div>
+      <div class="battery-icon">
+        <div class="battery-level"></div>
+        <div class="battery-cap"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 顶部标题栏 (消息 + 渐变绿小横杠) -->
+  <header class="top-header-section">
+    <div class="header-title-wrap">
+      <h1 class="header-main-title">消息</h1>
+      <div class="header-title-underline"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 9 36 16.16" width="36" height="16.16">
+  <defs><linearGradient id="grad_paint_9_478" x1="0.0000" y1="0.5000" x2="1.0000" y2="0.5000"><stop offset="0" stop-color="#19DEAC"/><stop offset="1" stop-color="#A6FFBE"/></linearGradient></defs>
+  <path d="M9.4983559,9L0,9L0,21L9.4983559,21Q11.349179,21,12.87838,22.042636899999998L17.457331,25.164653L22.661562,21.9120097Q24.120777,21,25.841555,21L36,21L36,9L25.841555,9Q23.311386,9,20.879269,9.6975222Q19.207136,10.177083,17.670448,10.960799699999999Q16.295338,10.259737999999999,14.804126,9.7997437Q12.211514,9,9.4983559,9Z" fill="url(#grad_paint_9_478)"/>
+</svg></div>
+    </div>
+  </header>
+
+  <!-- 主滚动区域 -->
+  <main class="message-main-scroll">
+    <!-- 三大社交快捷卡片 (MasterGo 组 57617, 57615, 57616) -->
+    <div class="social-cards-grid">
+      <!-- 1. 有用 -->
+      <div class="social-card-item card-youyong" onclick="handleOpenCategory('likes')">
+        <div class="card-bg-layer">
+          <span class="card-label-text">有用</span>
+        </div>
+        <div class="card-illus-box">
+          <img src="images/xiaoxi/youyong.png" onerror="this.src='https://image-resource.mastergo.com/60579938713982/60579938713984/a0b446fd0f58d0d257abc177643f522a.png'" class="card-illus-img" alt="有用">
+        </div>
+        <div class="card-unread-badge">99</div>
+      </div>
+
+      <!-- 2. 新增关注 -->
+      <div class="social-card-item card-fensi" onclick="handleOpenCategory('followers')">
+        <div class="card-bg-layer">
+          <span class="card-label-text">新增关注</span>
+        </div>
+        <div class="card-illus-box">
+          <img src="images/xiaoxi/fensi.png" onerror="this.src='https://image-resource.mastergo.com/60579938713982/60579938713984/3acf7ac2add03a7bbee2a763141fd37f.png'" class="card-illus-img" alt="新增关注">
+        </div>
+        <div class="card-unread-badge">99+</div>
+      </div>
+
+      <!-- 3. 评论回复 -->
+      <div class="social-card-item card-pinglun" onclick="handleOpenCategory('comments')">
+        <div class="card-bg-layer">
+          <span class="card-label-text">评论回复</span>
+        </div>
+        <div class="card-illus-box">
+          <img src="images/xiaoxi/pinglun.png" onerror="this.src='https://image-resource.mastergo.com/60579938713982/60579938713984/f4a9d271ed1aa9fb79bd6041164a0c82.png'" class="card-illus-img" alt="评论回复">
+        </div>
+        <div class="card-unread-badge">2</div>
+      </div>
+    </div>
+
+    <!-- 消息频道列表 (MasterGo 组 6696) -->
+    <section class="message-list-section">
+      <!-- 消息 01: 系统通知 -->
+      <div class="message-item-row" onclick="handleMessageClick('system')">
+        <div class="msg-icon-circle msg-icon-sys">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.91 22.33" width="22.91" height="22.33">
+  <defs><linearGradient id="grad_paint_162_03974" x1="0.5275" y1="-0.0248" x2="0.4725" y2="1.0248"><stop offset="0.02" stop-color="rgb(255,255,255)" stop-opacity="0.8"/><stop offset="0.46" stop-color="rgb(255,255,255)" stop-opacity="0"/></linearGradient></defs>
+  <path d="M1.0909091234207153,6.636364489471435L1.0909091234207153,15.818183489471435C1.0909091234207153,18.228153489471435,3.044575323420715,20.181819489471437,5.4545456234207155,20.181819489471437L6.000000123420715,20.181819489471437L7.312988423420715,20.181819489471437C8.398512923420714,20.181819489471437,9.445064623420715,20.586423489471436,10.248288323420715,21.316627489471436L10.532350623420715,21.574864489471434C11.364542123420716,22.331403489471434,12.635458123420715,22.331403489471434,13.467649123420715,21.574864489471434L13.751712123420715,21.316627489471436C14.554935123420716,20.586423489471436,15.601487123420716,20.181819489471437,16.687012123420715,20.181819489471437L18.000001123420716,20.181819489471437L18.545438123420716,20.181819489471437C20.955415123420714,20.181819489471437,22.909083123420714,18.228142489471438,22.909074123420716,15.818166489471436L22.909041123420714,6.6363477894714356C22.909032123420715,4.226384389471436,20.955367123420714,2.2727274894714355,18.545403123420716,2.2727274894714355L5.4545456234207155,2.2727274894714355C3.044575323420715,2.2727274894714355,1.0909091234207153,4.226393689471435,1.0909091234207153,6.636364489471435Z" fill="#20DCAD"/>
+  <path d="M1.0909091234207153,6.636364489471435L1.0909091234207153,15.818183489471435C1.0909091234207153,18.228153489471435,3.044575323420715,20.181819489471437,5.4545456234207155,20.181819489471437L7.312988423420715,20.181819489471437C8.398512923420714,20.181819489471437,9.445064623420715,20.586423489471436,10.248288323420715,21.316627489471436L10.532350623420715,21.574864489471434C11.364542123420716,22.331403489471434,12.635458123420715,22.331403489471434,13.467649123420715,21.574864489471434L13.751712123420715,21.316627489471436C14.554935123420716,20.586423489471436,15.601487123420716,20.181819489471437,16.687012123420715,20.181819489471437L18.545438123420716,20.181819489471437C20.955415123420714,20.181819489471437,22.909083123420714,18.228142489471438,22.909074123420716,15.818166489471436L22.909041123420714,6.6363477894714356C22.909032123420715,4.226384389471436,20.955367123420714,2.2727274894714355,18.545403123420716,2.2727274894714355L5.4545456234207155,2.2727274894714355C3.044575323420715,2.2727274894714355,1.0909091234207153,4.226393689471435,1.0909091234207153,6.636364489471435Z
+M1.6363636834207154,6.636364489471435L1.6363636834207154,15.818183489471435Q1.6363636834207154,17.399726489471433,2.7546831234207154,18.518046489471434Q3.8730026234207156,19.636365489471437,5.4545456234207155,19.636365489471437L7.312988423420715,19.636365489471437Q9.210878523420716,19.636365489471437,10.615201123420716,20.913024489471436L10.899263523420716,21.171262489471435Q11.367371123420716,21.596814489471434,12.000000123420715,21.596814489471434Q12.632629123420715,21.596814489471434,13.100738123420715,21.171262489471435L13.384799123420715,20.913024489471436Q14.789124123420715,19.636365489471437,16.687012123420715,19.636365489471437L18.545438123420716,19.636365489471437Q20.126985123420717,19.636365489471437,21.245307123420716,18.518041489471436Q22.363627123420716,17.399715489471436,22.363620123420716,15.818170489471436L22.363587123420714,6.636350189471435Q22.363582123420716,5.054811689471435,21.245261123420715,3.9364969894714354Q20.126943123420716,2.8181819894714355,18.545402123420715,2.8181820494714356L5.4545456234207155,2.8181820494714356Q3.8730029234207155,2.8181820494714356,2.7546835234207157,3.9365014894714356Q1.6363638634207154,5.054821289471436,1.6363636834207154,6.636364489471435Z" fill="url(#grad_paint_162_03974)"/>
+  <path d="M3.2727274894714355,1.6363637447357178C3.2727274894714355,2.5401024860788746,2.5401024860788746,3.2727274894714355,1.6363637447357178,3.2727274894714355C0.7326250033925609,3.2727274894714355,0,2.5401024860788746,0,1.6363637447357178C0,0.7326250033925609,0.7326250033925609,0,1.6363637447357178,0C2.5401024860788746,0,3.2727274894714355,0.7326250033925609,3.2727274894714355,1.6363637447357178Z" fill="#FFFFFF"/>
+  <path d="M8.727272510528564,1.6363637447357178C8.727272510528564,2.5401024860788746,7.994647507136003,3.2727274894714355,7.090908765792847,3.2727274894714355C6.187170024449689,3.2727274894714355,5.454545021057129,2.5401024860788746,5.454545021057129,1.6363637447357178C5.454545021057129,0.7326250033925609,6.187170024449689,0,7.090908765792847,0C7.994647507136003,0,8.727272510528564,0.7326250033925609,8.727272510528564,1.6363637447357178Z" fill="#FFFFFF"/>
+  <path d="M14.181817531585693,1.6363637447357178C14.181817531585693,2.5401024860788746,13.449192528193132,3.2727274894714355,12.545453786849976,3.2727274894714355C11.64171504550682,3.2727274894714355,10.909090042114258,2.5401024860788746,10.909090042114258,1.6363637447357178C10.909090042114258,0.7326250033925609,11.64171504550682,0,12.545453786849976,0C13.449192528193132,0,14.181817531585693,0.7326250033925609,14.181817531585693,1.6363637447357178Z" fill="#FFFFFF"/>
+</svg>
+        </div>
+        <div class="msg-content-col">
+          <div class="msg-top-line">
+            <span class="msg-title-text">系统通知</span>
+            <span class="msg-time-text">14:00</span>
+          </div>
+          <div class="msg-bottom-line">
+            <span class="msg-desc-text">陪伴社区 v1.0 已更新：新增确认错题功能</span>
+            <div class="msg-red-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="msg-divider-line"></div>
+
+      <!-- 消息 02: 学情诊断提醒 -->
+      <div class="message-item-row" onclick="handleMessageClick('diagnosis')">
+        <div class="msg-icon-circle msg-icon-diag">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="3.09 2.34 11.1 7.68" width="11.1" height="7.68">
+  <path d="M4.766457887172852,6.8412170025817876Q4.689448878172851,6.856087702581787,4.611017227172852,6.856087702581787Q4.530270435172851,6.856087702581787,4.451075167172852,6.840334702581787Q4.371879907172851,6.824581602581787,4.297279597172851,6.793681102581787Q4.222679317172852,6.762780702581788,4.155540827172851,6.717920102581787Q4.088402267172851,6.673059502581787,4.031305667172852,6.615963202581787Q3.9742090671728514,6.558866502581787,3.9293485871728517,6.491727802581787Q3.8844881071728516,6.424589202581787,3.8535875671728514,6.349988902581787Q3.8226871471728514,6.275388702581787,3.8069341771728515,6.1961937025817875Q3.7911812071728517,6.116998402581787,3.7911812071728517,6.036251802581788Q3.7911811471728516,5.958798602581787,3.8056862971728513,5.882715902581787Q3.8201913871728514,5.8066332025817875,3.8486883671728513,5.734613202581787Q3.8771853471728517,5.662593102581788,3.918665827172852,5.597184202581787Q3.9601463071728515,5.531775002581787,4.013142527172851,5.475291202581787Q4.066138627172852,5.418807702581788,4.128775177172852,5.373248602581787Q4.191411737172851,5.327689202581787,4.261472257172851,5.294666302581787Q4.331532777172852,5.261643402581787,4.406538117172851,5.242325402581788Q4.481543467172852,5.223007402581787,4.558839571172852,5.218077902581787L6.525305127172851,4.9665397025817875Q6.628934827172852,4.953284102581787,6.732570127172852,4.966494202581787Q6.836205527172852,4.979704302581787,6.9331958271728515,5.018532302581788Q7.030186627172851,5.057360502581787,7.114308327172852,5.119314902581787Q7.198430027172852,5.181269402581787,7.264284327172851,5.262374202581787L8.03932472717285,6.216897702581788L8.761192327172852,3.088806752581787Q8.797787627172852,2.930228052581787,8.892282527172853,2.797724782581787Q8.986777327172852,2.665221512581787,9.124785427172853,2.578966082581787Q9.262794027172852,2.492710592581787,9.423306027172853,2.465834562581787Q9.58381842717285,2.438958522581787,9.742397327172853,2.475553632581787Q9.907111627172853,2.513564582581787,10.043275827172852,2.613739612581787Q10.179439527172851,2.713914632581787,10.264755227172852,2.859849242581787L11.456224427172852,4.897888402581787L13.182898527172851,4.677130302581787Q13.25988392717285,4.6622690025817874,13.338291127172852,4.6622690025817874Q13.419037827172852,4.6622690025817874,13.498232827172851,4.678021902581787Q13.577426927172851,4.693774702581787,13.652027127172852,4.724675202581787Q13.726627327172851,4.755575702581787,13.793766027172852,4.800436102581787Q13.860904727172851,4.845296602581787,13.918002127172851,4.902393302581787Q13.975098627172851,4.959489802581787,14.019959427172852,5.026628402581787Q14.064819327172852,5.093766802581787,14.095719327172851,5.168367102581787Q14.126619327172852,5.242967402581787,14.142373127172851,5.322162602581788Q14.158126827172852,5.401358102581787,14.158126827172852,5.482105002581787Q14.158126827172852,5.559560802581787,14.143620527172851,5.635646102581787Q14.129114127172851,5.711731402581787,14.100616427172852,5.783754102581787Q14.072116827172852,5.855776302581788,14.030632927172851,5.9211872025817875Q13.989149127172851,5.9865975025817875,13.93615052717285,6.043082002581787Q13.883150127172852,6.099566002581787,13.820509927172852,6.145124902581787Q13.757869727172851,6.190683802581788,13.687806127172852,6.223705102581787Q13.617740627172852,6.256726302581788,13.542732227172852,6.2760413025817865Q13.467723827172852,6.295356302581787,13.390424727172851,6.300281802581788L11.126834827172852,6.589685002581787Q11.00739952717285,6.604955202581787,10.888628927172851,6.585169302581788Q10.769858327172852,6.565383902581788,10.661822327172851,6.512220402581788Q10.553787227172851,6.459056902581787,10.465648127172852,6.377023702581788Q10.377509127172852,6.294990102581787,10.316739527172851,6.191042702581787L9.892231027172851,5.464909802581787L9.257160627172851,8.216879402581787Q9.22643132717285,8.350040002581787,9.15409472717285,8.465984802581787Q9.08175752717285,8.581929702581787,8.975666527172852,8.668071702581788Q8.913107827172851,8.718866802581786,8.841841227172852,8.756481602581786Q8.770575027172852,8.794096502581787,8.693339827172853,8.817084802581787Q8.616104627172852,8.840073602581787,8.535868627172851,8.847552802581788Q8.455632727172851,8.855032002581787,8.375479227172852,8.846714502581786Q8.295325727172852,8.838396502581787,8.218335127172852,8.814601402581786Q8.141344327172853,8.790806302581787,8.07047532717285,8.752448102581788Q7.999606127172852,8.714089902581787,7.937582227172852,8.662643002581788Q7.875558327172852,8.611196002581787,7.824763027172851,8.548637902581788L6.281083927172851,6.647475202581787L4.766457887172852,6.8412170025817876Z" fill="#FFFFFF" transform="matrix(0.9919307827949524,0.12678107619285583,-0.12678107619285583,0.9919307827949524,0.4521342253990639,-0.5581809311057953)"/>
+</svg>
+        </div>
+        <div class="msg-content-col">
+          <div class="msg-top-line">
+            <span class="msg-title-text">学情诊断提醒</span>
+            <span class="msg-time-text">14:00</span>
+          </div>
+          <div class="msg-bottom-line">
+            <span class="msg-desc-text">「数学其中考试」试卷分析已完成，点击查看</span>
+            <div class="msg-red-badge">2</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="msg-divider-line"></div>
+
+      <!-- 消息 03: 私信交互扩展 (联动 sixin.html) -->
+      <div class="message-item-row" onclick="safeProtoNavigate('sixin.html')">
+        <div class="msg-icon-circle" style="background:#EBF3FF">
+          <span class="material-icons" style="font-size:22px;color:#3388FF">forum</span>
+        </div>
+        <div class="msg-content-col">
+          <div class="msg-top-line">
+            <span class="msg-title-text">李爸爸</span>
+            <span class="msg-time-text">10:30</span>
+          </div>
+          <div class="msg-bottom-line">
+            <span class="msg-desc-text">好的，我把那个网课链接发给你</span>
+            <div class="msg-red-badge">2</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 二级抽屉展开视图 -->
+  <div class="sub-view-overlay" id="subViewOverlay">
+    <div class="sub-header-bar">
+      <button class="sub-back-btn" onclick="closeSubView()">
+        <span class="material-icons">arrow_back</span>
+      </button>
+      <span class="sub-title" id="subViewTitle">详情</span>
+    </div>
+    <div class="sub-list-body" id="subViewList"></div>
+  </div>
+
+  <!-- 底部导航栏 (MasterGo 组 58592 1:1还原 4 Tab 架构) -->
+  <nav class="bottom-nav-bar">
+    <div class="nav-tabs-row">
+      <!-- 1. 首页 -->
+      <a class="nav-tab-item" href="fenxi.html" onclick="safeProtoNavigate('fenxi.html')">
+        <div class="nav-tab-icon-box"><svg xmlns="http://www.w3.org/2000/svg" viewBox="1.68 1.52 22.65 21.73" width="22.65" height="21.73">
+  <path d="M14.737436800000001,14.2374368Q14.224874,14.7499998,13.5,14.7499998L12.249994300000001,14.749994300000001L12.249994300000001,17.2500057L13.5,17.25Q15.2604074,17.2499995,16.5052032,16.0052032Q17.7499995,14.7604072,17.7499995,12.9999998L17.7499995,11.51724136Q17.7499995,10.78522654,17.232388,10.267614009999999Q16.7147751,9.7500001,15.9827595,9.7500001L13.7142851,9.7500001Q11.6578826,9.7500001,10.20349033,11.20608883Q8.7500001,12.6612746,8.7500001,14.7174215L8.7500001,21.999999000000003L8.7499944,23.250006L11.2500056,23.250006L11.25,22L11.2499999,14.7174215Q11.2499999,13.695954799999999,11.9722873,12.9728251Q12.6942701,12.2499999,13.7142851,12.2499999L15.249999500000001,12.2499999L15.249999500000001,12.9999998Q15.249999500000001,13.724874,14.737436800000001,14.2374368Z" fill="#B6B8C5"/>
+  <path d="M10.1667318,3.3147964500000002L4.4526856,6.933692199999999Q1.675642,8.6924872,2.01973248,11.9615736L2.70888644,18.508986Q2.921637677,20.530273,4.4321468,21.890137Q5.9426553,23.25,7.9751077,23.25L18.024894,23.25Q20.057344,23.25,21.567854,21.890137Q23.078363,20.530273,23.291115,18.508988000000002L23.980267,11.9615746Q24.32436,8.692487700000001,21.547314,6.933692000000001L15.833268,3.31479657Q13.000001,1.5203928,10.1667318,3.3147964500000002Z
+M4.5059979,11.6998796Q4.3243580999999995,9.9741802,5.7903161,9.0457401L11.5043621,5.4268439Q13,4.4796062,14.495639,5.4268439L20.209684,9.0457397Q21.675644,9.9741812,21.494003,11.6998787L20.804848,18.247293Q20.541424,20.75,18.024894,20.75L7.9751077,20.75Q5.4585752,20.75,5.195152,18.247295L4.5059979,11.6998796Z" fill="#B6B8C5"/>
+</svg></div>
+        <span class="nav-tab-label nav-label">首页</span>
+      </a>
+
+      <!-- 2. 社区 -->
+      <a class="nav-tab-item" href="shequ.html" onclick="safeProtoNavigate('shequ.html')">
+        <div class="nav-tab-icon-box"><svg xmlns="http://www.w3.org/2000/svg" viewBox="2.25 2.25 21.5 21.5" width="21.5" height="21.5">
+  <path d="M20.601398,20.601398Q23.750002,17.452795000000002,23.750002,12.999999Q23.75,8.547204,20.601398,5.398602Q17.452797,2.25,12.999999,2.25Q8.547204,2.25,5.398602,5.398602Q2.25,8.547204,2.25,13Q2.25,17.452797,5.398602,20.601398Q8.5472054,23.750002,13,23.750002Q17.452797,23.75,20.601398,20.601398Z
+M18.833633,7.1663689999999995Q21.25,9.5827365,21.25,13Q21.250002,16.417264,18.833633,18.833633Q16.417265999999998,21.25,13,21.250002Q9.5827379,21.250002,7.1663689999999995,18.833633Q4.75,16.417264,4.75,13Q4.75,9.5827379,7.1663689999999995,7.1663689999999995Q9.5827379,4.75,12.999999,4.75Q16.417264,4.75,18.833633,7.1663689999999995Z" fill="#B6B8C5"/>
+  <path d="M16.13715311875,10.828845975L16.13715311875,13.756721975L18.63715361875,13.756721975L18.63715361875,8.185546875Q18.63715411875,8.124138311,18.63113501875,8.063025445Q18.62511541875,8.001912575,18.613134818749998,7.941683975Q18.60115481875,7.881455365,18.58332871875,7.822691025Q18.56550261875,7.763926685,18.54200221875,7.707192595Q18.51850221875,7.650458455,18.48955491875,7.596300955Q18.46060701875,7.542143465,18.426490318749998,7.491084095Q18.39237351875,7.440024735,18.35341641875,7.392555235Q18.31445931875,7.345085795,18.27103661875,7.301663395Q18.22761441875,7.258240935,18.18014481875,7.219283815Q18.132675218750002,7.180326675,18.08161541875,7.146209975Q18.03055671875,7.112093075,17.97639941875,7.083145275Q17.92224171875,7.054197575,17.86550711875,7.030697575Q17.80877301875,7.0071973750000005,17.75000901875,6.989371375Q17.691244618749998,6.971545475,17.63101581875,6.959565375Q17.57078741875,6.947585075,17.50967451875,6.941565875Q17.44856161875,6.935546875,17.38715311875,6.935546875Q17.17022041875,6.935546875,16.96597291875,7.008641075Q16.76172491875,7.081735475,16.59404941875,7.219375725L12.52191471875,10.562080175Q12.42193662875,10.644149575,12.34088188875,10.744951975Q12.25982713875,10.845754175,12.20113056875,10.961017875Q12.14243399875,11.076281575,12.108583028750001,11.201121775Q12.07473212875,11.325962075,12.06716125875,11.455088575L11.696967118749999,17.769085875000002Q11.69337281875,17.830389975,11.69580471875,17.891750375Q11.69823641875,17.953109775,11.70667111875,18.013936075Q11.71510551875,18.074762375,11.72946141875,18.134469975000002Q11.74381731875,18.194176875,11.76395651875,18.252188875Q11.78409551875,18.310201875,11.80982401875,18.365959875Q11.83555221875,18.421719875,11.86662211875,18.474687875Q11.89769171875,18.527656874999998,11.93380381875,18.577324875000002Q11.96991574875,18.626992875,12.01072221875,18.672881875Q12.05152862875,18.718772875,12.09663658875,18.760440875Q12.14174449875,18.802109875,12.19071948875,18.839154875Q12.23969441875,18.876203875,12.29206478875,18.908271875Q12.344435098750001,18.940338875000002,12.39969652875,18.967118875Q12.45495789875,18.993899875,12.51257812875,19.015134875Q12.57019835875,19.036368875,12.62962248875,19.051853875Q12.68904661875,19.067339875000002,12.74970242875,19.076925875Q12.81035819875,19.086511875,12.87166148375,19.090105875Q13.10011952875,19.103499875,13.31850471875,19.035087875000002Q13.53688990875,18.966673874999998,13.71687209875,18.825326875000002L16.95954751875,16.278732275L15.415452018749999,14.312576275L14.35509391875,15.145315175L14.53086351875,12.147405375L16.13715311875,10.828845975Z" fill="#B6B8C5" transform="matrix(0.912746250629425,0.4085269868373871,-0.4085269868373871,0.912746250629425,4.473501248488901,-4.574090377733228)"/>
+</svg></div>
+        <span class="nav-tab-label nav-label">社区</span>
+      </a>
+
+      <!-- 3. 消息 (高亮激活态) -->
+      <a class="nav-tab-item active" href="xiaoxi.html" onclick="safeProtoNavigate('xiaoxi.html')">
+        <div class="nav-active-pill"></div>
+        <div class="nav-tab-icon-box">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="1.75 2.46 22.5 21.79" width="22.5" height="21.79">
+  <path d="M3,17.295003C3,19.582592,4.9150159,21.404249,7.1997509,21.290012L13,21L18,23L18,20.5L19,20.5C21.209139,20.5,23,18.709139,23,16.5L23,7.9199505C23,5.5534625,20.956728,3.70432717,18.601986,3.93980148L6.601985,5.1398015C4.5571775,5.3442823,3,7.0649443000000005,3,9.1199503L3,17.295003Z" fill="#000000"/>
+  <path d="M3.10737409,5.5971723Q1.75,7.097054,1.75,9.1199508L1.75,17.295004Q1.75,19.546848,3.38156867,21.098877Q5.0131376,22.650906,7.2621737,22.538452L12.7894897,22.262087L17.535761,24.160597Q17.592776999999998,24.183403,17.651755,24.200512Q17.710732,24.217619,17.771101,24.228863Q17.831471999999998,24.240108,17.892654,24.24538Q17.953834999999998,24.250654,18.015238,24.249905Q18.076643,24.249157,18.137678,24.242392Q18.198712999999998,24.235628,18.258789999999998,24.222914Q18.318869,24.210201,18.377412,24.191662Q18.435955,24.17312,18.492397,24.14893Q18.548841,24.124741,18.602642,24.095135Q18.656443,24.065529,18.707081000000002,24.03079Q18.757721,23.996054,18.804710999999998,23.95652Q18.851702,23.916988,18.89459,23.873039Q18.937481,23.829094,18.975856999999998,23.781153Q19.014233,23.733212,19.047724,23.68174Q19.081219,23.630268,19.109505,23.575762Q19.137791,23.521255,19.160595,23.464239Q19.25,23.240728,19.25,23L19.25,21.744831Q21.263767,21.660854,22.712311,20.212311Q24.25,18.674621000000002,24.25,16.5L24.25,7.9199514Q24.25,5.5904398,22.522778,4.02732486Q20.795555,2.46421,18.477606,2.69600517L6.4776051,3.896005Q4.4647480999999996,4.09729087,3.10737409,5.5971723Z
+M16.75,21.153709L16.75,20.5Q16.75,20.438591,16.75602,20.377478Q16.762038,20.316364,16.774017,20.256136Q16.785997000000002,20.195908,16.803823,20.137144Q16.821649999999998,20.078381,16.845148000000002,20.021645Q16.868648999999998,19.964912,16.897596,19.910755Q16.926544,19.856598,16.960661,19.805536Q16.99478,19.754478,17.033735999999998,19.707008Q17.072694,19.659538,17.116115999999998,19.616116Q17.159537999999998,19.572693,17.207008000000002,19.533737Q17.254478,19.49478,17.305536,19.460662Q17.356596,19.426546000000002,17.410753,19.397598000000002Q17.464911,19.368650000000002,17.521644000000002,19.34515Q17.578378999999998,19.321651,17.637144,19.303825Q17.695908,19.285999,17.756135999999998,19.274019Q17.816364999999998,19.26204,17.877478,19.256021Q17.938591000000002,19.250002000000002,18,19.250000999999997L19,19.250000999999997Q21.75,19.250000999999997,21.75,16.5L21.75,7.9199514Q21.75,6.699730199999999,20.845264,5.8809556999999995Q19.940529,5.0621814,18.726366,5.1835979000000005L6.7263646,6.3835979Q4.25,6.6312346,4.25,9.1199508L4.25,17.295004Q4.25,18.474543,5.1046309,19.287509Q5.9592612,20.100475,7.1373286,20.041571L12.9375782,19.751558Q13.21051,19.737913,13.464238,19.839403L16.75,21.153709Z" fill="#000000"/>
+  <path d="M9.4971248,10.99330312L10.7139653,11.2793337L14.474299,12.1632559L12.2725942,13.6736376L12.2741143,13.5125256L12.285913,12.2625756L9.786013,12.2389894L9.7742256,13.4889395L9.7500556,16.0507069Q9.7482408,16.243040999999998,9.8043315,16.4270234Q9.860422100000001,16.6110058,9.969228900000001,16.769614699999998Q10.00396717,16.8202534,10.04350168,16.8672433Q10.08303618,16.9142327,10.12698615,16.9571204Q10.17093605,17.0000095,10.21887815,17.038383Q10.26682019,17.076757399999998,10.3182928,17.1102471Q10.36976528,17.1437378,10.4242726,17.1720209Q10.47877991,17.200305,10.535797,17.2231092Q10.59281409,17.245914499999998,10.6517919,17.263021000000002Q10.71076974,17.2801275,10.77114031,17.291370399999998Q10.83151084,17.3026142,10.89269272,17.3078852Q10.953874592,17.313157099999998,11.01527857,17.3124061Q11.076682545,17.3116555,11.13771728,17.3048897Q11.19875202,17.298124299999998,11.25882968,17.2854085Q11.31890738,17.2726936,11.37744945,17.2541504Q11.4359915,17.2356071,11.49243411,17.2114153Q11.54887676,17.187224399999998,11.60267645,17.1576166Q11.65647614,17.128009300000002,11.70711464,17.0932708L18.2212749,12.6245213Q18.4138131,12.4924386,18.5456891,12.2997584Q18.6775646,12.107078099999999,18.730994199999998,11.8797849Q18.745046600000002,11.8200059,18.7531714,11.759136999999999Q18.761296299999998,11.6982684,18.7634149,11.6368964Q18.7655349,11.5755243,18.7616286,11.5142401Q18.7577229,11.452956,18.747828,11.3923496Q18.7379341,11.3317434,18.722147,11.2723987Q18.7063599,11.2130542,18.6848316,11.1555426Q18.6633043,11.0980313,18.6362433,11.04290688Q18.6091824,10.98778242,18.576848,10.93557584Q18.5445147,10.88336933,18.5072193,10.8345834Q18.469924,10.7857976,18.4280252,10.74090219Q18.3861284,10.69600689,18.3400316,10.65543443Q18.2939353,10.61486197,18.2440834,10.57900304Q18.1942329,10.54314417,18.1411066,10.51234427Q18.0879807,10.48154438,18.0320911,10.45610005Q17.976202999999998,10.43065572,17.9180889,10.41081202Q17.8599749,10.39096832,17.8001952,10.37691632L11.28603482,8.8456663L10.06919688,8.5596248L9.4971248,10.99330312Z" fill="#20DCAD" transform="matrix(1,-0.00953022763133049,0.00953022763133049,1,-0.09589791554026306,0.10483250394463539)"/>
+</svg>
+          <span class="nav-tab-badge">99+</span>
+        </div>
+        <span class="nav-tab-label nav-label">消息</span>
+      </a>
+
+      <!-- 4. 我的 -->
+      <a class="nav-tab-item" href="wode.html" onclick="safeProtoNavigate('wode.html')">
+        <div class="nav-tab-icon-box"><svg xmlns="http://www.w3.org/2000/svg" viewBox="3.75 7.64 18.5 16.61" width="18.5" height="16.61">
+  <path d="M18.0008631,7.6371131000000005L16.7564883,7.7556306L14.1314888,8.00563061L12.8189886,8.13063061L11.5746131,8.24913692L11.8116369,10.7378869L13.056011699999999,10.6193694L14.3685112,10.4943694L16.9935112,10.2443694L18.2378864,10.1258631L18.0008631,7.6371131000000005Z
+M10.7821131,8.32461309L9.53773856,8.44313061L8.88148864,8.50563061L7.6371131000000005,8.62413692L7.8741369,11.1128869L9.11851146,10.9943694L9.77476138,10.9318694L11.0191369,10.8133631L10.7821131,8.32461309Z" fill="#B6B8C5"/>
+  <path d="M13.2051287,20.75Q9.058544600000001,20.75,4.71080855,21.78391278L4.71086636,21.78415591Q4.60900515,21.80837898,4.51259428,21.84921294Q4.41618335,21.89004691,4.32791078,21.946353331Q4.23963815,22.0026597455,4.16196477,22.072868809Q4.08429146,22.14307788,4.01938283,22.2252322Q3.9544741,22.30738655,3.9041398000000003,22.39919573Q3.8538055,22.49100488,3.8194488,22.58990932Q3.7850921,22.68881381,3.7676711000000003,22.79205602Q3.7502499,22.8952983,3.7502500000000003,23Q3.7502500000000003,23.0613964,3.7562678,23.122497Q3.7622857,23.1835976,3.7742636000000003,23.2438141Q3.7862413999999998,23.3040307,3.8040637999999998,23.3627833Q3.8218863,23.4215358,3.8453816,23.4782585Q3.8688769,23.5349814,3.897819,23.589128Q3.926761,23.6432748,3.960871,23.6943238Q3.9949808,23.745373,4.03393024,23.7928331Q4.07287961,23.840293,4.11629337,23.8837067Q4.15970707,23.9271204,4.20716703,23.9660699Q4.25462699,24.0050192,4.30567616,24.039129Q4.35672528,24.0732391,4.41087198,24.1021812Q4.46501869,24.1311231,4.52174145,24.1546183Q4.57846418,24.1781137,4.63721675,24.1959362Q4.69596931,24.2137585,4.7561859,24.2257364Q4.81640245,24.2377143,4.87750308,24.2437325Q4.938603722,24.2497501,5,24.2497501Q5.14655484,24.2497501,5.28913364,24.2158442L5.28919145,24.216087299999998Q9.351713199999999,23.25,13.2051287,23.25Q17.043196000000002,23.25,20.681480999999998,24.2087374L20.681545,24.2084956Q20.8381,24.2497501,21,24.2497501Q21.061398,24.2497501,21.122498,24.2437325Q21.183598,24.2377143,21.243813,24.2257364Q21.304031,24.2137585,21.362783,24.1959362Q21.421535,24.1781137,21.478256,24.1546183Q21.534981,24.1311231,21.589127,24.102181Q21.643272,24.0732391,21.694321,24.039129Q21.745373,24.0050192,21.792831,23.9660699Q21.840292,23.9271204,21.883705,23.8837066Q21.92712,23.8402929,21.966068,23.7928329Q22.005018,23.745373,22.039127,23.6943238Q22.073238,23.6432747,22.102182,23.589128Q22.131123,23.5349813,22.154617,23.4782585Q22.178112,23.4215358,22.195936,23.3627832Q22.213757,23.3040307,22.225735,23.243814Q22.237713,23.1835976,22.243732,23.1224968Q22.24975,23.0613964,22.24975,23Q22.249748,22.89720047,22.232948,22.7957828Q22.216148,22.69436514,22.183006,22.597055609999998Q22.14986,22.49974599,22.101259,22.40916041Q22.052662,22.31857488,21.989914,22.23714846Q21.927162,22.15572199,21.851952,22.085643597Q21.776741,22.015565207,21.69109,21.958718751Q21.605438,21.901872292,21.51165,21.85978593Q21.41786,21.81769955,21.318457,21.79150465L21.31852,21.79126275Q17.367062,20.75,13.2051287,20.75Z" fill="#B6B8C5"/>
+</svg></div>
+        <span class="nav-tab-label nav-label">我的</span>
+      </a>
+    </div>
+
+    <!-- Home Indicator -->
+    <div class="bottom-home-indicator">
+      <div class="home-pill"></div>
+    </div>
+  </nav>
+</div>
+
+<script>
+function handleOpenCategory(cat) {
+  if (cat === 'likes') {
+    safeProtoNavigate('youyong.html');
+  } else if (cat === 'followers') {
+    safeProtoNavigate('fensi.html');
+  } else if (cat === 'comments') {
+    safeProtoNavigate('wodepinglun.html');
+  }
+}
+
+function handleMessageClick(type) {
+  if (type === 'diagnosis') {
+    safeProtoNavigate('xueqing_xiaoxi.html');
+  } else {
+    openSubNoticeModal();
+  }
+}
+
+function openSubNoticeModal() {
+  const overlay = document.getElementById('subViewOverlay');
+  const title = document.getElementById('subViewTitle');
+  const list = document.getElementById('subViewList');
+  title.textContent = '系统通知';
+  list.innerHTML = `
+    <div class="sub-item-card">
+      <div class="sub-user-row">
+        <span class="sub-user-name">版本更新公告</span>
+        <span class="sub-time">14:00</span>
+      </div>
+      <div class="sub-content-text">
+        陪伴社区 v1.0 已更新：新增试卷确认错题功能，拍照切题完成后支持极速核对，助您更精准分析学情。
+      </div>
+    </div>
+    <div class="sub-item-card">
+      <div class="sub-user-row">
+        <span class="sub-user-name">活动提醒</span>
+        <span class="sub-time">昨天 09:30</span>
+      </div>
+      <div class="sub-content-text">
+        暑期备考冲刺营已开启，创建日程即可解锁名校模考分析特权！
+      </div>
+    </div>
+  `;
+  overlay.classList.add('active');
+}
+
+function closeSubView() {
+  document.getElementById('subViewOverlay').classList.remove('active');
+}
+
+function safeProtoNavigate(targetUrl) {
+  if (typeof doProtoNavigate === 'function') {
+    doProtoNavigate(targetUrl);
+  } else {
+    window.location.href = targetUrl;
+  }
+}
+</script>
+
+<script src="prd-runtime.js"></script>
+
+<script id="prototypeAnnotationData" type="application/json">
+{
+  "prototypeId": "xiaoxi",
+  "version": 2,
+  "mobile": {
+    "appRoot": "[data-proto-app]",
+    "deviceWidth": 375
+  },
+  "globalMeta": {
+    "name": "小苗伴学 消息中心 (MasterGo 162:04097 精确还原版)",
+    "version": "V2.0",
+    "updatedAt": "2026-09-16"
+  },
+  "globalSections": [
+    {
+      "id": "sec_overview",
+      "title": "一.业务背景概述",
+      "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+      "format": "html"
+    }
+  ],
+  "annotations": []
+}
+</script>
+
+<script>
+// ══════ 全局原型内链与宿主工作台（ProtoHub / PRD Hub）无缝智能联动路由 ══════
+window.addEventListener('message', function(e) {
+  if (!e.data) return;
+  if (e.data.type === 'PRD_PAGES_UPDATED' && Array.isArray(e.data.pages)) {
+    window.__PRD_PAGES_REGISTRY__ = e.data.pages;
+    try { localStorage.setItem('PRD_PAGES_REGISTRY_UNIFIED', JSON.stringify(e.data.pages)); } catch(err) {}
+  }
+});
+
+function doProtoNavigate(targetUrl, e) {
+  if (!targetUrl || targetUrl.startsWith('#') || targetUrl.startsWith('javascript:') || targetUrl.startsWith('tel:') || targetUrl.startsWith('mailto:')) {
+    return true;
+  }
+  const targetFile = targetUrl.split(/[?#]/)[0].split('/').pop();
+  if (!targetFile || !targetFile.endsWith('.html')) return true;
+
+  const hasParent = window.parent && window.parent !== window;
+
+  // 1. 获取工作台页面注册表（优先级：当前窗口全局注册表 -> window.parent -> 本地缓存）
+  let pagesList = window.__PRD_PAGES_REGISTRY__ || null;
+  if (!pagesList && hasParent) {
+    try {
+      if (window.parent.__PRD_PAGES_REGISTRY__) {
+        pagesList = window.parent.__PRD_PAGES_REGISTRY__;
+      } else if (window.parent.projectInfo && window.parent.projectInfo.pages) {
+        pagesList = window.parent.projectInfo.pages;
+      } else if (window.parent.pageList) {
+        pagesList = window.parent.pageList;
+      }
+    } catch (err) {}
+  }
+
+  if (!pagesList) {
+    try {
+      const raw = localStorage.getItem('PRD_PAGES_REGISTRY_UNIFIED') || localStorage.getItem('PRD_HUB_PAGES_V2');
+      if (raw) pagesList = JSON.parse(raw);
+    } catch (err) {}
+  }
+
+  if (Array.isArray(pagesList) && pagesList.length > 0) {
+    const matched = pagesList.find(p => p.path === targetFile || p.id === targetFile.replace(/\\.html$/i, ''));
+    if (matched) {
+      // 1. 如果在【页面管理】中未勾选该页面：彻底阻止跳转（无反应）+ 弹提示
+      if (matched.visible === false) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
+        const msg = `⚠️ 页面「${matched.name || targetFile}」未在「页面管理」中勾选，暂不开放跳转`;
+        if (hasParent) {
+          try {
+            window.parent.postMessage({ type: 'GUARD_BLOCKED', file: targetFile, name: matched.name }, '*');
+          } catch (err) {}
+          try {
+            if (typeof window.parent.showFloatToast === 'function') window.parent.showFloatToast(msg);
+            else if (typeof window.parent.showHubToast === 'function') window.parent.showHubToast(msg);
+          } catch(err) {}
+        }
+        let toastEl = document.getElementById('proto-inner-guard-toast');
+        if (!toastEl) {
+          toastEl = document.createElement('div');
+          toastEl.id = 'proto-inner-guard-toast';
+          toastEl.style.cssText = 'position:fixed;top:30px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,0.92);color:#fff;font-size:13px;padding:8px 18px;border-radius:20px;z-index:999999;box-shadow:0 4px 16px rgba(0,0,0,0.3);';
+          document.body.appendChild(toastEl);
+        }
+        toastEl.textContent = msg;
+        toastEl.style.display = 'block';
+        setTimeout(() => { if (toastEl) toastEl.style.display = 'none'; }, 2400);
+        return false;
+      }
+
+      // 2. 如果在【页面管理】中已勾选：真正通知宿主工作台切换到该页面！
+      if (hasParent) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
+        try {
+          window.parent.postMessage({ type: 'SWITCH_PAGE', pageId: matched.id, path: matched.path }, '*');
+        } catch (err) {}
+        try {
+          if (typeof window.parent.switchPage === 'function') {
+            window.parent.switchPage(matched.id || matched.path);
+          }
+        } catch(err) {}
+        return false;
+      }
+    }
+  }
+
+  if (hasParent) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+    }
+    try {
+      window.parent.postMessage({ type: 'SWITCH_PAGE', path: targetFile }, '*');
+    } catch (err) {}
+    return false;
+  }
+
+  // 独立单文件直接打开时的降级
+  window.location.href = targetUrl;
+  return false;
+}
+
+function safeProtoNavigate(targetUrl) {
+  doProtoNavigate(targetUrl, null);
+}
+
+// 捕获阶段拦截所有链接和点击跳转
+document.addEventListener('click', function(e) {
+  const link = e.target.closest('a');
+  if (link) {
+    const href = link.getAttribute('href');
+    if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('tel:') && !href.startsWith('mailto:')) {
+      const targetFile = href.split(/[?#]/)[0].split('/').pop();
+      if (targetFile && targetFile.endsWith('.html')) {
+        const res = doProtoNavigate(href, e);
+        if (res === false) return;
+      }
+    }
+  }
+
+  const clickEl = e.target.closest('[onclick]');
+  if (clickEl) {
+    const onclickStr = clickEl.getAttribute('onclick') || '';
+    const match = onclickStr.match(/(?:window\\.)?location(?:\\.href)?\\s*=\\s*['"`]([^'"`]+)['"`]/) 
+      || onclickStr.match(/safeProtoNavigate\\(['"`]([^'"`]+)['"`]\\)/)
+      || onclickStr.match(/goToAllSchedule\\(\\)/);
+    
+    if (match) {
+      let href = match[1];
+      if (onclickStr.includes('goToAllSchedule')) href = 'quanburicheng.html';
+      if (href) {
+        const targetFile = href.split(/[?#]/)[0].split('/').pop();
+        if (targetFile && targetFile.endsWith('.html')) {
+          const res = doProtoNavigate(href, e);
+          if (res === false) return;
+        }
+      }
+    }
+  }
+}, true);
+</script>
+
+<div class="protoMobile-stage" id="protoMobileStage" hidden>
+  <aside class="protoMobile-review-panel protoMobile-docs-panel" id="protoMobileDocsPanel" aria-label="原型说明">
+    <header class="protoMobile-panel-header">
+      <strong>原型说明</strong>
+      <button class="protoMobile-compact-close" id="protoMobileCompactDocsClose" type="button" aria-label="关闭原型说明">×</button>
+    </header>
+    <div class="protoMobile-doc-layout">
+      <nav class="protoMobile-doc-nav" id="protoMobileDocNav" aria-label="原型说明目录"></nav>
+      <div class="protoMobile-doc-content" id="protoMobileDocContent"></div>
+    </div>
+  </aside>
+
+  <div class="protoMobile-desktop-splitter" id="protoMobileDocsSplitter" role="separator" aria-label="调整原型说明宽度" aria-orientation="vertical" tabindex="0"></div>
+
+  <main class="protoMobile-device" id="protoMobileDevice" aria-label="移动端原型画板"></main>
+
+  <aside class="protoMobile-review-panel protoMobile-notes-panel" aria-label="当前页面标注">
+    <header class="protoMobile-panel-header">
+      <strong>当前标注</strong>
+      <label class="protoMobile-desktop-toggle-label">
+        <span>显示标注</span>
+        <button class="protoMobile-switch" id="protoMobileDesktopToggle" type="button" role="switch" aria-checked="true" aria-label="隐藏页面标注"></button>
+      </label>
+    </header>
+    <div class="protoMobile-filter-bar" id="protoMobileFilterBar"></div>
+    <div class="protoMobile-note-list" id="protoMobileNoteList"></div>
+  </aside>
+</div>
+
+<div class="protoMobile-overlay-root" id="prototypeAnnotationRoot" popover="manual" aria-label="移动端原型标注层">
+  <div class="protoMobile-marker-layer" id="protoMobileMarkerLayer"></div>
+
+  <button class="protoMobile-compact-docs-trigger" id="protoMobileCompactDocsTrigger" type="button">说明</button>
+  <div class="protoMobile-compact-backdrop" id="protoMobileCompactBackdrop"></div>
+
+  <div class="protoMobile-mobile-controls" id="protoMobileMobileControls">
+    <div class="protoMobile-mobile-menu" id="protoMobileMobileMenu" role="menu" aria-label="原型标注菜单">
+      <div class="protoMobile-mobile-menu-row">
+        <span class="protoMobile-mobile-menu-copy">
+          <strong>页面标注</strong>
+          <small id="protoMobileMobileMenuMeta">当前页面 0 条</small>
+        </span>
+        <button class="protoMobile-switch" id="protoMobileMobileToggle" type="button" role="switch" aria-checked="false" aria-label="显示页面标注"></button>
+      </div>
+      <button class="protoMobile-mobile-menu-link" id="protoMobileMobileDocsOpen" type="button" role="menuitem">
+        <span class="protoMobile-mobile-menu-copy">
+          <strong>原型说明</strong>
+          <small>查看整体需求与跨页面规则</small>
+        </span>
+        <span aria-hidden="true">›</span>
+      </button>
+    </div>
+    <button class="protoMobile-mobile-launcher" id="protoMobileMobileLauncher" type="button" aria-label="打开原型标注菜单" aria-expanded="false">
+      <span>注</span>
+      <small id="protoMobileMobileCount">0</small>
+    </button>
+  </div>
+
+  <div class="protoMobile-mobile-note-layer" id="protoMobileMobileNoteLayer" aria-hidden="true">
+    <button class="protoMobile-mobile-mask" id="protoMobileMobileNoteMask" type="button" aria-label="关闭标注详情"></button>
+    <section class="protoMobile-mobile-sheet" id="protoMobileMobileSheet" role="dialog" aria-modal="true" aria-label="标注详情">
+      <div class="protoMobile-sheet-handle" id="protoMobileMobileSheetHandle" aria-label="拖动调整标注详情高度"><span></span></div>
+      <header class="protoMobile-mobile-sheet-header">
+        <strong id="protoMobileMobileSheetTitle">标注详情</strong>
+        <span class="protoMobile-mobile-sheet-tools">
+          <button id="protoMobileMobileSheetSize" type="button" aria-label="切换标注详情高度" title="切换高度">↕</button>
+          <button id="protoMobileMobileNoteClose" type="button" aria-label="关闭标注详情" title="关闭">×</button>
+        </span>
+      </header>
+      <article class="protoMobile-rich-content protoMobile-mobile-sheet-body" id="protoMobileMobileSheetBody"></article>
+    </section>
+  </div>
+
+  <section class="protoMobile-mobile-docs-layer" id="protoMobileMobileDocsLayer" aria-hidden="true" aria-label="原型说明">
+    <header class="protoMobile-mobile-docs-header">
+      <strong>原型说明</strong>
+      <button id="protoMobileMobileDocsClose" type="button" aria-label="关闭原型说明">×</button>
+    </header>
+    <div class="protoMobile-mobile-docs-content" id="protoMobileMobileDocsContent"></div>
+  </section>
+</div>
+
+<script id="protoMobileMobileAnnotationRuntime">
+(() => {
+  const dataNode = document.getElementById("prototypeAnnotationData");
+  const stage = document.getElementById("protoMobileStage");
+  const device = document.getElementById("protoMobileDevice");
+  const docsPanel = document.getElementById("protoMobileDocsPanel");
+  const docsSplitter = document.getElementById("protoMobileDocsSplitter");
+  const docNav = document.getElementById("protoMobileDocNav");
+  const docContent = document.getElementById("protoMobileDocContent");
+  const noteList = document.getElementById("protoMobileNoteList");
+  const filterBar = document.getElementById("protoMobileFilterBar");
+  let activeFilter = "all";
+  const desktopToggle = document.getElementById("protoMobileDesktopToggle");
+  const overlayRoot = document.getElementById("prototypeAnnotationRoot");
+  const markerLayer = document.getElementById("protoMobileMarkerLayer");
+  const compactTrigger = document.getElementById("protoMobileCompactDocsTrigger");
+  const compactClose = document.getElementById("protoMobileCompactDocsClose");
+  const compactBackdrop = document.getElementById("protoMobileCompactBackdrop");
+  const mobileLauncher = document.getElementById("protoMobileMobileLauncher");
+  const mobileCount = document.getElementById("protoMobileMobileCount");
+  const mobileMenu = document.getElementById("protoMobileMobileMenu");
+  const mobileMenuMeta = document.getElementById("protoMobileMobileMenuMeta");
+  const mobileToggle = document.getElementById("protoMobileMobileToggle");
+  const mobileDocsOpen = document.getElementById("protoMobileMobileDocsOpen");
+  const mobileNoteLayer = document.getElementById("protoMobileMobileNoteLayer");
+  const mobileSheet = document.getElementById("protoMobileMobileSheet");
+  const mobileSheetHandle = document.getElementById("protoMobileMobileSheetHandle");
+  const mobileSheetTitle = document.getElementById("protoMobileMobileSheetTitle");
+  const mobileSheetBody = document.getElementById("protoMobileMobileSheetBody");
+  const mobileDocsLayer = document.getElementById("protoMobileMobileDocsLayer");
+  const mobileDocsContent = document.getElementById("protoMobileMobileDocsContent");
+
+  if (!dataNode || !stage || !overlayRoot) return;
+
+  let annotationData;
+  try {
+    annotationData = JSON.parse(dataNode.textContent);
+  } catch (error) {
+    console.error("移动端原型标注数据解析失败", error);
+    return;
+  }
+
+  const annotations = Array.isArray(annotationData.annotations) ? annotationData.annotations : [];
+  const globalSections = Array.isArray(annotationData.globalSections) ? annotationData.globalSections : [];
+  const mobileConfig = annotationData.mobile || {};
+  const appSelector = mobileConfig.appRoot || "[data-proto-app]";
+  const approvedScrollSelectors = Array.isArray(mobileConfig.scrollContainers) && mobileConfig.scrollContainers.length
+    ? mobileConfig.scrollContainers.filter(item => typeof item === "string" && item.trim())
+    : ["[data-proto-scroll-container]", ".main-scroller"];
+  const appRoot = document.querySelector(appSelector);
+  if (!appRoot) {
+    console.error(`移动端标注框架找不到业务根节点：${appSelector}`);
+    return;
+  }
+
+  const deviceWidth = Math.min(480, Math.max(320, Number(mobileConfig.deviceWidth) || 414));
+  document.documentElement.style.setProperty("--protoMobile-device-width", `${deviceWidth}px`);
+  document.documentElement.classList.add("protoMobile-ready");
+  document.body.appendChild(stage);
+  document.body.appendChild(overlayRoot);
+  device.appendChild(appRoot);
+  stage.hidden = false;
+
+  let currentScope = "";
+  let currentNotes = [];
+  let activeNoteId = "";
+  let desktopEnabled = true;
+  let mobileEnabled = false;
+  let layoutFrame = 0;
+  let contextRefreshFrame = 0;
+  let contextRefreshUntil = 0;
+  let mermaidCounter = 0;
+  let sheetSnap = 1;
+  let layerAuditTimer = 0;
+  const sheetSnaps = [0.44, 0.68, 0.94];
+  const rootMaxZIndex = 2147483646;
+  const docsWidthStorageKey = `protoMobile:docs-width:${annotationData.prototypeId || "prototype"}`;
+  const desktopDocsMinWidth = 320;
+  const desktopDocsHardMaxWidth = 820;
+  let lastLayoutIssueSignature = "";
+
+  if (window.mermaid) {
+    window.mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: "base",
+      themeVariables: {
+        primaryColor: "#F0F9FF",
+        primaryTextColor: "#223355",
+        primaryBorderColor: "#3388FF",
+        lineColor: "#6B7A99",
+        secondaryColor: "#E8F4FF",
+        tertiaryColor: "#F5F7FA",
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif',
+        fontSize: "14px"
+      }
+    });
+  }
+
+  function isMobileViewport() {
+    return window.matchMedia("(max-width: 767px)").matches;
+  }
+
+  function getDesktopDocsWidth() {
+    return Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--protoMobile-docs-width")) || 520;
+  }
+
+  function getDesktopDocsMaxWidth() {
+    const reservedWidth = deviceWidth + 320 + 104;
+    return Math.max(desktopDocsMinWidth, Math.min(desktopDocsHardMaxWidth, window.innerWidth - reservedWidth));
+  }
+
+  function setDesktopDocsWidth(requestedWidth, persist = false) {
+    const maximum = getDesktopDocsMaxWidth();
+    const width = Math.round(Math.min(maximum, Math.max(desktopDocsMinWidth, Number(requestedWidth) || 520)));
+    document.documentElement.style.setProperty("--protoMobile-docs-width", `${width}px`);
+    docsSplitter?.setAttribute("aria-valuemin", String(desktopDocsMinWidth));
+    docsSplitter?.setAttribute("aria-valuemax", String(maximum));
+    docsSplitter?.setAttribute("aria-valuenow", String(width));
+    if (persist) {
+      try { localStorage.setItem(docsWidthStorageKey, String(width)); } catch (error) {}
+    }
+    return width;
+  }
+
+  function restoreDesktopDocsWidth() {
+    let stored = 0;
+    try { stored = Number(localStorage.getItem(docsWidthStorageKey)); } catch (error) {}
+    setDesktopDocsWidth(stored || 520, false);
+  }
+
+  function makeDesktopDocsResizable() {
+    if (!docsSplitter) return;
+    let dragState = null;
+    docsSplitter.addEventListener("pointerdown", event => {
+      if (event.button !== 0 || window.innerWidth < 1180) return;
+      dragState = { pointerId: event.pointerId, startX: event.clientX, startWidth: getDesktopDocsWidth() };
+      docsSplitter.setPointerCapture(event.pointerId);
+      docsSplitter.classList.add("is-dragging");
+      stage.classList.add("is-resizing");
+      event.preventDefault();
+    });
+    docsSplitter.addEventListener("pointermove", event => {
+      if (!dragState || event.pointerId !== dragState.pointerId) return;
+      setDesktopDocsWidth(dragState.startWidth + event.clientX - dragState.startX, false);
+      scheduleMarkerLayout();
+    });
+    const endDrag = event => {
+      if (!dragState || event.pointerId !== dragState.pointerId) return;
+      dragState = null;
+      docsSplitter.classList.remove("is-dragging");
+      stage.classList.remove("is-resizing");
+      setDesktopDocsWidth(getDesktopDocsWidth(), true);
+      scheduleMarkerLayout();
+      requestAnimationFrame(() => auditLayout(true));
+    };
+    docsSplitter.addEventListener("pointerup", endDrag);
+    docsSplitter.addEventListener("pointercancel", endDrag);
+    docsSplitter.addEventListener("keydown", event => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key) || window.innerWidth < 1180) return;
+      const next = event.key === "Home"
+        ? desktopDocsMinWidth
+        : event.key === "End"
+          ? getDesktopDocsMaxWidth()
+          : getDesktopDocsWidth() + (event.key === "ArrowRight" ? 24 : -24);
+      setDesktopDocsWidth(next, true);
+      scheduleMarkerLayout();
+      event.preventDefault();
+    });
+  }
+
+  function isVisible(element) {
+    if (!element) return false;
+    const style = getComputedStyle(element);
+    if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+    if (element.hidden || element.getAttribute("aria-hidden") === "true") return false;
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }
+
+  function serializeRect(rect) {
+    return {
+      left: Math.round(rect.left),
+      top: Math.round(rect.top),
+      right: Math.round(rect.right),
+      bottom: Math.round(rect.bottom),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height)
+    };
+  }
+
+  function inspectLayout() {
+    const issues = [];
+    const stageRect = stage.getBoundingClientRect();
+    const deviceRect = device.getBoundingClientRect();
+    const docsRect = docsPanel.getBoundingClientRect();
+    const notesPanel = noteList.closest(".protoMobile-notes-panel");
+    const notesRect = notesPanel?.getBoundingClientRect() || new DOMRect();
+    const desktopWide = window.innerWidth >= 1180;
+    if (stage.parentElement !== document.body) issues.push("STAGE_NOT_MOUNTED_TO_BODY");
+    if (Math.abs(stageRect.left) > 2 || Math.abs(stageRect.top) > 2
+      || Math.abs(stageRect.width - window.innerWidth) > 3
+      || Math.abs(stageRect.height - window.innerHeight) > 3) issues.push("STAGE_NOT_VIEWPORT_SIZED");
+    if (desktopWide) {
+      const hasDocs = globalSections.length > 0;
+      if ((hasDocs && !isVisible(docsPanel)) || !isVisible(device) || !isVisible(notesPanel)) issues.push("DESKTOP_COLUMNS_MISSING");
+      if (Math.abs(deviceRect.width - deviceWidth) > 3) issues.push("DEVICE_WIDTH_INVALID");
+      if ((hasDocs && docsRect.right > deviceRect.left + 1) || deviceRect.right > notesRect.left + 1) issues.push("DESKTOP_COLUMNS_OVERLAP");
+      if (hasDocs && (docsRect.width < desktopDocsMinWidth - 2 || docsRect.width > getDesktopDocsMaxWidth() + 2)) issues.push("DOCS_WIDTH_OUT_OF_RANGE");
+    } else if (isMobileViewport()) {
+      if (Math.abs(deviceRect.width - window.innerWidth) > 3) issues.push("MOBILE_DEVICE_NOT_VIEWPORT_SIZED");
+    }
+    const markerOutsideDeviceIds = Array.from(markerLayer.querySelectorAll(".protoMobile-marker:not([hidden])"))
+      .filter(marker => getComputedStyle(marker).display !== "none")
+      .filter(marker => {
+        const rect = marker.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        return x < deviceRect.left - 2 || x > deviceRect.right + 2 || y < deviceRect.top - 2 || y > deviceRect.bottom + 2;
+      })
+      .map(marker => marker.dataset.noteId);
+    if (markerOutsideDeviceIds.length) issues.push("MARKERS_OUTSIDE_DEVICE");
+    return {
+      status: issues.length ? "fail" : "pass",
+      issues,
+      stageMountedToBody: stage.parentElement === document.body,
+      docsWidthMaximum: getDesktopDocsMaxWidth(),
+      markerOutsideDeviceIds,
+      rects: {
+        stage: serializeRect(stageRect),
+        docs: serializeRect(docsRect),
+        device: serializeRect(deviceRect),
+        notes: serializeRect(notesRect)
+      }
+    };
+  }
+
+  function auditLayout(logFailure = false) {
+    const report = inspectLayout();
+    stage.dataset.protoMobileLayoutStatus = report.status;
+    const signature = report.issues.join("|");
+    if (logFailure && report.status === "fail" && signature !== lastLayoutIssueSignature) {
+      console.error("移动端标注审阅框架布局检查未通过", report);
+    }
+    lastLayoutIssueSignature = signature;
+    return report;
+  }
+
+  function isOverlayContainerOpen(node) {
+    if (!node || !node.isConnected) return false;
+    const overlay = node.closest ? node.closest(
+      ".sheet-panel, .bottom-sheet, .drawer, .drawer-panel, .modal, .modal-card, .dialog-modal, .grading-sheet-panel, [role='dialog'], [data-modal], [data-sheet]"
+    ) : null;
+    if (!overlay) return true;
+    const cl = overlay.classList;
+    if (cl.contains("show") || cl.contains("active") || cl.contains("is-open") || cl.contains("open") || cl.contains("visible")) {
+      const style = window.getComputedStyle(overlay);
+      if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  function isTargetRenderable(target, scopeNode) {
+    if (!target || !target.isConnected) return false;
+    if (!isOverlayContainerOpen(target)) return false;
+    let current = target;
+    while (current && current.nodeType === 1) {
+      const style = getComputedStyle(current);
+      if (current.hidden || current.getAttribute("aria-hidden") === "true") return false;
+      if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+      if (current === scopeNode || current === appRoot) break;
+      current = current.parentElement;
+    }
+    const rect = target.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }
+
+  function isTargetUndersized(target) {
+    const rect = target.getBoundingClientRect();
+    return rect.width < 4 || rect.height < 4;
+  }
+
+  function isPopoverOpen() {
+    try {
+      return overlayRoot.matches(":popover-open");
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function ensureOverlayLayer(reorder = false) {
+    if (typeof overlayRoot.showPopover === "function" && typeof overlayRoot.hidePopover === "function") {
+      try {
+        if (reorder && isPopoverOpen()) overlayRoot.hidePopover();
+        if (!isPopoverOpen()) overlayRoot.showPopover();
+        overlayRoot.dataset.protoMobileLayerMode = "top-layer";
+        overlayRoot.style.zIndex = String(rootMaxZIndex);
+        return;
+      } catch (error) {
+        console.warn("移动端标注层进入 top layer 失败，已使用 z-index 兜底", error);
+      }
+    }
+    overlayRoot.removeAttribute("popover");
+    overlayRoot.style.zIndex = String(rootMaxZIndex);
+    overlayRoot.dataset.protoMobileLayerMode = "z-index";
+  }
+
+  function scheduleLayerAudit() {
+    window.clearTimeout(layerAuditTimer);
+    layerAuditTimer = window.setTimeout(() => {
+      ensureOverlayLayer(false);
+      if (!isMobileViewport()) return;
+      const rect = mobileLauncher.getBoundingClientRect();
+      const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      const clickable = Boolean(hit && (hit === mobileLauncher || mobileLauncher.contains(hit)));
+      overlayRoot.dataset.protoMobileLauncherClickable = String(clickable);
+      if (!clickable) {
+        ensureOverlayLayer(true);
+        requestAnimationFrame(() => {
+          const nextHit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+          if (!(nextHit && (nextHit === mobileLauncher || mobileLauncher.contains(nextHit)))) {
+            console.error("移动端原型标注入口被业务界面遮挡");
+          }
+        });
+      }
+    }, 40);
+  }
+
+  function getScopeContext() {
+    const candidates = Array.from(appRoot.querySelectorAll("[data-proto-scope]"));
+    if (appRoot.matches("[data-proto-scope]")) candidates.unshift(appRoot);
+    const visible = candidates
+      .map((node, index) => ({ node, index, scope: node.dataset.protoScope, layer: Number(node.dataset.protoLayer) || 0 }))
+      .filter(item => item.scope && isVisible(item.node));
+    if (visible.length) {
+      visible.sort((a, b) => a.layer - b.layer || a.index - b.index);
+      return visible[visible.length - 1];
+    }
+    return { node: appRoot, scope: appRoot.dataset.protoScope || "page:default", layer: 0 };
+  }
+
+  function notesForScope(scope) {
+    const acceptedScopes = new Set([scope, "page:*", "page:default", "page:fenxi"]);
+    if (scope && scope.startsWith("page:")) {
+      const parts = scope.split(":");
+      if (parts.length >= 3) acceptedScopes.add(`${parts.slice(0, 2).join(":")}:*`);
+      acceptedScopes.add("page:*");
+      acceptedScopes.add("page:default");
+      acceptedScopes.add("page:fenxi");
+    }
+    return annotations.filter(note => {
+      if (!note.scope) return true;
+      if (acceptedScopes.has(note.scope)) return true;
+      if (note.scope.startsWith("page:") && (!scope || scope.startsWith("page:"))) return true;
+      return false;
+    });
+  }
+
+  function findTarget(note, scopeNode = getScopeContext().node) {
+    try {
+      if (scopeNode?.matches?.(note.target)) return scopeNode;
+      return scopeNode?.querySelector?.(note.target) || appRoot.querySelector(note.target);
+    } catch (error) {
+      console.warn(`移动端标注 ${note.id || note.title || "未命名"} 的 target 无效`, error);
+      return null;
+    }
+  }
+
+  function resolveNotesForContext(context) {
+    return notesForScope(context.scope);
+  }
+
+    function getClippedTargetRect(target) {
+    if (!isVisible(target)) return null;
+    const original = target.getBoundingClientRect();
+    const deviceRect = device.getBoundingClientRect();
+    let left = Math.max(original.left, deviceRect.left);
+    let top = Math.max(original.top, deviceRect.top);
+    let right = Math.min(original.right, deviceRect.right);
+    let bottom = Math.min(original.bottom, deviceRect.bottom);
+    let parent = target.parentElement;
+    while (parent && parent !== appRoot.parentElement) {
+      const style = getComputedStyle(parent);
+      if (/(auto|scroll|hidden|clip)/.test(`${style.overflow}${style.overflowX}${style.overflowY}`)) {
+        const rect = parent.getBoundingClientRect();
+        left = Math.max(left, rect.left);
+        top = Math.max(top, rect.top);
+        right = Math.min(right, rect.right);
+        bottom = Math.min(bottom, rect.bottom);
+      }
+      if (parent === appRoot) break;
+      parent = parent.parentElement;
+    }
+    if (right <= left || bottom <= top) return null;
+    return { original, visible: { left, top, right, bottom } };
+  }
+
+  function setActive(noteId) {
+    activeNoteId = noteId;
+    document.querySelectorAll(".protoMobile-marker, .protoMobile-note-card").forEach(element => {
+      element.classList.toggle("is-active", element.dataset.noteId === noteId);
+    });
+  }
+
+  function scheduleMarkerLayout() {
+    if (layoutFrame) return;
+    layoutFrame = requestAnimationFrame(() => {
+      layoutFrame = 0;
+      positionMarkers();
+    });
+  }
+
+  function positionMarkers() {
+    const deviceRect = device.getBoundingClientRect();
+    const occupied = [];
+    markerLayer.querySelectorAll(".protoMobile-marker").forEach(marker => {
+      const note = currentNotes.find(item => item.id === marker.dataset.noteId);
+      const target = note ? findTarget(note) : null;
+      const clipped = target ? getClippedTargetRect(target) : null;
+      if (!note || !clipped) {
+        marker.hidden = true;
+        return;
+      }
+      const anchorX = Number.isFinite(Number(note.x)) ? Math.min(1, Math.max(0, Number(note.x))) : 0.5;
+      const anchorY = Number.isFinite(Number(note.y)) ? Math.min(1, Math.max(0, Number(note.y))) : 0.5;
+      let left = clipped.original.left + clipped.original.width * anchorX;
+      let top = clipped.original.top + clipped.original.height * anchorY;
+      left = Math.max(clipped.visible.left, Math.min(clipped.visible.right, left));
+      top = Math.max(clipped.visible.top, Math.min(clipped.visible.bottom, top));
+      left = Math.max(deviceRect.left + 18, Math.min(deviceRect.right - 18, left));
+      top = Math.max(deviceRect.top + 18, Math.min(deviceRect.bottom - 18, top));
+      for (let attempt = 0; attempt < 5; attempt += 1) {
+        if (!occupied.some(point => Math.hypot(point.left - left, point.top - top) < 36)) break;
+        top = Math.min(deviceRect.bottom - 18, top + 36);
+      }
+      occupied.push({ left, top });
+      marker.hidden = false;
+      marker.style.left = `${left}px`;
+      marker.style.top = `${top}px`;
+    });
+  }
+
+  function renderMarkers() {
+    markerLayer.replaceChildren();
+    const shouldHide = isMobileViewport() ? !mobileEnabled : !desktopEnabled;
+    const docsOpen = mobileDocsLayer.classList.contains("is-open") || docsPanel.classList.contains("is-compact-open");
+    markerLayer.classList.toggle("is-hidden", shouldHide || docsOpen);
+    currentNotes.forEach((note, index) => {
+      const marker = document.createElement("button");
+      marker.type = "button";
+      marker.className = "protoMobile-marker";
+      marker.dataset.noteId = note.id;
+      marker.textContent = String(index + 1);
+      marker.title = note.title;
+      marker.setAttribute("aria-label", `标注 ${index + 1}：${note.title}`);
+      marker.addEventListener("click", event => {
+        event.stopPropagation();
+        openNote(note);
+      });
+      markerLayer.appendChild(marker);
+    });
+    setActive(activeNoteId);
+    scheduleMarkerLayout();
+  }
+
+  async function renderMermaidBlocks(root) {
+    if (!window.mermaid) return;
+    const blocks = Array.from(root.querySelectorAll("pre code.language-mermaid"));
+    for (const block of blocks) {
+      const pre = block.closest("pre");
+      const container = document.createElement("div");
+      container.className = "protoMobile-mermaid";
+      try {
+        const result = await window.mermaid.render(`protoMobile-mermaid-${++mermaidCounter}`, block.textContent.trim());
+        container.innerHTML = result.svg;
+        if (result.bindFunctions) result.bindFunctions(container);
+        pre.replaceWith(container);
+      } catch (error) {
+        pre.classList.add("protoMobile-mermaid-error");
+        console.error("移动端标注流程图渲染失败", error);
+      }
+    }
+  }
+
+  async function renderRichContent(root, item) {
+    if (item.format === "html" || !window.marked) root.innerHTML = item.content || "";
+    else root.innerHTML = window.marked.parse(item.content || "", { gfm: true, breaks: true });
+    await renderMermaidBlocks(root);
+  }
+
+  
+  function getNoteType(note) {
+    if (note.type) return note.type;
+    if (note.typeLabel?.includes('新')) return 'add';
+    if (note.typeLabel?.includes('修')) return 'modify';
+    if (note.typeLabel?.includes('删') || note.typeLabel?.includes('下')) return 'delete';
+    if (note.typeLabel?.includes('原')) return 'original';
+    return note.typeLabel ? 'custom' : 'original';
+  }
+
+  function renderFilterBar() {
+    if (!filterBar) return;
+    filterBar.replaceChildren();
+
+    const counts = {
+      all: currentNotes.length,
+      add: 0,
+      modify: 0,
+      original: 0,
+      delete: 0
+    };
+
+    currentNotes.forEach(note => {
+      const type = getNoteType(note);
+      if (counts[type] !== undefined) {
+        counts[type] += 1;
+      } else {
+        counts.original += 1;
+      }
+    });
+
+    const filterDefs = [
+      { key: "all", label: "全部", count: counts.all, chipClass: "chip-all" },
+      { key: "original", label: "⚪ 原有", count: counts.original, chipClass: "chip-original" },
+      { key: "add", label: "🟢 新增", count: counts.add, chipClass: "chip-add" },
+      { key: "modify", label: "🟡 修改", count: counts.modify, chipClass: "chip-modify" }
+    ];
+
+    if (counts.delete > 0) {
+      filterDefs.push({ key: "delete", label: "🔴 下线", count: counts.delete, chipClass: "chip-delete" });
+    }
+
+    filterDefs.forEach(def => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = `protoMobile-filter-chip ${def.chipClass}${activeFilter === def.key ? " is-active" : ""}`;
+      chip.innerHTML = `<span>${def.label}</span><span class="protoMobile-filter-count">${def.count}</span>`;
+      chip.addEventListener("click", () => {
+        if (activeFilter === def.key) {
+          activeFilter = "all";
+        } else {
+          activeFilter = def.key;
+        }
+        renderFilterBar();
+        renderNoteList();
+      });
+      filterBar.appendChild(chip);
+    });
+  }
+
+  function renderNoteList() {
+    renderFilterBar();
+    noteList.replaceChildren();
+    if (!currentNotes.length) {
+      noteList.innerHTML = '<div class="protoMobile-empty">当前页面暂无标注</div>';
+      return;
+    }
+    const visibleNotes = activeFilter === "all"
+      ? currentNotes
+      : currentNotes.filter(note => getNoteType(note) === activeFilter);
+
+    if (!visibleNotes.length) {
+      noteList.innerHTML = '<div class="protoMobile-empty">暂无该分类的标注</div>';
+      return;
+    }
+    visibleNotes.forEach((note, index) => {
+      const globalIndex = currentNotes.indexOf(note);
+      const displayIndex = globalIndex >= 0 ? globalIndex + 1 : index + 1;
+      const card = document.createElement("article");
+      const noteType = note.type || (note.typeLabel?.includes('新') ? 'add' : (note.typeLabel?.includes('修') ? 'modify' : (note.typeLabel?.includes('删') || note.typeLabel?.includes('下') ? 'delete' : (note.typeLabel?.includes('原') ? 'original' : (note.typeLabel ? 'custom' : 'original')))));
+      const typeLabel = note.typeLabel || note.badge || (noteType === 'add' ? '新增' : (noteType === 'modify' ? '修改' : (noteType === 'delete' ? '下线' : (noteType === 'original' ? '原有' : '说明'))));
+      const tagClass = noteType === 'add' ? 'tag-add' : (noteType === 'modify' ? 'tag-modify' : (noteType === 'delete' ? 'tag-delete' : (noteType === 'original' ? 'tag-original' : 'tag-custom')));
+      const cardClass = noteType === 'add' ? 'card-add' : (noteType === 'modify' ? 'card-modify' : (noteType === 'delete' ? 'card-delete' : (noteType === 'original' ? 'card-original' : 'card-custom')));
+
+      card.className = `protoMobile-note-card ${cardClass}`;
+      card.dataset.noteId = note.id;
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", `定位标注 ${displayIndex}：[${typeLabel}] ${note.title}`);
+
+      const number = document.createElement("span");
+      number.className = "protoMobile-note-index";
+      number.textContent = String(displayIndex);
+
+      const copy = document.createElement("div");
+      copy.className = "protoMobile-rich-content";
+
+      const headerRow = document.createElement("div");
+      headerRow.className = "protoMobile-note-header";
+
+      const tagEl = document.createElement("span");
+      tagEl.className = `protoMobile-note-tag ${tagClass}`;
+      tagEl.textContent = typeLabel;
+
+      const heading = document.createElement("h3");
+      heading.textContent = note.title;
+
+      headerRow.append(tagEl, heading);
+
+      const body = document.createElement("div");
+      copy.append(headerRow, body);
+      card.append(number, copy);
+
+      const locate = () => locateTarget(note);
+      card.addEventListener("click", locate);
+      card.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          locate();
+        }
+      });
+      noteList.appendChild(card);
+      renderRichContent(body, note).catch(error => console.error("移动端标注列表渲染失败", error));
+    });
+    setActive(activeNoteId);
+  }
+
+  function highlightTarget(target) {
+    document.querySelectorAll(".protoMobile-target-highlight").forEach(element => element.classList.remove("protoMobile-target-highlight"));
+    target.classList.add("protoMobile-target-highlight");
+    window.setTimeout(() => target.classList.remove("protoMobile-target-highlight"), 1100);
+  }
+
+  function matchesApprovedScrollContainer(element) {
+    return approvedScrollSelectors.some(selector => {
+      try {
+        return element.matches(selector);
+      } catch (error) {
+        console.warn(`移动端标注滚动容器选择器无效：${selector}`, error);
+        return false;
+      }
+    });
+  }
+
+  function findScrollParent(target) {
+    let parent = target.parentElement;
+    while (parent && parent !== document.body && parent !== device && parent !== stage) {
+      const style = getComputedStyle(parent);
+      if (matchesApprovedScrollContainer(parent)
+        && /(auto|scroll)/.test(style.overflowY)
+        && parent.scrollHeight > parent.clientHeight + 1) return parent;
+      if (parent === appRoot) break;
+      parent = parent.parentElement;
+    }
+    return null;
+  }
+
+  function isFullyVisibleInDevice(target, scroller = null) {
+    const targetRect = target.getBoundingClientRect();
+    const deviceRect = device.getBoundingClientRect();
+    const scrollRect = scroller ? scroller.getBoundingClientRect() : deviceRect;
+    const viewport = {
+      left: Math.max(deviceRect.left, scrollRect.left),
+      top: Math.max(deviceRect.top, scrollRect.top),
+      right: Math.min(deviceRect.right, scrollRect.right),
+      bottom: Math.min(deviceRect.bottom, scrollRect.bottom)
+    };
+    return targetRect.left >= viewport.left - 1
+      && targetRect.top >= viewport.top - 1
+      && targetRect.right <= viewport.right + 1
+      && targetRect.bottom <= viewport.bottom + 1;
+  }
+
+  function trackScrollUntilSettled(scroller, target) {
+    let last = scroller.scrollTop;
+    let stableFrames = 0;
+    let frameCount = 0;
+    function track() {
+      scheduleMarkerLayout();
+      const current = scroller.scrollTop;
+      stableFrames = Math.abs(current - last) < 0.5 ? stableFrames + 1 : 0;
+      last = current;
+      frameCount += 1;
+      if (stableFrames >= 3 || frameCount > 90) {
+        highlightTarget(target);
+        scheduleMarkerLayout();
+        return;
+      }
+      requestAnimationFrame(track);
+    }
+    requestAnimationFrame(track);
+  }
+
+    function tryOpenOverlayForNote(note) {
+    if (!note) return false;
+    const targetSelector = String(note.target || "");
+    const title = String(note.title || "");
+    const root = (typeof state !== "undefined" && state?.adapter?.businessRoot) || (typeof appRoot !== "undefined" && appRoot) || document.getElementById("app") || document.body;
+
+    const findTargetFn = typeof findNoteTarget === "function" ? findNoteTarget : (typeof findTarget === "function" ? findTarget : null);
+    const existing = findTargetFn ? findTargetFn(note) : (root ? root.querySelector(targetSelector) : null);
+    const isRenderableFn = typeof isRenderable === "function" ? isRenderable : (typeof isTargetRenderable === "function" ? isTargetRenderable : null);
+    const isOverlayOpenFn = typeof isOverlayContainerOpen === "function" ? isOverlayContainerOpen : () => true;
+
+    if (existing && (!isRenderableFn || isRenderableFn(existing)) && isOverlayOpenFn(existing)) {
+      return false;
+    }
+
+    const evId = (Array.isArray(window.mockEvents) && window.mockEvents.find(e => e.hasExamReport)?.id)
+      || (Array.isArray(window.mockEvents) && window.mockEvents[0]?.id)
+      || "ev8";
+
+    // 0. 拦截抽屉 / 诊断报告拦截弹窗 (MasterGo: sheetReportInterceptPanel)
+    const isIntercept = targetSelector.includes("intercept") || targetSelector.includes("sheetReportIntercept")
+      || title.includes("拦截") || title.includes("已有报告") || title.includes("诊断报告")
+      || (targetSelector.includes("sheet-panel") && (title.includes("报告") || title.includes("拦截")));
+
+    if (isIntercept) {
+      if (typeof window.closeAllSheets === "function") window.closeAllSheets();
+      if (typeof window.closeAllModals === "function") window.closeAllModals();
+
+      if (typeof window.openReportInterceptSheet === "function") {
+        try {
+          window.openReportInterceptSheet();
+          return true;
+        } catch(e) {
+          console.warn("调用 openReportInterceptSheet 失败", e);
+        }
+      }
+      const interceptPanel = document.getElementById("sheetReportInterceptPanel") || root.querySelector(".intercept-sheet-panel");
+      if (interceptPanel) {
+        interceptPanel.classList.add("show");
+        const overlay = document.getElementById("sheetOverlay") || root.querySelector("#sheetOverlay, .sheet-overlay");
+        if (overlay) overlay.classList.add("show");
+        return true;
+      }
+    }
+
+    // 1. 删除提示 / 删除二次确认弹窗
+    const isDelete = targetSelector.includes("delete") || targetSelector.includes("deleteWarning")
+      || title.includes("删除") || title.includes("下线") || title.includes("移除")
+      || (targetSelector.includes("modal-card") && !title.includes("编辑") && !title.includes("添加"));
+
+    if (isDelete) {
+      if (typeof window.closeAllSheets === "function") window.closeAllSheets();
+      if (typeof window.closeAllModals === "function") window.closeAllModals();
+      if (typeof window.closeModal === "function") window.closeModal("editEventModal");
+
+      if (typeof window.handleDeleteClick === "function") {
+        try {
+          window.handleDeleteClick(evId);
+          return true;
+        } catch(e) {}
+      }
+      if (typeof window.showDeleteExamWarningModal === "function") {
+        try {
+          window.showDeleteExamWarningModal(evId);
+          return true;
+        } catch(e) {}
+      }
+      if (typeof window.showDeleteGeneralWarningModal === "function") {
+        try {
+          window.showDeleteGeneralWarningModal(evId);
+          return true;
+        } catch(e) {}
+      }
+
+      const delBtn = document.querySelector("#eventDetailModal .sheet-btn-cancel, .sheet-card .sheet-btn-cancel, button.delete-btn, [onclick*='handleDeleteClick']");
+      if (delBtn) {
+        delBtn.click();
+        return true;
+      }
+      const eventItem = document.querySelector(".day-event-item, [onclick*='showEventDetail']");
+      if (eventItem) {
+        eventItem.click();
+        setTimeout(() => {
+          const detailDelBtn = document.querySelector("#eventDetailModal .sheet-btn-cancel, .sheet-card .sheet-btn-cancel");
+          if (detailDelBtn) detailDelBtn.click();
+        }, 60);
+        return true;
+      }
+    }
+
+    // 2. 编辑日程弹窗
+    const isEdit = targetSelector.includes("editEvent") || title.includes("编辑")
+      || (targetSelector.includes("sheet-card") && !title.includes("添加") && !title.includes("新建") && !isDelete);
+
+    if (isEdit) {
+      if (typeof window.closeAllSheets === "function") window.closeAllSheets();
+      if (typeof window.closeAllModals === "function") window.closeAllModals();
+      if (typeof window.closeModal === "function") window.closeModal("deleteWarningModal");
+
+      if (typeof window.openEditEventModal === "function") {
+        try {
+          window.openEditEventModal(evId);
+          return true;
+        } catch (e) {
+          console.warn("调用 openEditEventModal 失败", e);
+        }
+      }
+      const confirmBtn = document.querySelector("#eventDetailModal .sheet-btn-confirm, .sheet-card .sheet-btn-confirm");
+      if (confirmBtn) {
+        confirmBtn.click();
+        return true;
+      }
+      const eventItem = document.querySelector(".day-event-item, [onclick*='showEventDetail'], [onclick*='openEditEventModal']");
+      if (eventItem) {
+        eventItem.click();
+        setTimeout(() => {
+          const editBtn = document.querySelector("#eventDetailModal .sheet-btn-confirm");
+          if (editBtn) editBtn.click();
+        }, 60);
+        return true;
+      }
+    }
+
+    // 3. 新建 / 添加日程专属抽屉及弹窗
+    const isAdd = targetSelector.includes("addEvent") || targetSelector.includes("AddSchedule")
+      || title.includes("新建") || title.includes("添加") || title.includes("创建");
+
+    if (isAdd) {
+      if (typeof window.closeAllModals === "function") window.closeAllModals();
+      if (typeof window.closeAllSheets === "function") window.closeAllSheets();
+
+      if (typeof window.openAddScheduleSheet === "function") {
+        try {
+          window.openAddScheduleSheet();
+          return true;
+        } catch(e) {}
+      }
+      if (typeof window.openAddEventModal === "function") {
+        try {
+          window.openAddEventModal();
+          return true;
+        } catch(e) {}
+      }
+      const addBtn = root.querySelector("#addEventBtn, .add-event-btn, [onclick*='openAddEventModal'], [onclick*='openAddScheduleSheet'], .esc-add-btn");
+      if (addBtn) {
+        addBtn.click();
+        return true;
+      }
+    }
+
+    // 4. 切换日程专属抽屉
+    const isSelectSchedule = targetSelector.includes("scheduleSelect") || title.includes("选择日程") || title.includes("切换日程");
+    if (isSelectSchedule) {
+      if (typeof window.closeAllSheets === "function") window.closeAllSheets();
+      if (typeof window.openScheduleSelectSheet === "function") {
+        try {
+          window.openScheduleSelectSheet();
+          return true;
+        } catch(e) {}
+      }
+    }
+
+    // 5. 通用弹窗 / 抽屉 / 底部面板触发器寻找
+    const idMatch = targetSelector.match(/#([a-zA-Z0-9_-]+)/);
+    const classMatches = Array.from(targetSelector.matchAll(/\.([a-zA-Z0-9_-]+)/g)).map(m => m[1]);
+    const candidates = [];
+    if (idMatch) candidates.push(idMatch[1]);
+    candidates.push(...classMatches);
+
+    for (const cand of candidates) {
+      const capitalized = cand.charAt(0).toUpperCase() + cand.slice(1);
+      const fnNames = [`open${capitalized}`, `show${capitalized}`, `open${capitalized}Modal`, `show${capitalized}Modal`, `open${capitalized}Sheet`];
+      for (const fn of fnNames) {
+        if (typeof window[fn] === "function") {
+          try {
+            window[fn]();
+            return true;
+          } catch(e) {}
+        }
+      }
+      const trigger = root.querySelector(`[data-target="#${cand}"], [data-target="${cand}"], [data-modal="${cand}"], [data-sheet="${cand}"], [aria-controls="${cand}"], [href="#${cand}"]`);
+      if (trigger) {
+        trigger.click();
+        return true;
+      }
+    }
+
+    // 7. 批改加载中抽屉 (shangchuanfupan.html: gradingSheetPanel)
+    const isGrading = targetSelector.includes("grading") || targetSelector.includes("gsp-")
+      || title.includes("批改") || title.includes("解析中") || title.includes("进度条");
+    if (isGrading) {
+      if (typeof window.openGradingSheetDemo === "function") {
+        try {
+          window.openGradingSheetDemo(true);
+          return true;
+        } catch(e) {}
+      }
+      const panel = document.getElementById("gradingSheetPanel");
+      const overlay = document.getElementById("loadingSheetOverlay");
+      if (panel) {
+        panel.classList.add("show");
+        if (overlay) overlay.classList.add("show");
+        if (typeof window.pauseGrading === "function") window.pauseGrading();
+        return true;
+      }
+    }
+
+    // 6. 关键字按钮匹配 (排除通用词)
+    const stopWords = new Set(["日程", "页面", "说明", "业务", "功能", "模块", "弹窗", "面板"]);
+    const keywords = title.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, " ").trim().split(/\s+/).filter(w => w.length >= 2 && !stopWords.has(w));
+    for (const kw of keywords) {
+      const btn = Array.from(root.querySelectorAll("button, a, .btn, [role='button']")).find(el => el.textContent?.trim().includes(kw) && !el.closest("#prototypeAnnotationRoot, .protoMobile-stage, .proto-editor-overlay"));
+      if (btn) {
+        btn.click();
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function doLocateTarget(note, target) {
+    setActive(note.id);
+    if (note.scroll === false || target.closest('[data-proto-scroll="none"]')) {
+      highlightTarget(target);
+      scheduleMarkerLayout();
+      return;
+    }
+    const scroller = findScrollParent(target);
+    if (!scroller || isFullyVisibleInDevice(target, scroller)) {
+      highlightTarget(target);
+      scheduleMarkerLayout();
+      return;
+    }
+    const scrollRect = scroller.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const targetTop = targetRect.top - scrollRect.top + scroller.scrollTop;
+    const maxScrollTop = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+    const desiredTop = Math.min(maxScrollTop, Math.max(0, targetTop - (scroller.clientHeight - targetRect.height) / 2));
+    if (Math.abs(desiredTop - scroller.scrollTop) < 0.5) {
+      highlightTarget(target);
+      scheduleMarkerLayout();
+      return;
+    }
+    scroller.scrollTo({ top: desiredTop, behavior: "smooth" });
+    trackScrollUntilSettled(scroller, target);
+  }
+
+  function locateTarget(note) {
+    let target = findTarget(note);
+    const isOverlayOpenFn = typeof isOverlayContainerOpen === "function" ? isOverlayContainerOpen : () => true;
+    if (!target || !isTargetRenderable(target) || !isOverlayOpenFn(target)) {
+      if (tryOpenOverlayForNote(note)) {
+        setTimeout(() => {
+          syncContext();
+          renderMarkers();
+          const nextTarget = findTarget(note);
+          if (nextTarget && isTargetRenderable(nextTarget)) {
+            doLocateTarget(note, nextTarget);
+          }
+        }, 150);
+        return;
+      }
+    }
+    if (!target) return;
+    doLocateTarget(note, target);
+  }
+
+  async function openNote(note) {
+    setActive(note.id);
+    if (!isMobileViewport()) {
+      const card = noteList.querySelector(`[data-note-id="${CSS.escape(note.id)}"]`);
+      if (card) {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        card.focus({ preventScroll: true });
+      }
+      return;
+    }
+    mobileSheetTitle.textContent = note.title;
+    await renderRichContent(mobileSheetBody, note);
+    mobileNoteLayer.classList.add("is-open");
+    mobileNoteLayer.setAttribute("aria-hidden", "false");
+    closeMobileMenu();
+    applySheetSnap();
+  }
+
+  function closeMobileNote() {
+    mobileNoteLayer.classList.remove("is-open");
+    mobileNoteLayer.setAttribute("aria-hidden", "true");
+  }
+
+  function applySheetSnap() {
+    mobileSheet.style.setProperty("--protoMobile-sheet-height", `${Math.round(sheetSnaps[sheetSnap] * 100)}dvh`);
+  }
+
+  async function renderGlobalDocs() {
+    docNav.replaceChildren();
+    docContent.replaceChildren();
+    if (!globalSections.length) {
+      stage.classList.add("no-docs");
+      mobileDocsOpen.hidden = true;
+      docsPanel.hidden = true;
+      return;
+    }
+    for (const [index, section] of globalSections.entries()) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = section.title;
+      button.classList.toggle("is-active", index === 0);
+      const sectionNode = document.createElement("section");
+      sectionNode.className = "protoMobile-doc-section";
+      sectionNode.id = `protoMobile-doc-${section.id}`;
+      const heading = document.createElement("h3");
+      heading.textContent = section.title;
+      const body = document.createElement("div");
+      body.className = "protoMobile-rich-content";
+      sectionNode.append(heading, body);
+      docNav.appendChild(button);
+      docContent.appendChild(sectionNode);
+      await renderRichContent(body, section);
+      button.addEventListener("click", () => {
+        docNav.querySelectorAll("button").forEach(item => item.classList.toggle("is-active", item === button));
+        const contentRect = docContent.getBoundingClientRect();
+        const targetRect = sectionNode.getBoundingClientRect();
+        docContent.scrollTo({ top: targetRect.top - contentRect.top + docContent.scrollTop, behavior: "smooth" });
+      });
+    }
+  }
+
+  function openMobileDocs() {
+    if (!globalSections.length) return;
+    closeMobileMenu();
+    closeMobileNote();
+    mobileDocsContent.innerHTML = docContent.innerHTML;
+    mobileDocsContent.querySelectorAll("[id]").forEach(element => element.removeAttribute("id"));
+    mobileDocsLayer.classList.add("is-open");
+    mobileDocsLayer.setAttribute("aria-hidden", "false");
+    markerLayer.classList.add("is-hidden");
+  }
+
+  function closeMobileDocs() {
+    mobileDocsLayer.classList.remove("is-open");
+    mobileDocsLayer.setAttribute("aria-hidden", "true");
+    renderMarkers();
+  }
+
+  function syncContext() {
+    ensureOverlayLayer(true);
+    const context = getScopeContext();
+    const nextNotes = notesForScope(context.scope);
+    const scopeChanged = context.scope !== currentScope;
+    const notesChanged = nextNotes.length !== currentNotes.length
+      || nextNotes.some((note, index) => note.id !== currentNotes[index]?.id);
+    if (scopeChanged || notesChanged) {
+      currentScope = context.scope;
+      currentNotes = nextNotes;
+      if (!currentNotes.some(note => note.id === activeNoteId)) activeNoteId = "";
+      closeMobileNote();
+      renderNoteList();
+      renderMarkers();
+    } else {
+      setActive(activeNoteId);
+      scheduleMarkerLayout();
+    }
+    mobileCount.textContent = String(currentNotes.length);
+    mobileMenuMeta.textContent = `当前页面 ${currentNotes.length} 条`;
+    scheduleLayerAudit();
+  }
+
+  function runContextRefresh() {
+    contextRefreshFrame = 0;
+    syncContext();
+    if (performance.now() < contextRefreshUntil) {
+      contextRefreshFrame = requestAnimationFrame(runContextRefresh);
+    }
+  }
+
+  function scheduleContextRefresh(settle = false) {
+    if (settle === true) {
+      contextRefreshUntil = Math.max(contextRefreshUntil, performance.now() + 900);
+    }
+    if (!contextRefreshFrame) contextRefreshFrame = requestAnimationFrame(runContextRefresh);
+  }
+
+  function positionMobileMenu() {
+    if (!mobileMenu.classList.contains("is-open")) return;
+    const launcherRect = mobileLauncher.getBoundingClientRect();
+    const menuRect = mobileMenu.getBoundingClientRect();
+    const margin = 8;
+    const left = Math.min(Math.max(margin, launcherRect.right - menuRect.width), window.innerWidth - menuRect.width - margin);
+    let top = launcherRect.top - menuRect.height - 10;
+    if (top < margin) top = launcherRect.bottom + 10;
+    mobileMenu.style.left = `${left}px`;
+    mobileMenu.style.top = `${Math.min(top, window.innerHeight - menuRect.height - margin)}px`;
+  }
+
+  function closeMobileMenu() {
+    mobileMenu.classList.remove("is-open");
+    mobileLauncher.setAttribute("aria-expanded", "false");
+  }
+
+  function toggleMobileMenu() {
+    const willOpen = !mobileMenu.classList.contains("is-open");
+    mobileMenu.classList.toggle("is-open", willOpen);
+    mobileLauncher.setAttribute("aria-expanded", String(willOpen));
+    if (willOpen) positionMobileMenu();
+  }
+
+  function inspectCompactDocsLayer() {
+    const open = docsPanel.classList.contains("is-compact-open");
+    if (!open) return { status: "closed", open: false };
+    const rect = docsPanel.getBoundingClientRect();
+    const sampleX = Math.max(rect.left + 1, Math.min(rect.right - 1, rect.left + Math.min(80, rect.width / 2)));
+    const sampleY = Math.max(rect.top + 1, Math.min(rect.bottom - 1, rect.top + Math.min(32, rect.height / 2)));
+    const hit = document.elementFromPoint(sampleX, sampleY);
+    const issues = [];
+    if (docsPanel.parentElement !== overlayRoot) issues.push("DOCS_NOT_IN_OVERLAY_ROOT");
+    if (!compactBackdrop.classList.contains("is-open")) issues.push("COMPACT_BACKDROP_NOT_OPEN");
+    if (!isVisible(docsPanel)) issues.push("COMPACT_DOCS_NOT_VISIBLE");
+    if (!(hit && (hit === docsPanel || docsPanel.contains(hit)))) issues.push("COMPACT_DOCS_NOT_CLICKABLE");
+    if (!markerLayer.classList.contains("is-hidden")) issues.push("MARKERS_VISIBLE_BEHIND_DOCS");
+    return {
+      status: issues.length ? "fail" : "pass",
+      open: true,
+      issues,
+      mountedToOverlayRoot: docsPanel.parentElement === overlayRoot,
+      markersHidden: markerLayer.classList.contains("is-hidden"),
+      hitInsidePanel: Boolean(hit && (hit === docsPanel || docsPanel.contains(hit))),
+      rect: serializeRect(rect)
+    };
+  }
+
+  function auditCompactDocsLayer(logFailure = false) {
+    const report = inspectCompactDocsLayer();
+    docsPanel.dataset.protoMobileLayerStatus = report.status;
+    if (logFailure && report.status === "fail") console.error("移动端中宽原型说明层级检查未通过", report);
+    return report;
+  }
+
+  function restoreCompactDocsToStage() {
+    if (docsPanel.parentElement !== stage) stage.insertBefore(docsPanel, docsSplitter || device);
+  }
+
+  function openCompactDocs() {
+    if (isMobileViewport() || window.innerWidth >= 1180) return;
+    ensureOverlayLayer(false);
+    overlayRoot.appendChild(docsPanel);
+    compactBackdrop.classList.add("is-open");
+    docsPanel.classList.add("is-compact-open");
+    renderMarkers();
+    requestAnimationFrame(() => auditCompactDocsLayer(true));
+  }
+
+  function closeCompactDocs() {
+    const wasOpen = docsPanel.classList.contains("is-compact-open");
+    docsPanel.classList.remove("is-compact-open");
+    compactBackdrop.classList.remove("is-open");
+    restoreCompactDocsToStage();
+    docsPanel.dataset.protoMobileLayerStatus = "closed";
+    if (wasOpen) renderMarkers();
+  }
+
+  desktopToggle.addEventListener("click", () => {
+    desktopEnabled = !desktopEnabled;
+    desktopToggle.setAttribute("aria-checked", String(desktopEnabled));
+    desktopToggle.setAttribute("aria-label", desktopEnabled ? "隐藏页面标注" : "显示页面标注");
+    renderMarkers();
+  });
+
+  compactTrigger.addEventListener("click", openCompactDocs);
+  compactClose.addEventListener("click", closeCompactDocs);
+  compactBackdrop.addEventListener("click", closeCompactDocs);
+
+  let launcherDrag = null;
+  let suppressLauncherClick = false;
+  mobileLauncher.addEventListener("pointerdown", event => {
+    if (event.button !== 0) return;
+    const rect = mobileLauncher.getBoundingClientRect();
+    launcherDrag = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, left: rect.left, top: rect.top, moved: false };
+    mobileLauncher.style.left = `${rect.left}px`;
+    mobileLauncher.style.top = `${rect.top}px`;
+    mobileLauncher.style.right = "auto";
+    mobileLauncher.style.bottom = "auto";
+    mobileLauncher.setPointerCapture(event.pointerId);
+  });
+  mobileLauncher.addEventListener("pointermove", event => {
+    if (!launcherDrag || event.pointerId !== launcherDrag.pointerId) return;
+    const dx = event.clientX - launcherDrag.startX;
+    const dy = event.clientY - launcherDrag.startY;
+    if (Math.hypot(dx, dy) > 5) launcherDrag.moved = true;
+    if (!launcherDrag.moved) return;
+    mobileLauncher.style.left = `${Math.max(8, Math.min(window.innerWidth - 60, launcherDrag.left + dx))}px`;
+    mobileLauncher.style.top = `${Math.max(8, Math.min(window.innerHeight - 60, launcherDrag.top + dy))}px`;
+    closeMobileMenu();
+  });
+  mobileLauncher.addEventListener("pointerup", event => {
+    if (!launcherDrag || event.pointerId !== launcherDrag.pointerId) return;
+    suppressLauncherClick = launcherDrag.moved;
+    launcherDrag = null;
+  });
+  mobileLauncher.addEventListener("click", event => {
+    if (suppressLauncherClick) {
+      suppressLauncherClick = false;
+      event.preventDefault();
+      return;
+    }
+    toggleMobileMenu();
+  });
+
+  mobileToggle.addEventListener("click", event => {
+    event.stopPropagation();
+    mobileEnabled = !mobileEnabled;
+    mobileToggle.setAttribute("aria-checked", String(mobileEnabled));
+    mobileToggle.setAttribute("aria-label", mobileEnabled ? "隐藏页面标注" : "显示页面标注");
+    renderMarkers();
+  });
+  mobileDocsOpen.addEventListener("click", openMobileDocs);
+  document.getElementById("protoMobileMobileDocsClose").addEventListener("click", closeMobileDocs);
+  document.getElementById("protoMobileMobileNoteClose").addEventListener("click", closeMobileNote);
+  document.getElementById("protoMobileMobileNoteMask").addEventListener("click", closeMobileNote);
+  document.getElementById("protoMobileMobileSheetSize").addEventListener("click", () => {
+    sheetSnap = (sheetSnap + 1) % sheetSnaps.length;
+    applySheetSnap();
+  });
+
+  let sheetDrag = null;
+  mobileSheetHandle.addEventListener("pointerdown", event => {
+    sheetDrag = { pointerId: event.pointerId, startY: event.clientY, startHeight: mobileSheet.getBoundingClientRect().height };
+    mobileSheetHandle.setPointerCapture(event.pointerId);
+  });
+  mobileSheetHandle.addEventListener("pointermove", event => {
+    if (!sheetDrag || event.pointerId !== sheetDrag.pointerId) return;
+    const height = Math.max(window.innerHeight * 0.36, Math.min(window.innerHeight * 0.94, sheetDrag.startHeight + sheetDrag.startY - event.clientY));
+    mobileSheet.style.setProperty("--protoMobile-sheet-height", `${height}px`);
+  });
+  mobileSheetHandle.addEventListener("pointerup", event => {
+    if (!sheetDrag || event.pointerId !== sheetDrag.pointerId) return;
+    const ratio = mobileSheet.getBoundingClientRect().height / window.innerHeight;
+    sheetSnap = sheetSnaps.reduce((best, value, index) => Math.abs(value - ratio) < Math.abs(sheetSnaps[best] - ratio) ? index : best, 0);
+    sheetDrag = null;
+    applySheetSnap();
+  });
+
+  document.addEventListener("click", event => {
+    if (!mobileMenu.contains(event.target) && !mobileLauncher.contains(event.target)) closeMobileMenu();
+  });
+  document.addEventListener("scroll", scheduleMarkerLayout, true);
+  document.addEventListener("prototype-annotation:scopechange", () => scheduleContextRefresh(true));
+  document.addEventListener("animationstart", () => scheduleContextRefresh(true), true);
+  document.addEventListener("animationend", () => scheduleContextRefresh(true), true);
+  document.addEventListener("animationcancel", () => scheduleContextRefresh(true), true);
+  document.addEventListener("transitionrun", () => scheduleContextRefresh(true), true);
+  document.addEventListener("transitionend", () => scheduleContextRefresh(true), true);
+  document.addEventListener("transitioncancel", () => scheduleContextRefresh(true), true);
+  window.addEventListener("resize", () => {
+    closeCompactDocs();
+    closeMobileMenu();
+    closeMobileNote();
+    setDesktopDocsWidth(getDesktopDocsWidth(), false);
+    applySheetSnap();
+    scheduleContextRefresh(true);
+    requestAnimationFrame(() => auditLayout(true));
+  });
+
+  const scopeObserver = new MutationObserver(() => scheduleContextRefresh(true));
+  scopeObserver.observe(appRoot, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["class", "hidden", "style", "aria-hidden", "aria-selected", "data-proto-scope", "data-proto-layer"]
+  });
+  if (window.ResizeObserver) {
+    const resizeObserver = new ResizeObserver(() => scheduleContextRefresh(true));
+    resizeObserver.observe(device);
+    resizeObserver.observe(appRoot);
+    resizeObserver.observe(stage);
+  }
+
+  function inspectCurrentScopeAnnotations() {
+    const context = getScopeContext();
+    const configured = notesForScope(context.scope);
+    const invalidTargetIds = [];
+    const hiddenTargetIds = [];
+    const undersizedTargetIds = [];
+    configured.forEach(note => {
+      const target = findTarget(note, context.node);
+      if (!target) invalidTargetIds.push(note.id);
+      else if (!isTargetRenderable(target, context.node)) hiddenTargetIds.push(note.id);
+      else if (isTargetUndersized(target)) undersizedTargetIds.push(note.id);
+    });
+    return {
+      scope: context.scope,
+      configuredCount: configured.length,
+      listCount: currentNotes.length,
+      markerNodeCount: markerLayer.querySelectorAll(".protoMobile-marker").length,
+      invalidTargetIds,
+      hiddenTargetIds,
+      undersizedTargetIds,
+      currentIds: currentNotes.map(note => note.id)
+    };
+  }
+
+  window.__prototypeMobileDiagnostics = {
+    inspect() {
+      const rect = mobileLauncher.getBoundingClientRect();
+      const hit = isMobileViewport() ? document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2) : null;
+      return {
+        viewportMode: isMobileViewport() ? "mobile" : "desktop",
+        layerMode: overlayRoot.dataset.protoMobileLayerMode || "unknown",
+        scope: getScopeContext().scope,
+        annotationCount: currentNotes.length,
+        annotationIds: currentNotes.map(note => note.id),
+        deviceScrollTop: device.scrollTop,
+        stageScrollTop: stage.scrollTop,
+        windowScrollY: window.scrollY,
+        annotationAudit: inspectCurrentScopeAnnotations(),
+        layoutAudit: auditLayout(false),
+        compactDocsAudit: inspectCompactDocsLayer(),
+        launcherClickable: !isMobileViewport() || Boolean(hit && (hit === mobileLauncher || mobileLauncher.contains(hit)))
+      };
+    },
+    repair() {
+      ensureOverlayLayer(true);
+      if (docsPanel.classList.contains("is-compact-open")) overlayRoot.appendChild(docsPanel);
+      syncContext();
+      requestAnimationFrame(() => auditCompactDocsLayer(true));
+    }
+  };
+
+  restoreDesktopDocsWidth();
+  makeDesktopDocsResizable();
+  ensureOverlayLayer(false);
+  renderGlobalDocs()
+    .then(() => {
+      syncContext();
+      requestAnimationFrame(() => requestAnimationFrame(() => auditLayout(true)));
+    })
+    .catch(error => {
+      console.error("移动端原型说明渲染失败", error);
+      syncContext();
+    });
+  applySheetSnap();
+})();
+
+</script>
+</body>
+</html>

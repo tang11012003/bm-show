@@ -1,0 +1,961 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --bg-page: #F9F9FC;
+  --text-main: #111112;
+  --text-sub: #4B4C53;
+  --text-muted: #6C97A0;
+  --text-light: #B6B8C5;
+  --hint: #8C8D9B;
+  --primary-green: #08CE9A;
+  --accent-mint: #20DCAD;
+  --accent-soft: #E2F9F4;
+  --accent-red: #FF4D4F;
+  --accent-blue: #4858E1;
+  --card-bg: #FFFFFF;
+  --border-light: #ECECF2;
+  --primary: #20DCAD;
+  --primary-dark: #08CE9A;
+  --red: #FF2242;
+  --purple: #9C27B0;
+  --text1: #111112;
+  --text-color: #111112;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  background: #edf0f6;
+  color: var(--text-main);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#app {
+  width: 100%;
+  max-width: 390px;
+  height: 100vh;
+  max-height: 844px;
+  background: var(--bg-page);
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  -webkit-overflow-scrolling: touch;
+
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 420px) {
+  body {
+    background: var(--bg-page);
+  }
+  #app {
+    max-height: 100vh;
+    box-shadow: none;
+  }
+}
+
+/* 顶部状态栏与导航 */
+.top-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(249, 249, 252, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 0 16px;
+}
+
+.status-bar {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: #111112;
+  padding-top: 4px;
+}
+
+.status-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-bar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.nav-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111112;
+}
+
+.nav-btn-icon {
+  background: none;
+  border: none;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 8px;
+  color: #4B4C53;
+  transition: background 0.15s;
+}
+.nav-btn-icon:hover {
+  background: #ECECF2;
+}
+.nav-btn-icon:active {
+  transform: scale(0.95);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 页面滚动区 */
+.page-scroll {
+  flex: 1;
+  padding: 12px 16px 80px;
+}
+
+/* 1. 日程重点提醒卡片 (MasterGo 155:00728) */
+.schedule-highlight-card {
+  background: linear-gradient(180deg, #A6FFBE 0%, #19DEAC 100%);
+  border-radius: 14px;
+  padding: 6px;
+  box-shadow: 0 4px 16px rgba(25, 222, 172, 0.15);
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.shc-top-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 10px 12px;
+  cursor: pointer;
+}
+
+.shc-top-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shc-date-box {
+  font-size: 13px;
+  font-weight: 800;
+  color: #111112;
+}
+
+.shc-top-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.shc-badge-days {
+  font-size: 15px;
+  font-weight: 800;
+  color: #FF2242;
+  line-height: 1;
+}
+
+.shc-student-name {
+  font-size: 11px;
+  color: #111112;
+  font-weight: 600;
+}
+
+.shc-top-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #111112;
+  text-align: right;
+}
+
+.shc-sub-box {
+  background: #FFFFFF;
+  border-radius: 10px;
+  padding: 4px 0;
+}
+
+.shc-sub-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.shc-sub-row:active {
+  background: #F9F9FC;
+}
+
+.shc-sub-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shc-sub-date {
+  font-size: 12px;
+  color: #B6B8C5;
+  font-weight: 600;
+}
+
+.shc-sub-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.shc-sub-days {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4B4C53;
+  line-height: 1.2;
+}
+
+.shc-sub-user {
+  font-size: 11px;
+  color: #B6B8C5;
+}
+
+.shc-sub-title {
+  font-size: 13px;
+  color: #4B4C53;
+  font-weight: 600;
+  text-align: right;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shc-divider {
+  height: 1px;
+  background: rgba(240, 241, 245, 0.9);
+  margin: 0 12px;
+}
+
+/* 2. 温馨提示卡片 (MasterGo 155:01169) */
+.tips-card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid #F0F1F5;
+  box-sizing: border-box;
+}
+
+.tips-header {
+  margin-bottom: 8px;
+}
+
+.tips-title {
+  position: relative;
+  font-size: 14px;
+  font-weight: 800;
+  color: #111112;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.tips-title-accent {
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 4px;
+  pointer-events: none;
+}
+
+.tips-title-accent svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tips-desc {
+  font-size: 12px;
+  color: #4B4C53;
+  line-height: 1.6;
+}
+
+/* 3. 月度日历卡片 (MasterGo 155:00726) */
+.calendar-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 16px 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid #F0F1F5;
+  box-sizing: border-box;
+}
+
+.cal-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.cal-month-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #111112;
+  cursor: pointer;
+}
+
+.cal-nav-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cal-nav-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #EFEFF4;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #4B4C53;
+  transition: all 0.15s;
+}
+
+.cal-nav-btn:hover {
+  background: #F9F9FC;
+}
+
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 12px;
+  color: #8C8D9B;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.cal-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 8px;
+}
+
+.cal-cell {
+  height: 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.12s ease;
+}
+
+.cal-cell:hover {
+  background: #F4FBF8;
+}
+
+.cal-cell .cal-num {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111112;
+  line-height: 1;
+}
+
+.cal-cell.other-month .cal-num {
+  color: #D1D3DC;
+}
+
+.cal-cell.today .cal-num {
+  color: #20DCAD;
+  font-weight: 800;
+}
+
+.cal-cell.is-selected {
+  background: #F0F2F7;
+  border-radius: 8px;
+}
+
+.cal-cell.is-selected .cal-num {
+  font-weight: 800;
+  color: #111112;
+}
+
+.cal-dot-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  pointer-events: none;
+}
+
+.cal-dot {
+  width: 6px;
+  height: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.cal-dot.green {
+  background: #20DCAD;
+}
+
+.cal-dot.red {
+  background: #FF2242;
+}
+
+.cal-dot.purple {
+  background: #9C27B0;
+}
+
+.cal-dot.orange {
+  background: #FF7300;
+}
+
+/* 4. 当日日程详情卡片 (MasterGo 155:01148) */
+.day-detail-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 16px 14px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid #F0F1F5;
+  box-sizing: border-box;
+}
+
+.day-detail-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.day-detail-header {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111112;
+  letter-spacing: -0.2px;
+}
+
+.day-add-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 10px;
+  border-radius: 14px;
+  background: #F4F6FA;
+  border: 1px solid #E2E6ED;
+  color: #111112;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.day-add-link:active {
+  background: #E8EBF2;
+  transform: scale(0.97);
+}
+
+.day-event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.day-event-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: #F9F9FC;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.day-event-item:hover {
+  background: #F2F4FA;
+}
+
+.day-event-item:active {
+  background: #E8ECF5;
+  transform: scale(0.99);
+}
+
+.day-event-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.day-event-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.day-event-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111112;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.day-event-sub {
+  font-size: 12px;
+  color: #8C8D9B;
+  margin-top: 3px;
+  line-height: 1.2;
+}
+
+/* 空状态 (MasterGo 155:01148 / 155:01154 / 155:01160) */
+.day-empty-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 0 4px;
+  gap: 8px;
+}
+
+.btn-add-schedule {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 112px;
+  height: 32px;
+  border-radius: 20px;
+  background: #FFFFFF;
+  border: 1px solid #ECECF2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  color: #111112;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.btn-add-schedule:active {
+  background: #F4F6FA;
+  transform: scale(0.98);
+}
+
+.btn-add-schedule svg {
+  flex-shrink: 0;
+}
+
+.day-empty-tip {
+  font-size: 12px;
+  color: #B6B8C5;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* 5. 底部 Home Bar 与通用小图标 */
+.home-bar-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.home-bar {
+  width: 134px;
+  height: 5px;
+  background: #111112;
+  border-radius: 3px;
+}
+
+.status-icon-svg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+/* 6. 表单与弹窗样式 (MasterGo 155:01188 / 155:04314) */
+.add-form-group {
+  margin-bottom: 14px;
+}
+
+.add-form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111112;
+  margin-bottom: 6px;
+  padding-left: 2px;
+}
+
+.required-star {
+  color: #FF2242;
+  margin-right: 3px;
+}
+
+.add-input-box {
+  position: relative;
+  width: 100%;
+}
+
+.add-input-field {
+  width: 100%;
+  height: 42px;
+  background: #F9F9FC;
+  border: 1px solid #ECECF2;
+  border-radius: 10px;
+  padding: 0 36px 0 12px;
+  font-size: 14px;
+  color: #111112;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.add-input-field:focus {
+  border-color: #20DCAD;
+  background: #FFFFFF;
+}
+
+.add-icon-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.type-tabs-row {
+  display: flex;
+  gap: 8px;
+}
+
+.type-tab-btn {
+  flex: 1;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #ECECF2;
+  background: #F9F9FC;
+  color: #4B4C53;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.type-tab-btn.is-active {
+  background: #E2F9F4;
+  border-color: #20DCAD;
+  color: #08CE9A;
+  font-weight: 700;
+}
+
+.add-textarea-field {
+  width: 100%;
+  height: 72px;
+  background: #F9F9FC;
+  border: 1px solid #ECECF2;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #111112;
+  outline: none;
+  resize: none;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.add-textarea-field:focus {
+  border-color: #20DCAD;
+  background: #FFFFFF;
+}
+
+/* 7. MasterGo 弹窗抽屉基础样式 */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  animation: riliFadeIn 0.2s forwards ease;
+}
+
+@keyframes riliFadeIn {
+  to { opacity: 1; }
+}
+
+.modal-overlay.bottom-sheet-overlay {
+  align-items: flex-end;
+}
+
+.sheet-card {
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 20px 20px 0 0;
+  padding: 12px 20px 20px;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(100%);
+  animation: riliSlideUp 0.25s forwards cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+@keyframes riliSlideUp {
+  to { transform: translateY(0); }
+}
+
+.sheet-drag-handle {
+  width: 36px;
+  height: 4px;
+  background: #E2E2E8;
+  border-radius: 2px;
+  margin: 0 auto 14px;
+}
+
+.add-sheet-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111112;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.sheet-button-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+.sheet-btn-cancel {
+  flex: 1;
+  max-width: 140px;
+  height: 42px;
+  border-radius: 21px;
+  background: #F0F0F4;
+  color: #232323;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sheet-btn-cancel:active {
+  background: #e2e2e8;
+  transform: scale(0.97);
+}
+
+.sheet-btn-confirm {
+  flex: 1;
+  max-width: 160px;
+  height: 42px;
+  border-radius: 21px;
+  background: #111112;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.sheet-btn-confirm:active {
+  opacity: 0.9;
+  transform: scale(0.97);
+}
+
+.sheet-home-bar-wrap {
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.sheet-home-bar {
+  width: 120px;
+  height: 4px;
+  background: #111112;
+  border-radius: 2px;
+}
+
+.sheet-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.sheet-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111112;
+}
+
+.sheet-days-badge {
+  background: #FFEBEF;
+  color: #FF2242;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.sheet-student-text {
+  font-size: 13px;
+  color: #4B4C53;
+  margin-bottom: 4px;
+}
+
+.sheet-date-text {
+  font-size: 12px;
+  color: #8C8D9B;
+  margin-bottom: 14px;
+}
+
+.sheet-note-box {
+  background: #F9F9FC;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 13px;
+  color: #4B4C53;
+  line-height: 1.6;
+  max-height: 120px;
+  overflow-y: auto;
+  border: 1px solid #ECECF2;
+}
+
+.modal-card {
+  width: 90%;
+  max-width: 320px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.student-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.student-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  background: #F4F6FA;
+  border: 1px solid #E2E6ED;
+  font-size: 12px;
+  color: #4B4C53;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.student-chip.is-selected {
+  background: #E2F9F4;
+  border-color: #20DCAD;
+  color: #08CE9A;
+  font-weight: 600;
+}
+
+.student-chip.is-locked {
+  background: #F5F5F7;
+  border-color: #E2E2E8;
+  color: #8C8D9B;
+  cursor: not-allowed;
+}
+
+/* 隐藏原生滚动条 */
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+html, body, #app, .page-scroll, .sheet-note-box {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
