@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>确认错题信息 (单科小测)</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+/* 页面基础布局 (390 x 844 标准移动画板) */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #E8EBF2;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  color: #1A1A1A;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#app {
+  width: 100%;
+  max-width: 390px;
+  height: 100%;
+  max-height: 844px;
+  background: #F3F2F8;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 600px) {
+  body {
+    background: #F3F2F8;
+  }
+  #app {
+    max-height: 100vh;
+    box-shadow: none;
+  }
+}
+
+/* 顶部导航栏 */
+.top-header-bar {
+  height: 48px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFFFFF;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  position: relative;
+  z-index: 20;
+  flex-shrink: 0;
+}
+.back-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #111112;
+  transition: background 0.15s;
+}
+.back-icon-btn:active {
+  background: #f1f5f9;
+}
+.page-title-center {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111112;
+}
+.btn-header-skip {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 400;
+  color: #B6B8C5;
+  cursor: pointer;
+  padding: 6px 8px;
+}
+.btn-header-skip:active {
+  color: #111112;
+}
+
+/* 主滚动列表 (纯净单科，无多学科 Tab) */
+.cards-scroll-view {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: none;
+}
+.cards-scroll-view::-webkit-scrollbar {
+  display: none;
+}
+
+/* 外部标题栏 (默认科目 + 可切换胶囊 + 考试名) */
+.section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+.subj-gem-icon {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.section-title-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111112;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: -0.2px;
+}
+
+/* 单科识别科目胶囊 (匹配图二黑色圆角描边质感) */
+.single-subject-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: #EAFBF5;
+  border: 1.5px solid #111112;
+  color: #00B383;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.single-subject-pill:active {
+  transform: scale(0.95);
+  background: #d4f7e9;
+}
+
+/* 单科卡片 */
+.diag-paper-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  flex-shrink: 0;
+}
+
+/* 试卷原图 Banner */
+.paper-photo-banner {
+  position: relative;
+  width: 100%;
+  height: 118px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #1A1A1E;
+}
+.paper-photo-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.88;
+}
+
+/* 浮动半透明提示胶囊 */
+.paper-float-tip {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  border-radius: 14px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+/* 查看试卷原图按钮 */
+.btn-view-paper-raw {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+/* 卡片内容区域 */
+.card-content-wrap {
+  padding: 16px 16px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 识别统计行 */
+.ai-stat-line {
+  font-size: 14px;
+  color: #1A1A1A;
+  font-weight: 400;
+  line-height: 20px;
+}
+.num-green {
+  color: #20DCAD;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 2px;
+}
+.num-orange {
+  color: #FF7919;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 2px;
+}
+
+/* 状态图例说明条 */
+.stat-legend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 16px;
+}
+.legend-items-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.legend-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #1A1A1A;
+  font-weight: 400;
+}
+.legend-dot-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.legend-dot-circle.green {
+  background: #20DCAD;
+}
+.legend-dot-circle.orange {
+  background: #FF7919;
+}
+.legend-dot-circle.half {
+  background: linear-gradient(135deg, #CFFAF0 50%, #20DCAD 50%);
+}
+.legend-hint-action {
+  font-size: 12px;
+  color: #B6B8C5;
+  font-weight: 400;
+}
+
+/* 题号区域滑动容器 */
+.q-grid-scroll-box {
+  width: 100%;
+  min-height: 194px;
+  height: auto;
+  flex-shrink: 0;
+  overflow-y: visible;
+  padding-bottom: 8px;
+}
+
+/* 题号圆形宫格 (6列精确对齐) */
+.question-circles-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 34px);
+  justify-content: space-between;
+  row-gap: 16px;
+}
+.q-circle-wrap {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.q-circle-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+  user-select: none;
+  border: none;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.q-circle-btn:active {
+  transform: scale(0.92);
+}
+.q-circle-btn.correct {
+  background: #20DCAD;
+}
+.q-circle-btn.wrong {
+  background: #FF7919;
+}
+.q-circle-btn.half {
+  background: linear-gradient(135deg, #CFFAF0 50%, #20DCAD 50%);
+  color: #1A1A1A;
+}
+
+/* 人工修正微标 */
+.fix-tag-pill {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111112;
+  color: #FFFFFF;
+  font-size: 9px;
+  line-height: 13px;
+  padding: 0 4px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 底部操作固定栏 */
+.bottom-fixed-dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 84px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px env(safe-area-inset-bottom, 8px);
+  z-index: 60;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.btn-generate-report {
+  width: 100%;
+  max-width: 342px;
+  height: 46px;
+  border-radius: 16px;
+  background: #111112;
+  color: #FFFFFF;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.12s ease;
+  box-shadow: 0 4px 14px rgba(17, 17, 18, 0.22);
+}
+.btn-generate-report:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* 查看试卷大图弹窗 */
+.image-zoom-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+  z-index: 500;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.image-zoom-overlay.show {
+  display: flex;
+}
+.close-zoom-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.image-zoom-box img {
+  max-width: 92%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.toast-msg {
+  display: none;
+  position: absolute;
+  bottom: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17, 17, 18, 0.88);
+  color: #FFFFFF;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  z-index: 600;
+  white-space: nowrap;
+}
+
+/* 弹窗抽屉与对话框 (精确还原图一学科弹窗) */
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.modal-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  border-radius: 20px 20px 0 0;
+  padding: 18px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.12);
+}
+.modal-sheet.is-open {
+  transform: translateY(0);
+}
+.modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111112;
+  letter-spacing: -0.2px;
+}
+.subject-pill-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.sub-select-pill {
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid #E2E6EE;
+  background: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111112;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.sub-select-pill:active {
+  transform: scale(0.96);
+}
+.sub-select-pill.active {
+  border-color: #00B383;
+  background: #EAFBF5;
+  color: #00B383;
+  font-weight: 700;
+  box-shadow: 0 0 0 1px #00B383;
+}
+</style>
+
+<style id="protoMobileAnnotationCss">
+:root {
+  --protoMobile-accent: #3388ff;
+  --protoMobile-accent-dark: #2167d9;
+  --protoMobile-accent-soft: #f0f9ff;
+  --protoMobile-ink: #223355;
+  --protoMobile-muted: #6b7a99;
+  --protoMobile-line: #dde1eb;
+  --protoMobile-bg: #edf0f6;
+  --protoMobile-device-width: 390px;
+  --protoMobile-device-height: 844px;
+  --protoMobile-docs-width: 1fr;
+}
+
+html.protoMobile-ready,
+html.protoMobile-ready body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.protoMobile-stage,
+.protoMobile-stage *,
+.protoMobile-overlay-root,
+.protoMobile-overlay-root * {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+
+.protoMobile-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: minmax(320px, var(--protoMobile-docs-width, 1fr)) 8px var(--protoMobile-device-width) minmax(320px, 1fr);
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--protoMobile-bg);
+  color: var(--protoMobile-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+}
+
+.protoMobile-stage.no-docs {
+  grid-template-columns: var(--protoMobile-device-width) minmax(320px, 1fr);
+  justify-content: center;
+}
+.protoMobile-stage.no-docs .protoMobile-desktop-splitter { display: none; }
+.protoMobile-stage.no-docs .protoMobile-device { grid-column: 1; }
+.protoMobile-stage.no-docs .protoMobile-notes-panel { grid-column: 2; }
+
+.protoMobile-docs-panel { grid-column: 1; grid-row: 1; }
+.protoMobile-desktop-splitter { grid-column: 2; grid-row: 1; }
+.protoMobile-device { grid-column: 3; grid-row: 1; }
+.protoMobile-notes-panel { grid-column: 4; grid-row: 1; }
+
+.protoMobile-desktop-splitter {
+  position: relative;
+  width: 8px;
+  min-width: 8px;
+  height: min(var(--protoMobile-device-height, 844px), calc(100dvh - 32px));
+  align-self: center;
+  cursor: col-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.protoMobile-desktop-splitter::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 56px;
+  border-radius: 2px;
+  background: #b8c2d3;
+  transform: translate(-50%, -50%);
+  transition: height 0.15s ease, background 0.15s ease;
+}
+
+.protoMobile-desktop-splitter:hover::after,
+.protoMobile-desktop-splitter:focus-visible::after,
+.protoMobile-desktop-splitter.is-dragging::after { height: 84px; background: var(--protoMobile-accent); }
+.protoMobile-stage.is-resizing { cursor: col-resize; user-select: none; }
+
+.protoMobile-device,
+.protoMobile-review-panel {
+  height: min(var(--protoMobile-device-height, 844px), calc(100dvh - 32px));
+  min-height: 0;
+}
+
+.protoMobile-device {
+  position: relative;
+  width: var(--protoMobile-device-width);
+  min-width: 0;
+  justify-self: center;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(34, 51, 85, 0.12);
+}
+
+.protoMobile-device > [data-proto-app] {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+}
+
+.protoMobile-review-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(51, 136, 255, 0.22);
+  border-top: 3px solid rgba(51, 136, 255, 0.82);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 44px rgba(34, 51, 85, 0.1);
+}
+
+.protoMobile-panel-header {
+  height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid #e9edf5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  font-size: 16px;
+}
+
+.protoMobile-doc-layout {
+  height: calc(100% - 56px);
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  min-height: 0;
+}
+
+.protoMobile-doc-nav {
+  padding: 12px 8px;
+  border-right: 1px solid #e9edf5;
+  overflow-y: auto;
+  background: #fbfcff;
+}
+
+.protoMobile-doc-nav button {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--protoMobile-muted);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.protoMobile-doc-nav button:hover,
+.protoMobile-doc-nav button.is-active {
+  border-left-color: var(--protoMobile-accent);
+  color: #235cb3;
+  background: #e8f1ff;
+}
+
+.protoMobile-doc-content {
+  min-width: 0;
+  padding: 0 16px 24px;
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+.protoMobile-doc-section {
+  padding: 20px 0;
+  border-bottom: 1px solid #e9edf5;
+  scroll-margin-top: 12px;
+}
+
+.protoMobile-doc-section:last-child { border-bottom: 0; }
+.protoMobile-doc-section > h3 { margin: 0 0 12px; color: var(--protoMobile-ink); font-size: 16px; }
+
+.protoMobile-desktop-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--protoMobile-muted);
+  font-size: 12px;
+}
+
+.protoMobile-switch {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  border: 0;
+  border-radius: 11px;
+  background: #cbd3e1;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.protoMobile-switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.protoMobile-switch[aria-checked="true"] { background: var(--protoMobile-accent); }
+.protoMobile-switch[aria-checked="true"]::after { transform: translateX(16px); }
+
+.protoMobile-note-list {
+  height: calc(100% - 94px);
+  padding: 12px 14px 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.protoMobile-note-card {
+  padding: 12px;
+  border: 1px solid #e3e8f2;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.protoMobile-note-card:hover,
+.protoMobile-note-card.is-active {
+  border-color: rgba(51, 136, 255, 0.45);
+  box-shadow: 0 4px 14px rgba(34, 51, 85, 0.08);
+}
+
+.protoMobile-note-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.protoMobile-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--protoMobile-accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.protoMobile-note-title {
+  color: var(--protoMobile-ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.protoMobile-overlay-root {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  background: transparent;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  letter-spacing: 0;
+}
+
+.protoMobile-overlay-root::backdrop {
+  background: transparent;
+  pointer-events: none;
+}
+
+.protoMobile-marker-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.protoMobile-marker-layer.is-hidden {
+  visibility: hidden;
+}
+
+.protoMobile-marker[hidden] {
+  display: none;
+}
+
+.protoMobile-marker {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--protoMobile-accent);
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(51, 136, 255, 0.28), 0 8px 18px rgba(33, 103, 217, 0.28);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.protoMobile-marker:hover,
+.protoMobile-marker.is-active {
+  background: var(--protoMobile-accent-dark);
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(51, 136, 255, 0.28), 0 10px 22px rgba(33, 103, 217, 0.34);
+}
+
+.protoMobile-target-highlight {
+  outline: 3px solid rgba(51, 136, 255, 0.45) !important;
+  outline-offset: 3px !important;
+}
+
+.protoMobile-compact-docs-trigger,
+.protoMobile-compact-backdrop,
+.protoMobile-compact-close,
+.protoMobile-mobile-controls,
+.protoMobile-mobile-note-layer,
+.protoMobile-mobile-docs-layer {
+  display: none;
+}
+
+.protoMobile-rich-content {
+  color: var(--protoMobile-muted);
+  font-size: 14px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.protoMobile-rich-content > :first-child { margin-top: 0; }
+.protoMobile-rich-content > :last-child { margin-bottom: 0; }
+.protoMobile-rich-content h1,
+.protoMobile-rich-content h2,
+.protoMobile-rich-content h3,
+.protoMobile-rich-content h4 { color: var(--protoMobile-ink); }
+.protoMobile-rich-content p,
+.protoMobile-rich-content ul,
+.protoMobile-rich-content ol,
+.protoMobile-rich-content blockquote,
+.protoMobile-rich-content pre,
+.protoMobile-rich-content table { margin: 8px 0; }
+.protoMobile-rich-content ul,
+.protoMobile-rich-content ol { padding-left: 20px; }
+.protoMobile-rich-content blockquote {
+  padding: 8px 12px;
+  border-left: 3px solid var(--protoMobile-accent);
+  background: #f6f9ff;
+}
+.protoMobile-rich-content table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--protoMobile-ink);
+  font-size: 12px;
+}
+.protoMobile-rich-content th,
+.protoMobile-rich-content td {
+  padding: 7px 8px;
+  border: 1px solid var(--protoMobile-line);
+  text-align: left;
+  vertical-align: top;
+}
+.protoMobile-rich-content th { background: #f5f7fa; }
+.protoMobile-rich-content pre {
+  padding: 12px;
+  border-radius: 4px;
+  overflow: auto;
+  background: #172033;
+  color: #eaf1ff;
+}
+.protoMobile-rich-content code {
+  font-family: Consolas, "SFMono-Regular", monospace;
+}
+.protoMobile-rich-content :not(pre) > code {
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: #edf3ff;
+  color: #235cb3;
+}
+
+@media (min-width: 768px) and (max-width: 1179px) {
+  .protoMobile-stage {
+    grid-template-columns: var(--protoMobile-device-width) minmax(320px, 1fr);
+    justify-content: center;
+  }
+  .protoMobile-docs-panel { display: none; }
+  .protoMobile-desktop-splitter { display: none; }
+  .protoMobile-device { grid-column: 1; }
+  .protoMobile-notes-panel { grid-column: 2; }
+  .protoMobile-docs-panel.is-compact-open {
+    position: fixed;
+    inset: 16px auto 16px 16px;
+    z-index: 2147483500;
+    width: min(520px, calc(100vw - 32px));
+    height: auto;
+    display: block;
+    pointer-events: auto;
+  }
+  .protoMobile-compact-close {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    place-items: center;
+    background: #f5f7fa;
+    color: var(--protoMobile-ink);
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .protoMobile-compact-docs-trigger {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 2147483400;
+    display: block;
+    min-width: 54px;
+    height: 34px;
+    border: 1px solid #9bbcff;
+    border-radius: 17px;
+    background: #fff;
+    color: #235cb3;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  .protoMobile-compact-backdrop.is-open {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483450;
+    display: block;
+    background: rgba(20, 32, 55, 0.38);
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .protoMobile-stage {
+    display: block;
+    padding: 0;
+    background: #fff;
+  }
+  .protoMobile-review-panel { display: none; }
+  .protoMobile-desktop-splitter { display: none; }
+  .protoMobile-device {
+    width: 100%;
+    height: 100dvh;
+    max-height: none;
+    box-shadow: none;
+  }
+  .protoMobile-mobile-controls { display: block; }
+  .protoMobile-mobile-launcher {
+    position: fixed;
+    right: 16px;
+    bottom: calc(112px + env(safe-area-inset-bottom));
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--protoMobile-accent), var(--protoMobile-accent-dark));
+    color: #fff;
+    box-shadow: 0 0 0 2px rgba(33, 103, 217, 0.48), 0 10px 24px rgba(33, 103, 217, 0.36);
+    pointer-events: auto;
+    touch-action: none;
+    cursor: grab;
+  }
+  .protoMobile-mobile-launcher > span { font-size: 18px; font-weight: 700; }
+  .protoMobile-mobile-launcher > small {
+    position: absolute;
+    top: -6px;
+    right: -5px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 4px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    background: #e11d48;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+  }
+  .protoMobile-mobile-menu {
+    position: fixed;
+    right: 16px;
+    bottom: calc(176px + env(safe-area-inset-bottom));
+    z-index: 2147483647;
+    width: 240px;
+    padding: 10px 12px;
+    border: 1px solid rgba(51, 136, 255, 0.28);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 16px 36px rgba(20, 32, 55, 0.2);
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: auto;
+  }
+  .protoMobile-mobile-menu.is-open { display: flex; }
+  .protoMobile-mobile-menu-row,
+  .protoMobile-mobile-menu-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .protoMobile-mobile-menu-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .protoMobile-mobile-menu-copy > strong { color: var(--protoMobile-ink); font-size: 14px; }
+  .protoMobile-mobile-menu-copy > small { color: var(--protoMobile-muted); font-size: 11px; }
+  .protoMobile-mobile-menu-link {
+    width: 100%;
+    padding: 6px 0 0;
+    border: 0;
+    border-top: 1px solid #edf1f7;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+  }
+  .protoMobile-mobile-note-layer,
+  .protoMobile-mobile-docs-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483600;
+  }
+  .protoMobile-mobile-note-layer.is-open,
+  .protoMobile-mobile-docs-layer.is-open { display: block; }
+  .protoMobile-mobile-mask {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(20, 32, 55, 0.45);
+    cursor: pointer;
+  }
+  .protoMobile-mobile-sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--protoMobile-sheet-height, 56dvh);
+    max-height: 90dvh;
+    min-height: 24dvh;
+    border-radius: 18px 18px 0 0;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -12px 32px rgba(20, 32, 55, 0.2);
+    transform: translateY(100%);
+    transition: transform 0.25s ease;
+  }
+  .protoMobile-mobile-note-layer.is-open .protoMobile-mobile-sheet { transform: translateY(0); }
+  .protoMobile-sheet-handle {
+    width: 100%;
+    height: 18px;
+    display: grid;
+    place-items: center;
+    touch-action: none;
+    cursor: grab;
+  }
+  .protoMobile-sheet-handle > span {
+    width: 42px;
+    height: 4px;
+    border-radius: 2px;
+    background: #cdd5e2;
+  }
+  .protoMobile-mobile-sheet-header {
+    height: 44px;
+    padding: 0 16px;
+    border-bottom: 1px solid #edf1f7;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .protoMobile-mobile-sheet-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .protoMobile-mobile-sheet-tools button,
+  .protoMobile-mobile-docs-close {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #f2f5fa;
+    color: var(--protoMobile-ink);
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .protoMobile-mobile-sheet-body {
+    flex: 1;
+    min-height: 0;
+    padding: 14px 16px 24px;
+    overflow-y: auto;
+  }
+  .protoMobile-mobile-docs-layer {
+    background: #fff;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+  }
+  .protoMobile-mobile-docs-layer.is-open { transform: translateX(0); }
+  .protoMobile-mobile-docs-header {
+    height: 52px;
+    padding: 0 16px;
+    border-bottom: 1px solid #edf1f7;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .protoMobile-mobile-docs-body {
+    height: calc(100% - 52px);
+    padding: 0 16px 24px;
+    overflow-y: auto;
+  }
+}
+
+.protoMobile-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.protoMobile-filter-bar::-webkit-scrollbar { display: none; }
+
+.protoMobile-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border: 1px solid #d0d7e3;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.protoMobile-filter-chip.chip-all.is-active { background: #1e293b; color: #fff; border-color: #1e293b; }
+.protoMobile-filter-chip.chip-add.is-active { background: #059669; color: #fff; border-color: #059669; }
+.protoMobile-filter-chip.chip-modify.is-active { background: #d97706; color: #fff; border-color: #d97706; }
+.protoMobile-filter-chip.chip-original.is-active { background: #475569; color: #fff; border-color: #475569; }
+.protoMobile-filter-chip.chip-delete.is-active { background: #dc2626; color: #fff; border-color: #dc2626; }
+.protoMobile-filter-count {
+  display: inline-block;
+  min-width: 14px;
+  padding: 0 3px;
+  border-radius: 7px;
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 10px;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<div id="app" data-proto-app data-proto-platform="mobile">
+  <!-- 顶部返回导航栏 -->
+  <div class="top-header-bar">
+    <button class="back-icon-btn" onclick="history.back()" title="返回上一页">
+      <span class="material-icons" style="font-size:24px">arrow_back_ios_new</span>
+    </button>
+    <div class="page-title-center">确认错题信息</div>
+    <button class="btn-header-skip" onclick="skipToLoading()" title="跳过核对直接生成报告">跳过</button>
+  </div>
+
+  <!-- 主滚动列表 -->
+  <div class="cards-scroll-view" id="cardsScrollView">
+    <!-- 外部标题栏 (默认科目 + 考试名) -->
+    <div class="section-title-row">
+      <div class="subj-gem-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L21 7.2V16.8L12 22L3 16.8V7.2L12 2Z" stroke="#20DCAD" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M7 8.5L12 17L17 8.5" stroke="#20DCAD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="section-title-text" style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:13px;color:#6D7080;font-weight:500;">默认科目:</span>
+        <button class="single-subject-pill" id="btnChangeSubjPill" type="button" onclick="openSubjectChangeSheet()" title="点击切换默认科目">
+          <span id="currentSubjName">数学</span>
+          <span class="material-icons" style="font-size:15px;color:#00B383;">expand_more</span>
+        </button>
+        <span style="color:#CBD0DC;margin:0 2px;">·</span>
+        <span id="examTitleText" style="font-size:14px;color:#111112;font-weight:600;">09月30日单科数学</span>
+      </div>
+    </div>
+
+    <!-- 单科卡片 (聚焦当前选中学科) -->
+    <div class="diag-paper-card" id="paperCardSingle">
+      <!-- 试卷原图 Cover -->
+      <div class="paper-photo-banner" onclick="openZoomModal()">
+        <img src="https://image-resource.mastergo.com/60579938713982/60579938713984/feb5bcfe627a401bca8e9282e8380048.png" alt="试卷原图">
+        <div class="paper-float-tip">以下是试卷题号，点击修正题目对/错状态</div>
+        <button class="btn-view-paper-raw" type="button">
+          <span class="material-icons" style="font-size:14px">image</span>
+          <span>查看试卷原图</span>
+        </button>
+      </div>
+
+      <!-- 卡片内容区域 -->
+      <div class="card-content-wrap">
+        <!-- 识别统计行 -->
+        <div class="ai-stat-line" id="aiStatLine">
+          小苗共识别出 <span class="num-green" id="statTotalQ">22</span> 道题，判断错误 <span class="num-orange" id="statWrongQ">5</span> 道
+        </div>
+
+        <!-- 状态图例说明条 -->
+        <div class="stat-legend-row">
+          <div class="legend-items-left">
+            <div class="legend-badge"><span class="legend-dot-circle green"></span>正确</div>
+            <div class="legend-badge"><span class="legend-dot-circle orange"></span>错误</div>
+            <div class="legend-badge"><span class="legend-dot-circle half"></span>半对</div>
+          </div>
+          <div class="legend-hint-action" id="legendHintAction">
+            点击题号修正对错
+          </div>
+        </div>
+
+        <!-- 题号圆形宫格 (6列精确对齐) -->
+        <div class="q-grid-scroll-box">
+          <div class="question-circles-grid" id="questionCirclesGrid">
+            <!-- 动态生成 22 道题圆形状态 -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部吸底操作栏 -->
+  <div class="bottom-fixed-dock">
+    <button class="btn-generate-report" id="btnSubmitGenerate" type="button" onclick="submitAndGenerate()">
+      <span style="display:inline-flex;align-items:center;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="18" height="18">
+          <path d="M10,0 C10,5.523 14.477,10 20,10 C14.477,10 10,14.477 10,20 C10,14.477 5.523,10 0,10 C5.523,10 10,5.523 10,0 Z" fill="#05FFD5"/>
+          <path d="M10,4 C10,7.314 12.686,10 16,10 C12.686,10 10,12.686 10,16 C10,12.686 7.314,10 4,10 C7.314,10 10,7.314 10,4 Z" fill="#FFFFFF"/>
+        </svg>
+      </span>
+      <span>直接生成诊断报告</span>
+    </button>
+    <div style="width:134px;height:5px;background:#000000;opacity:0.18;border-radius:2.5px;margin-top:8px;"></div>
+  </div>
+    <!-- 查看试卷大图弹窗 (置于 #app 内部) -->
+    <div class="image-zoom-overlay" id="imageZoomModal" onclick="closeZoomModal()">
+      <button class="close-zoom-btn" onclick="closeZoomModal()"><span class="material-icons">close</span></button>
+      <div class="image-zoom-box" onclick="event.stopPropagation()">
+        <img id="zoomImgTarget" src="https://image-resource.mastergo.com/60579938713982/60579938713984/feb5bcfe627a401bca8e9282e8380048.png" alt="试卷原图">
+      </div>
+    </div>
+
+    <div class="toast-msg" id="toastMsg"></div>
+
+    <!-- 单科切换学科抽屉 (精确还原图一学科弹窗，置于 #app 内部) -->
+    <div class="modal-overlay" id="subjectOverlay" onclick="closeSubjectChangeSheet()"></div>
+    <div class="modal-sheet" id="subjectSheet">
+      <div class="modal-title">选择所属学科</div>
+      <div class="subject-pill-grid">
+        <div class="sub-select-pill active" data-sub="数学" onclick="selectDefaultSubject('数学')">数学</div>
+        <div class="sub-select-pill" data-sub="语文" onclick="selectDefaultSubject('语文')">语文</div>
+        <div class="sub-select-pill" data-sub="英语" onclick="selectDefaultSubject('英语')">英语</div>
+        <div class="sub-select-pill" data-sub="物理" onclick="selectDefaultSubject('物理')">物理</div>
+        <div class="sub-select-pill" data-sub="化学" onclick="selectDefaultSubject('化学')">化学</div>
+        <div class="sub-select-pill" data-sub="生物" onclick="selectDefaultSubject('生物')">生物</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// 1. 获取 URL 参数
+const urlParams = new URLSearchParams(window.location.search);
+const paramSubject = urlParams.get('subject') || '数学';
+const paramExam = urlParams.get('exam') || urlParams.get('examName') || '';
+
+// 2. 读取 localStorage 上下文
+let uploadCtx = null;
+let step1 = null;
+try {
+  uploadCtx = JSON.parse(localStorage.getItem('uploadContext') || 'null');
+  step1 = JSON.parse(localStorage.getItem('uploadStep1') || 'null');
+} catch(e) {}
+
+let currentSubject = paramSubject || (uploadCtx && uploadCtx.subjects && uploadCtx.subjects[0]) || (step1 && step1.subject) || '数学';
+
+function getDefaultExamName(sub) {
+  let d = new Date();
+  if (step1 && step1.examDate) {
+    const parts = step1.examDate.split('-');
+    if (parts.length >= 3) {
+      d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    }
+  }
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${m}月${day}日单科${sub}`;
+}
+
+let rawExam = paramExam || (uploadCtx && uploadCtx.examName) || (step1 && step1.examName) || '';
+let isCustomExamName = (rawExam && rawExam !== '未命名考试' && !rawExam.includes('单科') && rawExam !== '期末考试周' && rawExam !== '随堂小测' && rawExam !== '数学随堂小测');
+let currentExamName = isCustomExamName ? rawExam : getDefaultExamName(currentSubject);
+
+// 3. 错题预设表 (与初筛引导数据完全契合)
+const PRESET_WRONG_MAP = {
+  '数学': [1, 5, 8, 13, 19],     // 5 错题
+  '语文': [3, 11],             // 2 错题
+  '英语': [2, 7, 14, 18],       // 4 错题
+  '物理': [4, 9, 15],          // 3 错题
+  '化学': [6, 12],             // 2 错题
+  '生物': [5]                  // 1 错题
+};
+
+let questions = [];
+function initQuestions(sub) {
+  questions = [];
+  const wrongNums = PRESET_WRONG_MAP[sub] || [1, 5, 8];
+  for (let i = 1; i <= 22; i++) {
+    questions.push({
+      num: i,
+      state: wrongNums.includes(i) ? 'wrong' : 'correct',
+      isFixed: false
+    });
+  }
+}
+
+// 初始化题目数据
+initQuestions(currentSubject);
+
+// 4. 渲染界面
+function renderView() {
+  document.getElementById('currentSubjName').textContent = currentSubject;
+  document.getElementById('examTitleText').textContent = currentExamName;
+
+  const totalQ = questions.length;
+  const wrongCount = questions.filter(q => q.state === 'wrong').length;
+  const fixedCount = questions.filter(q => q.isFixed).length;
+
+  // 识别统计文本
+  const statEl = document.getElementById('aiStatLine');
+  if (statEl) {
+    statEl.innerHTML = `小苗共识别出 <span class="num-green">${totalQ}</span> 道题，判断错误 <span class="num-orange">${wrongCount}</span> 道${fixedCount > 0 ? `，当前修正为错题 <span class="num-orange">${wrongCount}</span> 道` : ''}`;
+  }
+
+  // 提示操作文本
+  const hintEl = document.getElementById('legendHintAction');
+  if (hintEl) {
+    hintEl.textContent = fixedCount > 0 ? `人工修正${fixedCount}道` : '点击题号修正对错';
+  }
+
+  // 渲染 22 道题矩阵
+  const gridEl = document.getElementById('questionCirclesGrid');
+  if (gridEl) {
+    gridEl.innerHTML = questions.map((q, idx) => `
+      <div class="q-circle-wrap" onclick="toggleQuestionState(${idx})">
+        <div class="q-circle-btn ${q.state}">
+          ${q.num}
+        </div>
+        ${q.isFixed ? '<div class="fix-tag-pill">修正</div>' : ''}
+      </div>
+    `).join('');
+  }
+}
+
+// 5. 点击题号正误切换 (正确 ➔ 错误 ➔ 半对 ➔ 正确)
+function toggleQuestionState(qIdx) {
+  const q = questions[qIdx];
+  if (q.state === 'correct') {
+    q.state = 'wrong';
+  } else if (q.state === 'wrong') {
+    q.state = 'half';
+  } else {
+    q.state = 'correct';
+  }
+  q.isFixed = true;
+  renderView();
+}
+
+// 6. 科目切换抽屉 (图一学科弹窗)
+function openSubjectChangeSheet() {
+  document.querySelectorAll('.sub-select-pill').forEach(btn => {
+    const isAct = (btn.dataset.sub === currentSubject || btn.textContent.trim() === currentSubject);
+    btn.classList.toggle('active', isAct);
+  });
+  const overlay = document.getElementById('subjectOverlay');
+  const sheet = document.getElementById('subjectSheet');
+  if (overlay) overlay.classList.add('is-open');
+  if (sheet) sheet.classList.add('is-open');
+}
+
+function closeSubjectChangeSheet() {
+  const overlay = document.getElementById('subjectOverlay');
+  const sheet = document.getElementById('subjectSheet');
+  if (overlay) overlay.classList.remove('is-open');
+  if (sheet) sheet.classList.remove('is-open');
+}
+
+function selectDefaultSubject(newSub) {
+  if (currentSubject === newSub) {
+    closeSubjectChangeSheet();
+    return;
+  }
+  currentSubject = newSub;
+  if (!isCustomExamName) {
+    currentExamName = getDefaultExamName(newSub);
+  }
+  initQuestions(newSub);
+  closeSubjectChangeSheet();
+  renderView();
+  showToast(`已将默认科目切换为【${newSub}】`);
+}
+
+// 别名与兼容函数
+function openSubjectSheet() { openSubjectChangeSheet(); }
+function closeSubjectSheet() { closeSubjectChangeSheet(); }
+function changeSingleSubject(newSub) { selectDefaultSubject(newSub); }
+
+// 7. 原图预览弹窗
+function openZoomModal() {
+  document.getElementById('imageZoomModal').classList.add('show');
+}
+function closeZoomModal() {
+  document.getElementById('imageZoomModal').classList.remove('show');
+}
+
+// 8. 提示消息 Toast
+function showToast(msg) {
+  const t = document.getElementById('toastMsg');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 2000);
+}
+
+// 9. 路由跳转
+function getNextUrl() {
+  const query = new URLSearchParams({
+    from: 'gouxuancuoti_single',
+    type: 'small',
+    subject: currentSubject,
+    examName: currentExamName
+  });
+  return 'loading.html?' + query.toString();
+}
+
+function skipToLoading() {
+  window.location.href = getNextUrl();
+}
+
+function submitAndGenerate() {
+  const subjectDataMap = {};
+  subjectDataMap[currentSubject] = {
+    total: questions.length,
+    origWrongCount: PRESET_WRONG_MAP[currentSubject]?.length || 3,
+    questions: questions,
+    isEdited: questions.some(q => q.isFixed)
+  };
+  localStorage.setItem('confirmedWrongQuestions', JSON.stringify(subjectDataMap));
+  showToast('错题已确认，开始生成诊断报告…');
+  setTimeout(() => {
+    window.location.href = getNextUrl();
+  }, 400);
+}
+
+// 首次渲染
+renderView();
+</script>
+
+<script id="prototypeAnnotationData" type="application/json">
+{
+  "prototypeId": "gouxuancuoti_single",
+  "version": 3,
+  "mobile": {
+    "appRoot": "[data-proto-app]",
+    "deviceWidth": 390
+  },
+  "globalMeta": {
+    "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+    "version": "V1.0",
+    "updatedAt": "2026-09-30"
+  },
+  "globalSections": [
+    {
+      "id": "sec_overview",
+      "title": "一.业务背景概述",
+      "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作用。</span></p><p>2.日程:</p><ul><li>日程需要提供编辑功能。</li></ul><p><span>3.考试诊断:</span></p><ul><li>原流程试卷上传后直接跳出诊断报告，AI识别的错题准确率低。</li><li>同一场大考重复录入会产生脏数据，需要检测到已有该考试时，自动拦截并提供「覆盖重新诊断」与「补充未录入科目」通道，限制重新诊断入口。</li></ul>",
+      "format": "html"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "note-single-skip",
+      "scope": "page:default",
+      "target": "#app button.btn-header-skip",
+      "x": 0.94,
+      "y": 1,
+      "title": "跳过核对说明",
+      "content": "<p>赶时间的用户可点击右上角跳过，直接按初筛疑难错题结果生成诊断报告。</p>",
+      "format": "html",
+      "type": "original",
+      "typeLabel": "原有",
+      "badge": "原有"
+    },
+    {
+      "id": "note-single-subj-pill",
+      "scope": "page:default",
+      "target": "#btnChangeSubjPill",
+      "x": 0.5,
+      "y": 1,
+      "title": "单科默认科目切换",
+      "content": "<p>单科场景下，在顶部直接标明AI识别出来的科目，用户点击修改科目。</p>",
+      "format": "html",
+      "type": "original",
+      "typeLabel": "原有",
+      "badge": "原有"
+    }
+  ]
+}
+</script>
+
+<div class="protoMobile-stage" id="protoMobileStage" hidden>
+  <aside class="protoMobile-review-panel protoMobile-docs-panel" id="protoMobileDocsPanel" aria-label="原型说明">
+    <header class="protoMobile-panel-header">
+      <div style="display:flex;align-items:center;gap:8px">
+        <strong>原型说明</strong>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="protoMobile-doc-sync-btn" id="protoMobileDocSyncBtn" type="button" title="从其他页面复制或同步原型说明">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          <span>跨页复制/同步</span>
+        </button>
+        <button class="protoMobile-compact-close" id="protoMobileCompactDocsClose" type="button" aria-label="关闭原型说明">×</button>
+      </div>
+    </header>
+    <div class="protoMobile-doc-layout">
+      <nav class="protoMobile-doc-nav" id="protoMobileDocNav" aria-label="原型说明目录"></nav>
+      <div class="protoMobile-doc-content" id="protoMobileDocContent"></div>
+    </div>
+  </aside>
+
+  <div class="protoMobile-desktop-splitter" id="protoMobileDocsSplitter" role="separator" aria-label="调整原型说明宽度" aria-orientation="vertical" tabindex="0"></div>
+
+  <main class="protoMobile-device" id="protoMobileDevice" aria-label="移动端原型画板"></main>
+
+  <aside class="protoMobile-review-panel protoMobile-notes-panel" aria-label="当前页面标注">
+    <header class="protoMobile-panel-header">
+      <strong>当前标注</strong>
+      <label class="protoMobile-desktop-toggle-label">
+        <span>显示标注</span>
+        <button class="protoMobile-switch" id="protoMobileDesktopToggle" type="button" role="switch" aria-checked="true" aria-label="隐藏页面标注"></button>
+      </label>
+    </header>
+    <div class="protoMobile-filter-bar" id="protoMobileFilterBar"></div>
+    <div class="protoMobile-note-list" id="protoMobileNoteList"></div>
+  </aside>
+</div>
+
+<div class="protoMobile-overlay-root" id="prototypeAnnotationRoot" popover="manual" aria-label="移动端原型标注层">
+  <div class="protoMobile-marker-layer" id="protoMobileMarkerLayer"></div>
+
+  <button class="protoMobile-compact-docs-trigger" id="protoMobileCompactDocsTrigger" type="button">说明</button>
+  <div class="protoMobile-compact-backdrop" id="protoMobileCompactBackdrop"></div>
+
+  <div class="protoMobile-mobile-controls" id="protoMobileMobileControls">
+    <div class="protoMobile-mobile-menu" id="protoMobileMobileMenu" role="menu" aria-label="原型标注菜单">
+      <div class="protoMobile-mobile-menu-row">
+        <span class="protoMobile-mobile-menu-copy">
+          <strong>页面标注</strong>
+          <small id="protoMobileMobileMenuMeta">当前页面 0 条</small>
+        </span>
+        <button class="protoMobile-switch" id="protoMobileMobileToggle" type="button" role="switch" aria-checked="false" aria-label="显示页面标注"></button>
+      </div>
+      <button class="protoMobile-mobile-menu-link" id="protoMobileMobileDocsOpen" type="button" role="menuitem">
+        <span class="protoMobile-mobile-menu-copy">
+          <strong>原型说明</strong>
+          <small>查看整体需求与跨页面规则</small>
+        </span>
+        <span aria-hidden="true">›</span>
+      </button>
+    </div>
+    <button class="protoMobile-mobile-launcher" id="protoMobileMobileLauncher" type="button" aria-label="打开原型标注菜单" aria-expanded="false">
+      <span>注</span>
+      <small id="protoMobileMobileCount">0</small>
+    </button>
+  </div>
+
+  <div class="protoMobile-mobile-note-layer" id="protoMobileMobileNoteLayer" aria-hidden="true">
+    <button class="protoMobile-mobile-mask" id="protoMobileMobileNoteMask" type="button" aria-label="关闭标注详情"></button>
+    <section class="protoMobile-mobile-sheet" id="protoMobileMobileSheet" role="dialog" aria-modal="true" aria-label="标注详情">
+      <div class="protoMobile-sheet-handle" id="protoMobileMobileSheetHandle" aria-label="拖动调整标注详情高度"><span></span></div>
+      <header class="protoMobile-mobile-sheet-header">
+        <strong id="protoMobileMobileSheetTitle">标注详情</strong>
+        <span class="protoMobile-mobile-sheet-tools">
+          <button id="protoMobileMobileSheetSize" type="button" aria-label="切换标注详情高度" title="切换高度">↕</button>
+          <button id="protoMobileMobileNoteClose" type="button" aria-label="关闭标注详情" title="关闭">×</button>
+        </span>
+      </header>
+      <article class="protoMobile-rich-content protoMobile-mobile-sheet-body" id="protoMobileMobileSheetBody"></article>
+    </section>
+  </div>
+
+  <section class="protoMobile-mobile-docs-layer" id="protoMobileMobileDocsLayer" aria-hidden="true" aria-label="原型说明">
+    <header class="protoMobile-mobile-docs-header">
+      <strong>原型说明</strong>
+      <button class="protoMobile-mobile-docs-close" id="protoMobileMobileDocsClose" type="button" aria-label="关闭原型说明">×</button>
+    </header>
+    <div class="protoMobile-rich-content protoMobile-mobile-docs-body" id="protoMobileMobileDocsBody"></div>
+  </section>
+</div>
+
+<script id="protoMobileAnnotationRuntime">
+(() => {
+  const dataScript = document.getElementById("prototypeAnnotationData");
+  if (!dataScript) return;
+
+  let rawData = {};
+  try {
+    rawData = JSON.parse(dataScript.textContent || "{}");
+  } catch (error) {
+    console.error("解析 prototypeAnnotationData 失败", error);
+    return;
+  }
+
+  const annotations = Array.isArray(rawData.annotations) ? rawData.annotations : [];
+  const globalSections = Array.isArray(rawData.globalSections) ? rawData.globalSections : [];
+  const mobileConfig = rawData.mobile && typeof rawData.mobile === "object" ? rawData.mobile : {};
+  const stage = document.getElementById("protoMobileStage");
+  const device = document.getElementById("protoMobileDevice");
+  const notesPanel = document.querySelector(".protoMobile-notes-panel");
+  const docsPanel = document.getElementById("protoMobileDocsPanel");
+  const docsNav = document.getElementById("protoMobileDocNav");
+  const docsContent = document.getElementById("protoMobileDocContent");
+  const splitter = document.getElementById("protoMobileDocsSplitter");
+  const desktopToggle = document.getElementById("protoMobileDesktopToggle");
+  const noteList = document.getElementById("protoMobileNoteList");
+  const filterBar = document.getElementById("protoMobileFilterBar");
+  const overlayRoot = document.getElementById("prototypeAnnotationRoot");
+  const markerLayer = document.getElementById("protoMobileMarkerLayer");
+  const mobileLauncher = document.getElementById("protoMobileMobileLauncher");
+  const mobileCount = document.getElementById("protoMobileMobileCount");
+  const mobileMenu = document.getElementById("protoMobileMobileMenu");
+  const mobileMenuMeta = document.getElementById("protoMobileMobileMenuMeta");
+  const mobileToggle = document.getElementById("protoMobileMobileToggle");
+  const mobileNoteLayer = document.getElementById("protoMobileMobileNoteLayer");
+  const mobileNoteMask = document.getElementById("protoMobileMobileNoteMask");
+  const mobileNoteClose = document.getElementById("protoMobileMobileNoteClose");
+  const mobileSheet = document.getElementById("protoMobileMobileSheet");
+  const mobileSheetTitle = document.getElementById("protoMobileMobileSheetTitle");
+  const mobileSheetBody = document.getElementById("protoMobileMobileSheetBody");
+  const mobileSheetSize = document.getElementById("protoMobileMobileSheetSize");
+  const mobileSheetHandle = document.getElementById("protoMobileMobileSheetHandle");
+  const compactDocsTrigger = document.getElementById("protoMobileCompactDocsTrigger");
+  const compactBackdrop = document.getElementById("protoMobileCompactBackdrop");
+  const compactDocsClose = document.getElementById("protoMobileCompactDocsClose");
+  const mobileDocsOpen = document.getElementById("protoMobileMobileDocsOpen");
+  const mobileDocsLayer = document.getElementById("protoMobileMobileDocsLayer");
+  const mobileDocsClose = document.getElementById("protoMobileMobileDocsClose");
+  const mobileDocsBody = document.getElementById("protoMobileMobileDocsBody");
+  const appRoot = document.querySelector(mobileConfig.appRoot || "[data-proto-app]") || document.querySelector("#app");
+
+  if (!appRoot || !stage || !device || !overlayRoot || !markerLayer) return;
+
+  const storageKey = `protoMobile_visible_${rawData.prototypeId || "default"}`;
+  const docsWidthKey = "protoMobile_desktop_docs_width";
+  let activeFilter = "all";
+  let activeNoteId = null;
+  let currentNotes = [];
+  let isMobile = window.innerWidth <= 767;
+  let isVisible = localStorage.getItem(storageKey) !== "false";
+
+  function updateDesktopToggle(val) {
+    if (desktopToggle) {
+      desktopToggle.setAttribute("aria-checked", String(val));
+    }
+  }
+
+  function updateMobileToggle(val) {
+    if (mobileToggle) {
+      mobileToggle.setAttribute("aria-checked", String(val));
+    }
+  }
+
+  function renderFilterBar() {
+    if (!filterBar) return;
+    const types = [
+      { key: "all", label: "全部", cls: "chip-all", count: annotations.length },
+      { key: "add", label: "新增", cls: "chip-add", count: annotations.filter(n => n.type === "add").length },
+      { key: "modify", label: "修改", cls: "chip-modify", count: annotations.filter(n => n.type === "modify").length },
+      { key: "original", label: "原有", cls: "chip-original", count: annotations.filter(n => n.type === "original").length }
+    ];
+    filterBar.innerHTML = types.map(t => `
+      <button class="protoMobile-filter-chip ${t.cls} ${activeFilter === t.key ? "is-active" : ""}" type="button" data-filter="${t.key}">
+        <span>${t.label}</span>
+        <span class="protoMobile-filter-count">${t.count}</span>
+      </button>
+    `).join("");
+
+    filterBar.querySelectorAll(".protoMobile-filter-chip").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeFilter = btn.dataset.filter;
+        renderFilterBar();
+        renderNoteList();
+        renderMarkers();
+      });
+    });
+  }
+
+  function renderNoteList() {
+    if (!noteList) return;
+    const filtered = annotations.filter(n => activeFilter === "all" || n.type === activeFilter);
+    noteList.innerHTML = filtered.map((n, idx) => `
+      <div class="protoMobile-note-card ${activeNoteId === n.id ? "is-active" : ""}" data-id="${n.id}">
+        <div class="protoMobile-note-card-head">
+          <span class="protoMobile-badge">${idx + 1}</span>
+          <span class="protoMobile-note-title">${n.title || "标注说明"}</span>
+        </div>
+        <div class="protoMobile-rich-content">${n.content || ""}</div>
+      </div>
+    `).join("");
+
+    noteList.querySelectorAll(".protoMobile-note-card").forEach(card => {
+      card.addEventListener("click", () => {
+        activeNoteId = card.dataset.id;
+        renderNoteList();
+        renderMarkers();
+        const note = annotations.find(n => n.id === activeNoteId);
+        if (note && note.target) {
+          const el = document.querySelector(note.target);
+          if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      });
+    });
+  }
+
+  function renderMarkers() {
+    markerLayer.innerHTML = "";
+    if (!isVisible) return;
+    const filtered = annotations.filter(n => activeFilter === "all" || n.type === activeFilter);
+    filtered.forEach((n, idx) => {
+      const target = document.querySelector(n.target);
+      if (!target) return;
+      const rect = target.getBoundingClientRect();
+      const marker = document.createElement("button");
+      marker.className = `protoMobile-marker ${activeNoteId === n.id ? "is-active" : ""}`;
+      marker.textContent = String(idx + 1);
+      const posX = rect.left + rect.width * (n.x !== undefined ? n.x : 0.5);
+      const posY = rect.top + rect.height * (n.y !== undefined ? n.y : 0.5);
+      marker.style.left = `${posX}px`;
+      marker.style.top = `${posY}px`;
+      marker.addEventListener("click", (e) => {
+        e.stopPropagation();
+        activeNoteId = n.id;
+        renderNoteList();
+        renderMarkers();
+        if (isMobile) {
+          mobileSheetTitle.textContent = n.title || "标注详情";
+          mobileSheetBody.innerHTML = n.content || "";
+          mobileNoteLayer.classList.add("is-open");
+        }
+      });
+      markerLayer.appendChild(marker);
+    });
+  }
+
+  function renderDocs() {
+    if (!docsNav || !docsContent) return;
+    docsNav.innerHTML = globalSections.map(sec => `
+      <button type="button" class="protoMobile-nav-item" data-sec="${sec.id}">${sec.title}</button>
+    `).join("");
+    docsContent.innerHTML = globalSections.map(sec => `
+      <section class="protoMobile-doc-section" id="sec_${sec.id}">
+        <h3>${sec.title}</h3>
+        <div class="protoMobile-rich-content">${sec.content}</div>
+      </section>
+    `).join("");
+
+    if (mobileDocsBody) {
+      mobileDocsBody.innerHTML = globalSections.map(sec => `
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;margin-bottom:8px;color:#1e293b;">${sec.title}</h3>
+          <div class="protoMobile-rich-content">${sec.content}</div>
+        </div>
+      `).join("");
+    }
+  }
+
+  function setupEvents() {
+    if (desktopToggle) {
+      desktopToggle.addEventListener("click", () => {
+        isVisible = !isVisible;
+        localStorage.setItem(storageKey, String(isVisible));
+        updateDesktopToggle(isVisible);
+        updateMobileToggle(isVisible);
+        renderMarkers();
+      });
+    }
+
+    if (mobileToggle) {
+      mobileToggle.addEventListener("click", () => {
+        isVisible = !isVisible;
+        localStorage.setItem(storageKey, String(isVisible));
+        updateDesktopToggle(isVisible);
+        updateMobileToggle(isVisible);
+        renderMarkers();
+      });
+    }
+
+    if (mobileLauncher) {
+      mobileLauncher.addEventListener("click", () => {
+        mobileMenu.classList.toggle("is-open");
+      });
+    }
+
+    if (mobileNoteMask) mobileNoteMask.addEventListener("click", () => mobileNoteLayer.classList.remove("is-open"));
+    if (mobileNoteClose) mobileNoteClose.addEventListener("click", () => mobileNoteLayer.classList.remove("is-open"));
+
+    if (mobileDocsOpen) {
+      mobileDocsOpen.addEventListener("click", () => {
+        mobileMenu.classList.remove("is-open");
+        mobileDocsLayer.classList.add("is-open");
+      });
+    }
+    if (mobileDocsClose) mobileDocsClose.addEventListener("click", () => mobileDocsLayer.classList.remove("is-open"));
+
+    if (compactDocsTrigger) {
+      compactDocsTrigger.addEventListener("click", () => {
+        docsPanel.classList.add("is-compact-open");
+        compactBackdrop.classList.add("is-open");
+      });
+    }
+    if (compactDocsClose) {
+      compactDocsClose.addEventListener("click", () => {
+        docsPanel.classList.remove("is-compact-open");
+        compactBackdrop.classList.remove("is-open");
+      });
+    }
+    if (compactBackdrop) {
+      compactBackdrop.addEventListener("click", () => {
+        docsPanel.classList.remove("is-compact-open");
+        compactBackdrop.classList.remove("is-open");
+      });
+    }
+
+    window.addEventListener("resize", () => {
+      isMobile = window.innerWidth <= 767;
+      renderMarkers();
+    });
+    window.addEventListener("scroll", () => renderMarkers(), true);
+  }
+
+  function init() {
+    document.documentElement.classList.add("protoMobile-ready");
+    stage.removeAttribute("hidden");
+    device.appendChild(appRoot);
+    if (typeof overlayRoot.showPopover === "function") {
+      try { overlayRoot.showPopover(); } catch(e) {}
+    }
+    updateDesktopToggle(isVisible);
+    updateMobileToggle(isVisible);
+    if (mobileCount) mobileCount.textContent = String(annotations.length);
+    if (mobileMenuMeta) mobileMenuMeta.textContent = `当前页面 ${annotations.length} 条`;
+
+    renderDocs();
+    renderFilterBar();
+    renderNoteList();
+    setupEvents();
+    setTimeout(renderMarkers, 150);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

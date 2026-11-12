@@ -1,0 +1,1419 @@
+[
+  {
+    "file": "bianjijiazhang.html",
+    "title": "编辑个人资料 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "bianjijiazhang",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "bianjixs.html",
+    "title": "我的孩子 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "bianjixs",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "changqifenxixq.html",
+    "title": "成长趋势分析 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "changqifenxixq",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "chanpin_wendang.html",
+    "title": "陪读社区与学习分析 · 统一产品需求文档 (PRD) 工作台",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": null
+  },
+  {
+    "file": "cuoti.html",
+    "title": "错题/试卷 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "cuoti",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "dancifenxixq.html",
+    "title": "单次大考诊断 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "dancifenxixq",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "fabutiezi.html",
+    "title": "发布帖子 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "fabutiezi",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "fensi.html",
+    "title": "我的粉丝 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "fensi",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "fenxi.html",
+    "title": "学情分析 - 高考志愿与陪读社区",
+    "has_annotations": true,
+    "anno_count": 1,
+    "anno_data": {
+      "prototypeId": "fenxi",
+      "version": 8,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": [
+        {
+          "id": "note-mu3h8vvu-1-0b0f9522f3",
+          "scope": "page:default",
+          "target": "#app div.esc-light-col",
+          "x": 0.17524494844324448,
+          "y": 0.6290479025945356,
+          "title": "新用户默认日程",
+          "content": "<p><span data-lark-record-data=\"{&quot;rootId&quot;:&quot;GUfmdt90aos9pXxtZCocCe9EnQ9&quot;,&quot;text&quot;:{&quot;initialAttributedTexts&quot;:{&quot;text&quot;:{&quot;0&quot;:&quot;无任何未来有效考试日程&quot;},&quot;attribs&quot;:{&quot;0&quot;:&quot;*0+b&quot;}},&quot;apool&quot;:{&quot;numToAttrib&quot;:{&quot;0&quot;:[&quot;author&quot;,&quot;7611732615745244377&quot;]},&quot;nextNum&quot;:1}},&quot;type&quot;:&quot;text&quot;,&quot;referenceRecordMap&quot;:{},&quot;extra&quot;:{&quot;channel&quot;:&quot;saas&quot;,&quot;isEqualBlockSelection&quot;:false,&quot;pasteRandomId&quot;:&quot;662e4ca8-6c46-4d63-8ca4-c443fff19744&quot;,&quot;mention_page_title&quot;:{},&quot;external_mention_url&quot;:{}},&quot;isKeepQuoteContainer&quot;:false,&quot;isFromCode&quot;:false,&quot;selection&quot;:[{&quot;id&quot;:660,&quot;type&quot;:&quot;text&quot;,&quot;selection&quot;:{&quot;start&quot;:14,&quot;end&quot;:25},&quot;recordId&quot;:&quot;G13kdXGcoo7ebxxb61DcmrvRn4d&quot;}],&quot;payloadMap&quot;:{},&quot;isCut&quot;:false}\" data-lark-record-format=\"docx/text\" class=\"lark-record-clipboard\"></span></p><div data-page-id=\"GUfmdt90aos9pXxtZCocCe9EnQ9\" data-lark-html-role=\"root\" data-docx-has-block-data=\"false\"><div class=\" old-record-id-G13kdXGcoo7ebxxb61DcmrvRn4d\">当前无任何日程时，展示默认日程：“日程标题\"：<span>建立首个考试日程，</span><span>“日程类型\"：</span><span>其它，</span><span>“关联类型\"：</span><span>不选</span></div><div class=\" old-record-id-G13kdXGcoo7ebxxb61DcmrvRn4d\"><span>当用户无最近日程，但存在历史日程时暂时原有的”暂无“界面</span></div></div>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "原有",
+          "badge": "原有"
+        }
+      ]
+    }
+  },
+  {
+    "file": "fenxibaogao.html",
+    "title": "试卷诊断报告",
+    "has_annotations": true,
+    "anno_count": 2,
+    "anno_data": {
+      "prototypeId": "fenxibaogao",
+      "version": 2,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": [
+        {
+          "id": "note-mu53ntju-1-54c498b5a5",
+          "scope": "page:default",
+          "target": "#app button.btn-re-diagnose-pill",
+          "x": 0.6010957181628772,
+          "y": 0.28027336459495467,
+          "title": "重新诊断说明",
+          "content": "<p></p><ol><li><span>&nbsp;覆盖与合并规则：</span></li></ol><p></p><p></p><ul><li>仅允许重新上传该单科的试卷。</li><li>&nbsp;诊断完成后，仅覆盖替换该科目的分析数据。</li><li>其余科目的保持不变。</li></ul><p></p>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "原有",
+          "badge": "原有"
+        },
+        {
+          "id": "note-mu53rodn-2-1916a6ae00",
+          "scope": "page:default",
+          "target": "#app div.subj-tab-item:nth-of-type(1)",
+          "x": 0.9371620482189873,
+          "y": 0.6217900616387595,
+          "title": "补录科目说明",
+          "content": "<p>&nbsp;界面展示规则：</p><p></p><ul><li>&nbsp; 自动过滤并隐藏已完成诊断的科目。</li><li>仅展示当前未上传的科目卡片（例如语文、数学已上传，则仅显示英语、物理、化学、生物）。</li><li>顶部进度条与统计显示：待补充科目：N 科。</li><li>提交规则：提交后，仅对新补充的科目进行分析，完成后自动合并进该次考试。</li></ul><p></p>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "原有",
+          "badge": "原有"
+        }
+      ]
+    }
+  },
+  {
+    "file": "gerenzhuye.html",
+    "title": "个人主页 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "gerenzhuye",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "gouxuancuoti.html",
+    "title": "确认错题信息",
+    "has_annotations": true,
+    "anno_count": 1,
+    "anno_data": {
+      "prototypeId": "gouxuancuoti",
+      "version": 2,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": [
+        {
+          "id": "note-mu6feov5-1-3e813b9cbf",
+          "scope": "page:default",
+          "target": "#app button.btn-header-skip",
+          "x": 0.9637784090909091,
+          "y": 1,
+          "title": "跳过说明",
+          "content": "<p>用户可点击跳过错题核对流程</p>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "原有",
+          "badge": "原有"
+        }
+      ]
+    }
+  },
+  {
+    "file": "guanzhu.html",
+    "title": "我的关注 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "guanzhu",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "heimdan.html",
+    "title": "黑名单管理 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "heimdan",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "huozan.html",
+    "title": "获得的赞 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "huozan",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "index.html",
+    "title": "陪读社区与学习分析 · 统一产品需求文档 (PRD) 工作台",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": null
+  },
+  {
+    "file": "jiazhangrenzheng.html",
+    "title": "家长认证 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "jiazhangrenzheng",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "jinru_querencuoti.html",
+    "title": "进入确认错题 - 待办引导",
+    "has_annotations": true,
+    "anno_count": 1,
+    "anno_data": {
+      "prototypeId": "jinru_querencuoti",
+      "version": 5,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "进入确认错题引导 (纯白画布 + 底部悬浮窗直接展开)",
+        "version": "V2.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": [
+        {
+          "id": "note-mu56fva4-1-b2749aff48",
+          "scope": "page:default",
+          "target": "#app button.btn-sheet-main",
+          "x": 0.8595723410737063,
+          "y": 0.3086736282671428,
+          "title": "立即核对错题说明",
+          "content": "<p node=\"[object Object]\" class=\"\"><font color=\"#101010\" face=\"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif\"><span>当试卷识别错题完成（无论是在线即时跑完，还是后台批改完成后，用户在APP中浏览、操作时弹出该弹窗）：</span></font></p><p node=\"[object Object]\" class=\"\"><font color=\"#101010\" face=\"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif\"><span>标出 [✓ 1.上传试卷] ➔ [✓ 2.切题解析] ➔ [● 3.核对错题] ➔ [○ 4.学情报告]，让用户知道“当前还没有生成最终报告”，处于校验阶段。</span></font></p><p node=\"[object Object]\" class=\"\"><font color=\"#101010\" face=\"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif\"><span>&nbsp;文案：“已初筛勾选题面与批改笔迹，仅需您花费 30 秒 核对剔除误判，即可立即计算学情得分并解锁提分诊断！”</span></font></p><p node=\"[object Object]\" class=\"\"><font color=\"#101010\" face=\"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif\"><span>识别错题数量展示： “n道错题与疑难点已圈出”，并按科目拆解（语文 n题、数学 n题、英语 n题、物理 n题），让用户复核。</span></font></p><p node=\"[object Object]\" class=\"\"><br></p>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "原有",
+          "badge": "原有"
+        }
+      ]
+    }
+  },
+  {
+    "file": "loading.html",
+    "title": "深度分析中 - 试卷分析",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "loading",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "login.html",
+    "title": "登录 / 注册 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "login",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "prd-recover.html",
+    "title": "PRD 数据恢复",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": null
+  },
+  {
+    "file": "quanburicheng.html",
+    "title": "全部日程 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "quanburicheng",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "quanxian.html",
+    "title": "应用权限管理 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "quanxian",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "queren_dacuoti.html",
+    "title": "确认错题信息",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "queren_dacuoti",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "rili.html",
+    "title": "备考日程 - 陪读社区",
+    "has_annotations": true,
+    "anno_count": 2,
+    "anno_data": {
+      "prototypeId": "rili",
+      "version": 9,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": [
+        {
+          "id": "note-mu4wq4ko-2-302d6eb57a",
+          "scope": "page:default",
+          "target": "#app div.sheet-card",
+          "x": 0.6615384615384615,
+          "y": 0.03610060343427862,
+          "title": "编辑日程",
+          "content": "<p><byte-sheet-html-origin data-id=\"1789615205941\" data-version=\"4\" data-is-embed=\"true\" data-grid-line-hidden=\"false\" data-lark-html-role=\"root\" data-copy-type=\"col\"></byte-sheet-html-origin></p><byte-sheet-html-origin data-id=\"1789615567391\" data-version=\"4\" data-is-embed=\"true\" data-grid-line-hidden=\"false\" data-lark-html-role=\"root\" data-copy-type=\"col\"><table><colgroup><col width=\"105\"><col width=\"105\"><col width=\"105\"><col width=\"105\"></colgroup><tbody><tr height=\"65\"><td>字段</td><td data-sheet-value=\"[{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;场景 A：所有关联考生均&quot;},{&quot;type&quot;:&quot;text&quot;,&quot;style&quot;:{&quot;font&quot;:&quot;bold 10pt/1.5 MonospacedNumber, LarkHackSafariFont, LarkEmojiFont, LarkChineseQuote, -apple-system, BlinkMacSystemFont, \\&quot;Helvetica Neue\\&quot;, Tahoma, \\&quot;PingFang SC\\&quot;, \\&quot;Microsoft Yahei\\&quot;, Arial, \\&quot;Hiragino Sans GB\\&quot;, sans-serif, \\&quot;Apple Color Emoji\\&quot;, \\&quot;Segoe UI Emoji\\&quot;, \\&quot;Segoe UI Symbol\\&quot;, \\&quot;Noto Color Emoji\\&quot;&quot;,&quot;foreColor&quot;:&quot;rgb(0, 0, 0)&quot;},&quot;text&quot;:&quot;无&quot;},{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;报告&quot;}]\">场景 A：所有关联考生均无报告</td><td data-sheet-value=\"[{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;场景 B：部分或全部关联考生&quot;},{&quot;type&quot;:&quot;text&quot;,&quot;style&quot;:{&quot;font&quot;:&quot;bold 10pt/1.5 MonospacedNumber, LarkHackSafariFont, LarkEmojiFont, LarkChineseQuote, -apple-system, BlinkMacSystemFont, \\&quot;Helvetica Neue\\&quot;, Tahoma, \\&quot;PingFang SC\\&quot;, \\&quot;Microsoft Yahei\\&quot;, Arial, \\&quot;Hiragino Sans GB\\&quot;, sans-serif, \\&quot;Apple Color Emoji\\&quot;, \\&quot;Segoe UI Emoji\\&quot;, \\&quot;Segoe UI Symbol\\&quot;, \\&quot;Noto Color Emoji\\&quot;&quot;,&quot;foreColor&quot;:&quot;rgb(0, 0, 0)&quot;},&quot;text&quot;:&quot;已有&quot;},{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;报告&quot;}]\">场景 B：部分或全部关联考生已有报告</td><td>说明</td></tr><tr height=\"27\"><td>日程标题 / 备注</td><td>允许修改</td><td>允许修改</td><td>属于文案展示</td></tr><tr height=\"65\"><td>日程日期</td><td>允许修改</td><td>允许修改（同步更新报告时间）</td><td>考试日程时间调整也属于常见场景</td></tr><tr height=\"84\"><td data-sheet-value=\"[{&quot;type&quot;:&quot;text&quot;,&quot;style&quot;:{&quot;font&quot;:&quot;bold 10pt/1.5 MonospacedNumber, LarkHackSafariFont, LarkEmojiFont, LarkChineseQuote, -apple-system, BlinkMacSystemFont, \\&quot;Helvetica Neue\\&quot;, Tahoma, \\&quot;PingFang SC\\&quot;, \\&quot;Microsoft Yahei\\&quot;, Arial, \\&quot;Hiragino Sans GB\\&quot;, sans-serif, \\&quot;Apple Color Emoji\\&quot;, \\&quot;Segoe UI Emoji\\&quot;, \\&quot;Segoe UI Symbol\\&quot;, \\&quot;Noto Color Emoji\\&quot;&quot;,&quot;foreColor&quot;:&quot;rgb(0, 0, 0)&quot;},&quot;text&quot;:&quot;日程类型&quot;},{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;\\n(大考/小测/其他)&quot;}]\">日程类型<br>(大考/小测/其他)</td><td>允许自由切换</td><td data-sheet-value=\"[{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;全局锁定不可更改\\n&quot;,&quot;style&quot;:{&quot;font&quot;:&quot;bold 10pt/1.5 MonospacedNumber, LarkHackSafariFont, LarkEmojiFont, LarkChineseQuote, -apple-system, BlinkMacSystemFont, \\&quot;Helvetica Neue\\&quot;, Tahoma, \\&quot;PingFang SC\\&quot;, \\&quot;Microsoft Yahei\\&quot;, Arial, \\&quot;Hiragino Sans GB\\&quot;, sans-serif, \\&quot;Apple Color Emoji\\&quot;, \\&quot;Segoe UI Emoji\\&quot;, \\&quot;Segoe UI Symbol\\&quot;, \\&quot;Noto Color Emoji\\&quot;&quot;,&quot;vAlign&quot;:1,&quot;hAlign&quot;:3,&quot;textDecoration&quot;:0,&quot;foreColor&quot;:&quot;rgb(0, 0, 0)&quot;,&quot;wordWrap&quot;:0}},{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;（点击即 Toast 提示）&quot;,&quot;style&quot;:{&quot;font&quot;:&quot;10pt/1.5 MonospacedNumber, LarkHackSafariFont, LarkEmojiFont, LarkChineseQuote, -apple-system, BlinkMacSystemFont, \\&quot;Helvetica Neue\\&quot;, Tahoma, \\&quot;PingFang SC\\&quot;, \\&quot;Microsoft Yahei\\&quot;, Arial, \\&quot;Hiragino Sans GB\\&quot;, sans-serif, \\&quot;Apple Color Emoji\\&quot;, \\&quot;Segoe UI Emoji\\&quot;, \\&quot;Segoe UI Symbol\\&quot;, \\&quot;Noto Color Emoji\\&quot;&quot;,&quot;vAlign&quot;:1,&quot;hAlign&quot;:3,&quot;textDecoration&quot;:0,&quot;foreColor&quot;:&quot;rgb(0, 0, 0)&quot;,&quot;wordWrap&quot;:0}}]\">全局锁定不可更改<br>（点击即 Toast 提示）</td><td>报告已生成，防混乱</td></tr><tr height=\"122\"><td>学生勾选列表</td><td>自由勾选/取消勾选</td><td data-sheet-value=\"[{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;已生成报告的考生置灰锁定（不可取消）\\n&quot;,&quot;style&quot;:{&quot;font&quot;:&quot;bold 10pt/1.5 MonospacedNumber, LarkHackSafariFont, LarkEmojiFont, LarkChineseQuote, -apple-system, BlinkMacSystemFont, \\&quot;Helvetica Neue\\&quot;, Tahoma, \\&quot;PingFang SC\\&quot;, \\&quot;Microsoft Yahei\\&quot;, Arial, \\&quot;Hiragino Sans GB\\&quot;, sans-serif, \\&quot;Apple Color Emoji\\&quot;, \\&quot;Segoe UI Emoji\\&quot;, \\&quot;Segoe UI Symbol\\&quot;, \\&quot;Noto Color Emoji\\&quot;&quot;,&quot;vAlign&quot;:1,&quot;hAlign&quot;:3,&quot;textDecoration&quot;:0,&quot;foreColor&quot;:&quot;rgb(0, 0, 0)&quot;,&quot;wordWrap&quot;:0}},{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;✅ &quot;,&quot;style&quot;:{&quot;font&quot;:&quot;10pt/1.5 MonospacedNumber, LarkHackSafariFont, LarkEmojiFont, LarkChineseQuote, -apple-system, BlinkMacSystemFont, \\&quot;Helvetica Neue\\&quot;, Tahoma, \\&quot;PingFang SC\\&quot;, \\&quot;Microsoft Yahei\\&quot;, Arial, \\&quot;Hiragino Sans GB\\&quot;, sans-serif, \\&quot;Apple Color Emoji\\&quot;, \\&quot;Segoe UI Emoji\\&quot;, \\&quot;Segoe UI Symbol\\&quot;, \\&quot;Noto Color Emoji\\&quot;&quot;,&quot;vAlign&quot;:1,&quot;hAlign&quot;:3,&quot;textDecoration&quot;:0,&quot;foreColor&quot;:&quot;rgb(0, 0, 0)&quot;,&quot;wordWrap&quot;:0}},{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;未生成报告的考生可自由增删勾选&quot;,&quot;style&quot;:{&quot;font&quot;:&quot;bold 10pt/1.5 MonospacedNumber, LarkHackSafariFont, LarkEmojiFont, LarkChineseQuote, -apple-system, BlinkMacSystemFont, \\&quot;Helvetica Neue\\&quot;, Tahoma, \\&quot;PingFang SC\\&quot;, \\&quot;Microsoft Yahei\\&quot;, Arial, \\&quot;Hiragino Sans GB\\&quot;, sans-serif, \\&quot;Apple Color Emoji\\&quot;, \\&quot;Segoe UI Emoji\\&quot;, \\&quot;Segoe UI Symbol\\&quot;, \\&quot;Noto Color Emoji\\&quot;&quot;,&quot;vAlign&quot;:1,&quot;hAlign&quot;:3,&quot;textDecoration&quot;:0,&quot;foreColor&quot;:&quot;rgb(0, 0, 0)&quot;,&quot;wordWrap&quot;:0}}]\">已生成报告的考生置灰锁定（不可取消）<br>未生成报告的考生可增删勾选</td><td>保护已有报告的绑定关系，同时允许增加/移除其他未生成报告的学生</td></tr></tbody></table></byte-sheet-html-origin>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "原有",
+          "badge": "原有"
+        },
+        {
+          "id": "note-mu4yzo1f-1-42e77d3b46",
+          "scope": "page:default",
+          "target": "#app div.modal-card > div:nth-of-type(2) > button:nth-of-type(2)",
+          "x": 0.547263529763293,
+          "y": 0.5520828247070313,
+          "title": "删除日程说明",
+          "content": "<div><ol><li>有<span>分析报告</span>二次弹窗确认判断逻辑：<div>检测当前日程下是否至少有 1 位考生已生成考试分析报告。</div><div><span>存在 1 个或多个报告警示弹窗：</span></div><div>（“该行程下包含 [学生名] 的考试分析报告，若删除则所有关联的考试报告将一同删除，是否确认删除？”）</div><div>[ 取消 ]　[ 确认删除 ]</div></li><li><span>无分析报告</span><span>二次弹窗确认判断逻辑</span><span>：</span></li></ol></div><div>弹出普通删除确认（“确认删除该日程？”）。</div><div><span>[ 取消 ]　[ 确认删除 ]</span></div>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "原有",
+          "badge": "原有"
+        }
+      ]
+    }
+  },
+  {
+    "file": "scshijuan.html",
+    "title": "上传试卷 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "scshijuan",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "shangchuanfupan.html",
+    "title": "试卷分析 - 录入试卷",
+    "has_annotations": true,
+    "anno_count": 1,
+    "anno_data": {
+      "prototypeId": "shangchuanfupan",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": [
+        {
+          "id": "note-grading-sheet-pause",
+          "scope": "page:default",
+          "target": "#gradingSheetPanel div.gsp-progress-track",
+          "x": 0.5,
+          "y": 0.5,
+          "title": "AI批改解析抽屉与后台持续批改",
+          "content": "<div><strong>批改解析中状态与业务交互规则：</strong></div><ul><li><strong>解析动画与进度条反馈：</strong> 试卷上传后自动拉起半屏抽屉，展示 AI 解析动态光效与实时进度条（点击标注或进度条可随时暂停/恢复，便于演示评审）。</li><li><strong>离线/后台批改机制：</strong> 用户可随时点击「返回首页等待（后台持续批改）」，系统转入静默后台处理，不阻塞用户其他操作；批改完成后在首页最新日程与通知栏同步推送结果。</li><li><strong>自动流转确认：</strong> 进度达 100% 后自动平滑流转进入「确认错题」页面（gouxuancuoti.html）。</li></ul>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "原有",
+          "badge": "原有"
+        }
+      ]
+    }
+  },
+  {
+    "file": "shequ.html",
+    "title": "陪读社区 - 社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "shequ",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "shezhi.html",
+    "title": "设置 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "shezhi",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "shouye_guajian.html",
+    "title": "首页挂件组件 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "shouye_guajian",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "sixin.html",
+    "title": "私信聊天 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "sixin",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "tiezidetail.html",
+    "title": "帖子详情 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "tiezidetail",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "weirenzi.html",
+    "title": "家长认证 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "weirenzi",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "wode.html",
+    "title": "我的 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "wode",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "wodepinglun.html",
+    "title": "我的评论 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "wodepinglun",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "wodetiezi.html",
+    "title": "我的发帖 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "wodetiezi",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "xiaoxi.html",
+    "title": "消息 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "xiaoxi",
+      "version": 2,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 375
+      },
+      "globalMeta": {
+        "name": "小苗伴学 消息中心 (MasterGo 162:04097 精确还原版)",
+        "version": "V2.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "xiugaishouji.html",
+    "title": "更换手机号 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "xiugaishouji",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "xuanzhexingzhi.html",
+    "title": "试卷分析 - 选择日期与性质",
+    "has_annotations": true,
+    "anno_count": 2,
+    "anno_data": {
+      "prototypeId": "xuanzhexingzhi",
+      "version": 4,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": [
+        {
+          "id": "note-mu541rt6-1-9e34bc598c",
+          "scope": "page:default",
+          "target": "#app div.intercept-sheet-title",
+          "x": 0.875238037109375,
+          "y": 0.4232010186887255,
+          "title": "原入口拦截已有报告日程",
+          "content": "<div>拦截弹窗：</div><div><div><ul><li>&nbsp; 弹窗标题：检测到已有考试报告</li><li>&nbsp; 提示文案：「日期+考试名称」已完成部分/全部科目诊断，您可以直接查看报告，或为未录入的科目补充上传试卷。</li><li>&nbsp; 操作按钮：</li></ul></div><div>&nbsp; &nbsp; 1. 【查看已有报告】：点击后直接跳转至该次考试的报告页。</div><div>&nbsp; &nbsp; 2. 【补未录入科目】：点击后进入上传试卷页面，仅展示尚未录入的科目。</div><div><br></div><div><br></div></div>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "原有",
+          "badge": "原有"
+        },
+        {
+          "id": "note-mu55opzn-1-6ec0d916cf",
+          "scope": "page:default",
+          "target": "#typeOptionSmall",
+          "x": 0.17391304347826086,
+          "y": 0,
+          "title": "多科/单科说明",
+          "content": "<p></p><ol><li>原大小考更名为：「多科 / 大考」与「单科 / 小测」</li><li><span>「多科 / 大考」与「单科 / 小测」可勾选，同新建日程的编辑规则与日程同步更新</span></li></ol><p></p>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "原有",
+          "badge": "原有"
+        }
+      ]
+    }
+  },
+  {
+    "file": "xueqing_xiaoxi.html",
+    "title": "学情诊断提醒 - 陪读社区",
+    "has_annotations": true,
+    "anno_count": 2,
+    "anno_data": {
+      "prototypeId": "xueqing_xiaoxi",
+      "version": 4,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 375
+      },
+      "globalMeta": {
+        "name": "小苗伴学 学情诊断提醒 (MasterGo 439:14922 精确还原版)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": [
+        {
+          "id": "note-msg-verify",
+          "scope": "page:default",
+          "target": "#msgCardVerify",
+          "x": 0.85,
+          "y": 0.8,
+          "title": "错题识别完成·待核对错题提醒",
+          "content": "<div><strong>部分科目错题识别完成先行核对机制：</strong></div><ul><li><strong>触发时机：</strong> 多科大考并发处理中，数学、英语已率先完成 AI 切题与错题识别（共 11 道错题），物理仍在识别中。</li><li><strong>异步解耦价值：</strong> 用户无需死等所有科目跑完，可立即点击核对已就绪科目错题（约 30 秒），消除木桶等待焦虑。</li><li><strong>操作跳转：</strong> 点击「立即核对 (数学/英语)」进入核对中转弹窗与错题勾选工作台。</li></ul>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "新增",
+          "badge": "新增"
+        },
+        {
+          "id": "note-msg-failed",
+          "scope": "page:default",
+          "target": "#msgCardFailed",
+          "x": 0.85,
+          "y": 0.8,
+          "title": "错题识别失败·重新拍照上传提醒",
+          "content": "<div><strong>单科识别异常与独立重拍机制：</strong></div><ul><li><strong>触发时机：</strong> 物理试卷因强光反光遮挡或折痕导致题干识别失败。</li><li><strong>异常隔离：</strong> 仅物理单科告警重拍，不影响已识别就绪的数学、英语核对与报告生成。</li><li><strong>一键重传：</strong> 点击「重新上传」直跳试卷上传页物理重传，无需重新配置其他正常科目。</li></ul>",
+          "format": "html",
+          "type": "original",
+          "typeLabel": "新增",
+          "badge": "新增"
+        }
+      ]
+    }
+  },
+  {
+    "file": "yinsi_info.html",
+    "title": "个人信息收集清单 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "yinsi_info",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "yinsi_third.html",
+    "title": "第三方共享清单 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "yinsi_third",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "yinsi_zhengce.html",
+    "title": "隐私政策 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "yinsi_zhengce",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "yonghu_xieyi.html",
+    "title": "用户协议 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "yonghu_xieyi",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "youyong.html",
+    "title": "有用 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "youyong",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "zhuxiao_xieyi.html",
+    "title": "账号注销协议 - 陪读社区",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "zhuxiao_xieyi",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  },
+  {
+    "file": "发卡与授权码生成器.html",
+    "title": "ProtoHub · 授权卡密生成与发货工作台 (管理员专用)",
+    "has_annotations": false,
+    "anno_count": 0,
+    "anno_data": {
+      "prototypeId": "发卡与授权码生成器",
+      "version": 1,
+      "mobile": {
+        "appRoot": "[data-proto-app]",
+        "deviceWidth": 390
+      },
+      "globalMeta": {
+        "name": "小苗伴学 9月版本产品需求文档 (PRD V2.0)",
+        "version": "V1.0",
+        "updatedAt": "2026-09-16"
+      },
+      "globalSections": [
+        {
+          "id": "sec_overview",
+          "title": "一.业务背景概述",
+          "content": "<p><span>1.分析:</span></p><p><span>新用户进入[分析]页时，最新日程看板展示“暂无”，用户无法直观理解该区域的作</span></p><p>2.日程:</p><p></p><ul><li>日程需要提供编辑功能。</li><li>多考生家庭的隔离:既需要总览全家的考试日程，又必须确保每个孩子的学情分析、成绩报告严格独立，新建日程需要可多选孩</li></ul><p></p>",
+          "format": "html"
+        }
+      ],
+      "annotations": []
+    }
+  }
+]
